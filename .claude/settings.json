@@ -9,8 +9,6 @@
       "Bash(git push -f*)",
       "Bash(git commit --no-verify*)",
       "Edit(.github/workflows/**)",
-      "Edit(fastlane/Fastfile)",
-      "Edit(fastlane/Appfile)",
       "Edit(config/detekt/**)",
       "Edit(**/lint-baseline.xml)",
       "Edit(spotless.gradle)",

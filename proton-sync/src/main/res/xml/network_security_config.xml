@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Proton sync bridge network policy (security-audit.md §4.2): cleartext is explicitly
+    DISABLED base-wide and no host is whitelisted. targetSdk 37 already blocks cleartext by
+    default; this config states the rule so a future contributor can't silently relax it.
+    TLS pinning lives in the OkHttp CertificatePinner (ProtonApiClientFactory) — the
+    network-security-config is NOT used for pins, and must never grow <domain> entries.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>

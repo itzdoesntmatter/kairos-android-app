@@ -1,5 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Sample backup rules file; uncomment and customize as necessary. See https://developer.android.com/guide/topics/data/autobackup 
-    for details. Note: This file is ignored for devices older than API 31 See https://developer.android.com/about/versions/12/backup-restore -->
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Cloud backup rules (API < 31 path, android:fullBackupContent).
+    The Proton sync bridge's secrets MUST never enter cloud backups or device transfers
+    (security-audit.md CR-1 / §2.4.19): the encrypted session file is excluded alongside its
+    whole directory, and the sync-metadata database is excluded as defense in depth (it
+    holds no secrets by rule, but its structure stays off backup media regardless).
+-->
 <full-backup-content>
-    <!-- <include domain="sharedpref" path="."/> <exclude domain="sharedpref" path="device.xml"/> -->
+    <exclude domain="file" path="proton-session/" />
+    <exclude domain="database" path="proton-sync.db" />
+    <exclude domain="database" path="proton-sync.db-wal" />
+    <exclude domain="database" path="proton-sync.db-shm" />
 </full-backup-content>

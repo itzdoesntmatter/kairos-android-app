@@ -1,8 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Sample data extraction rules file; uncomment and customize as necessary. See https://developer.android.com/about/versions/12/backup-restore#xml-changes
-    for details. -->
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Data extraction rules (API 31+ path, android:dataExtractionRules).
+    Mirrors backup_rules.xml in BOTH transfer modes: the Proton sync bridge session file and
+    sync-metadata DB must never ride cloud backup OR device-to-device transfer
+    (security-audit.md CR-1 / §2.4.19).
+-->
 <data-extraction-rules>
     <cloud-backup>
-        <!-- TODO: Use <include> and <exclude> to control what is backed up. <include .../> <exclude .../> -->
+        <exclude domain="file" path="proton-session/" />
+        <exclude domain="database" path="proton-sync.db" />
+        <exclude domain="database" path="proton-sync.db-wal" />
+        <exclude domain="database" path="proton-sync.db-shm" />
     </cloud-backup>
-    <!-- <device-transfer> <include .../> <exclude .../> </device-transfer> -->
+    <device-transfer>
+        <exclude domain="file" path="proton-session/" />
+        <exclude domain="database" path="proton-sync.db" />
+        <exclude domain="database" path="proton-sync.db-wal" />
+        <exclude domain="database" path="proton-sync.db-shm" />
+    </device-transfer>
 </data-extraction-rules>

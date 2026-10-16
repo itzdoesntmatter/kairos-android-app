@@ -8,5 +8,13 @@
     -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+
+    <!--
+        Explicit no-cleartext policy for the bridge (security-audit.md §4.2). Merges into
+        :app, which has no networkSecurityConfig of its own.
+    -->
+    <application android:networkSecurityConfig="@xml/network_security_config" />
 
 </manifest>

@@ -59,11 +59,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Decode Google Services
-        run: |
-          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
-          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > wear/google-services.json
-
       - name: Run Detekt and Lint
         env:
           GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID }}
@@ -97,11 +92,6 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-
-      - name: Decode Google Services
-        run: |
-          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
-          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > wear/google-services.json
 
       - name: Run Tests and Coverage
         env:
@@ -201,7 +191,6 @@ jobs:
 
       - name: Decode Secrets
         run: |
-          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
           echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > app/release-key.jks
 
       - name: Deploy to Play Store
@@ -249,7 +238,6 @@ jobs:
 
       - name: Decode Secrets
         run: |
-          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > wear/google-services.json
           echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > wear/release-key.jks
 
       - name: Deploy to Play Store

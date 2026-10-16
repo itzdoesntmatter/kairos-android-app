@@ -2,7 +2,7 @@
 
 [![Android CI - Kairos Multi-Module](https://github.com/tonimadev/kairos-android-app/actions/workflows/android-ci.yaml/badge.svg)](https://github.com/tonimadev/kairos-android-app/actions/workflows/android-ci.yaml) [![codecov](https://codecov.io/gh/tonimadev/kairos-android-app/graph/badge.svg?token=TKC92HM5VY)](https://codecov.io/gh/tonimadev/kairos-android-app)
 
-# Kairós - Calendar Alarms for Android & Wear OS powered by Gemini AI
+# Kairós - Calendar Alarms for Android & Wear OS
 
 > ⚠️ **Disclaimer:** This project is largely AI-generated ("vibe-coded") — written with AI coding agents and minimal human review. It may contain bugs, security issues, or unexpected behavior, and comes with no warranty. Review the code before relying on it for anything important.
 
@@ -24,8 +24,6 @@ Kairós is a modern application that transforms your calendar appointments into 
   - **Tiles**: Instant access to event information with a side swipe.
 - **Smart Synchronization**: Uses WorkManager for efficient background scheduling without draining the battery.
 - **Native Integration**: Reads events from any calendar account configured on the device (e.g., Google Calendar).
-- **AI-Powered Daily Summaries**: Intelligent briefing of your day, processed on-device (Gemini Nano) for privacy and speed.
-- **AppFunctions Support**: Exposes core features to the Android system, allowing execution via voice commands or system shortcuts.
 - **Total Control**: Enable or disable alarms globally or for specific events.
 
 <p align="center">
@@ -36,27 +34,12 @@ Kairós is a modern application that transforms your calendar appointments into 
 
 ---
 
-## 🎬 AI Assistant in Action
-
-<p align="center">
-  <a href="/images/ai-demo.mp4"><img src="/images/ai-demo.gif" width="720" alt="Kairós AI assistant demo: daily briefing, streamed chat answers and an event created through tool calling"></a>
-</p>
-
-1. **Daily briefing** generated from today's calendar events.
-2. **Streamed chat answers** grounded in the user's agenda ("How is my agenda today?", "What time should I sleep?").
-3. **Tool calling**: "Schedule dentist Wednesday, 10am" triggers `create_event`, which is a `CRITICAL` action and asks for confirmation before the event is saved to the calendar.
-
-<sub>Click the animation for the full-quality video. Recorded on an Android emulator; model responses come from a scripted stand-in for the Gemini backend, so the UI and tool-calling flow are real but the answers are pre-written.</sub>
-
----
-
 ## 📱 Screenshots
 
 <p align="center">
   <img src="/images/screenshot-home.webp" width="220" alt="Home: the day's events as alarm cards">
   <img src="/images/screenshot-alarm.webp" width="220" alt="Full-screen event alarm">
   <img src="/images/screenshot-settings.webp" width="220" alt="Alarm settings">
-  <img src="/images/screenshot-ai-chat.webp" width="220" alt="AI assistant chat">
 </p>
 
 <sub>Store listing graphics (feature graphic and framed screenshots in all 10 supported languages) live in `fastlane/metadata/android/<locale>/images/`.</sub>
@@ -74,8 +57,6 @@ This project follows modern Android development principles with MVVM + MVI archi
 - **Async**: Kotlin Coroutines + Flow
 - **Persistence & Background**: DataStore, Room, WorkManager, AlarmManager
 - **DI**: Hilt
-- **AI**: Firebase AI (Gemini Pro/Flash) & Gemini Nano (On-Device inference)
-- **System**: Android AppFunctions (API 36+)
 - **Sync**: Wearable Data Layer (Play Services)
 - **Testing**: JUnit4, Robolectric, Turbine, MockK
 
@@ -98,7 +79,6 @@ kairos-android-app/
 ├── core/ui/                    → Shared design system (KairosTheme, Dimensions, …)
 ├── feature/calendar/{bridge,impl}/ → Home screen, event CRUD, import/manage calendars, auth
 ├── feature/settings/{bridge,impl}/ → Settings screen, permission gating
-├── feature/ai/{bridge,impl}/       → AI agent, chat history, daily briefing
 ├── feature/alarm/impl/             → Alarm MVI (screen itself lives in `app/`, shared with `wear/`)
 ├── wear/                       → Wear OS UI, Tiles, Complications
 ├── build-logic/                → Convention plugins (android-library/-compose/-feature-*, Jacoco)
@@ -136,147 +116,7 @@ View (Compose) ──EventIntent──▶ ViewModel ──▶ UseCases / Reposit
 | Shared usecases + repositories (2+ features) | `core/data` | `digital.tonima.core.data.usecases` / `.repository` |
 | Domain entities (Event, AlarmOffset, Weather, …) | `core/model` | `digital.tonima.kairos.core.model` |
 | Alarm scheduling/sound, wear sync, permissions, analytics | `core` | `digital.tonima.core.*` |
-| AI Agent architecture (tools, ActionRegistry, chat DB) | `feature/ai/impl` | `digital.tonima.core.ai.*` |
 | `AppNavigator` / `FeatureNavKey` contracts | `core/navigation` | `digital.tonima.kairos.core.navigation` |
-
----
-
-## 🤖 AI Agent Architecture
-
-The app integrates an **AI Agent** using a **hybrid approach**:
-- **Cloud-hosted (Gemini Pro/Flash)**: Used for complex tasks like "Function Calling" (executing actions).
-- **On-Device (Gemini Nano)**: Used for privacy-sensitive tasks like the **Daily Briefing**, utilizing the device's hardware for inference.
-
-### Hybrid Inference Mode
-
-Kairos uses `InferenceMode.PREFER_ON_DEVICE` for text generation tasks. This ensures:
-1. **Privacy**: Sensitive data (like your schedule) stays on the device when summarized.
-2. **Speed**: No network latency for local tasks.
-3. **Fallback**: If the device doesn't support Gemini Nano, it automatically fails back to the Cloud model.
-
-The Daily Briefing is also cached per calendar day (`DailyBriefingRepository.getLastGeneratedDate()`):
-the background `DailyBriefingWorker`, the on-demand "Generate Summary" button, and the AppFunctions
-entry point all reuse the same generation for a given day instead of triggering a new model call
-each time.
-
-### Reliability & Cost Controls
-
-Both AI entry points go through `AiModelRepository`, which centralizes:
-- **Streaming** for the chat agent (`Chat.sendMessageStream`), so replies render as they arrive instead of waiting for the full response.
-- **Retry with backoff** for transient network failures — only before any content has been streamed back, so a retry never restarts text the user already sees.
-- **Client-side rate limiting** (`AiRateLimiter`, a sliding window capped by `AIConfig.MAX_REQUESTS_PER_MINUTE`) to guard against runaway cost or a stuck retry loop.
-- **Typed errors** (`AIAgentResponse.Error` / `BriefingResult.Error`) instead of silently swallowing failures — the UI surfaces them via `AiSideEffect.AIToolError`.
-
-### How It Works (Tool Calling)
-
-`AskAiAgentUseCase` never talks to the Firebase AI SDK directly — it builds the system prompt +
-tool declarations and delegates to `AiModelRepository`, which owns the SDK call itself: streaming
-the response, retrying transient network failures (before any chunk has been emitted), enforcing a
-client-side rate limit, and classifying failures into `AiErrorType` (`NETWORK`, `RATE_LIMITED`,
-`SAFETY_BLOCKED`, `UNKNOWN`).
-
-```text
-User question ──▶ DB (ChatHistoryDao) ──▶ AskAiAgentUseCase ──▶ AiModelRepository
-                                                                (streams Gemini + Tool declarations)
-                                                                        │
-                                   ┌────────────────────────────────────┼────────────────────────────────────┐
-                                   ▼                                    ▼                                     ▼
-                          Text response (Flow)                 FunctionCall response                       Error
-                    (accumulated chunks shown live,                    │                        (surfaced as a snackbar via
-                     final chunk saved to DB)                          ▼                          AiSideEffect.AIToolError)
-                                                              onAIFunctionCalled()
-                                                                        │
-                                                                        ▼
-                                                          ActionRegistry.processAIToolCall()
-                                                                        │
-                                                  ┌─────────────────────┼─────────────────────┐
-                                                  ▼                     ▼                     ▼
-                                                SAFE                MODERATE               CRITICAL
-                                             (execute)         (execute + snackbar)  (pause, ask user)
-                                                  │                     │
-                                                  └─────────────────────┘
-                                                            │
-                                                 DB (Save FunctionResponse)
-                                                            │
-                                              (Loop back to AskAiAgentUseCase)
-```
-
-### Risk Levels
-
-| Level | Behavior | Example |
-|---|---|---|
-| `SAFE` | Executes immediately, no feedback | `SearchTool` → search events |
-| `MODERATE` | Executes immediately + snackbar notification | `ToggleGlobalAlarmsTool` → toggle alarms |
-| `CRITICAL` | Pauses, saves intent in `pendingAIAction`, requires explicit user confirmation | `CreateEventTool` → create calendar event |
-
-### Key Components
-
-| Component | Role |
-|---|---|
-| `ChatHistoryDao` | Room database interface managing the offline chat history persistence. |
-| `AITool` | Interface — each tool maps an LLM function call to an `EventIntent` |
-| `ActionRegistry` | Singleton — discovers tools, dispatches function calls |
-| `AskAiAgentUseCase` | Builds the system prompt + tool declarations and streams the conversation via `AiModelRepository`, emitting `Flow<AIAgentResponse>` (`Text`, `FunctionCall`, or `Error`) |
-| `AiModelRepository` | The only place that touches the Firebase AI SDK — builds requests, streams/generates content, retries transient failures, enforces the rate limit, classifies errors into `AiErrorType` |
-| `AiRateLimiter` | In-memory sliding-window limiter guarding LLM calls against runaway cost/abuse |
-| `RiskLevel` | Enum controlling execution policy (`SAFE`, `MODERATE`, `CRITICAL`) |
-| `AIToolResult` | Sealed class wrapping dispatch results (`Success`, `ToolNotFound`, `InvalidArguments`) |
-
-### How to Create a New AI Tool
-
-**Step 1 —** Create a class implementing `AITool` in `feature/ai/impl/.../ai/tools/`:
-
-```kotlin
-class MyNewTool @Inject constructor() : AITool {
-
-    override val name = "my_new_action"
-
-    override val description = "Describe when the LLM should call this tool."
-
-    override val riskLevel = RiskLevel.SAFE // or MODERATE / CRITICAL
-
-    override val parametersSchema = mapOf(
-        "type" to "object",
-        "properties" to mapOf(
-            "param1" to mapOf("type" to "string", "description" to "…"),
-        ),
-        "required" to listOf("param1"),
-    )
-
-    override fun parseArguments(args: Map<String, Any?>): EventIntent? {
-        val value = args["param1"]?.toString() ?: return null
-        return EventIntent.SomeExistingIntent(value)   // reuse an MVI intent
-    }
-}
-```
-
-**Step 2 —** Register it in `AIToolsModule` (`feature/ai/impl/.../ai/di/`):
-
-```kotlin
-@Provides @IntoSet @Singleton
-fun provideMyNewTool(): AITool = MyNewTool()
-```
-
-**Step 3 —** Done. `ActionRegistry` discovers it automatically via Hilt multibinding, includes it in the Gemini tool declarations, and routes function calls through `onAIFunctionCalled()`.
-
-> **Tip:** Choose `RiskLevel` carefully — `SAFE` executes silently, `MODERATE` shows a snackbar, and `CRITICAL` pauses for user confirmation.
-
----
-
-## 📲 AppFunctions & System Integration
-
-Kairos leverages the **Android AppFunctions** framework (available from Android 16+) to expose its capabilities as agentic tools directly to the OS. This allows system-level assistants (like Gemini on Android) to discover and execute app features without opening the UI.
-
-### Exposed Functions
-
-| Function | Description |
-|---|---|
-| `createEvent` | Allows the system to schedule new appointments on the user's calendar. |
-| `getDailyBriefing` | Provides the AI-generated summary of the user's day to the system assistant. |
-
-### Technical Setup
-- **Metadata**: Capabilities are declared in `res/xml/app_metadata.xml`.
-- **Hilt Integration**: `KairosApplication` implements `AppFunctionConfiguration.Provider` to allow the framework to inject dependencies into function implementations.
 
 ---
 
@@ -306,9 +146,7 @@ Kairos leverages the **Android AppFunctions** framework (available from Android 
 
 ## ⚙️ Additional Configuration
 
-For **Release** builds or full **Firebase** integration, it is necessary:
-1. Add `google-services.json` in `app/` and `wear/` folders.
-2. Configure signing keys in `local.properties` or environment variables. See `build.gradle.kts` for details on expected properties.
+For **Release** builds, configure signing keys in `local.properties` or environment variables. See `build.gradle.kts` for details on expected properties.
 
 ---
 
@@ -321,4 +159,3 @@ Developed by **tonimadev**
 ## License
 
 This project is licensed under the MIT License — see [LICENSE](LICENSE).
-

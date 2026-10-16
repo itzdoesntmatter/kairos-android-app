@@ -226,7 +226,6 @@
 
     <!-- Additional Strings -->
     <string name="settings">সেটিংস</string>
-    <string name="app_functions_description">সময়সূচি, অ্যালার্ম আর দৈনিক সারাংশ সামলাতে Kairos-এর স্মার্ট অ্যাকশন।</string>
     <string name="import_calendar">ICS ক্যালেন্ডার ইমপোর্ট করুন</string>
     <string name="manage_calendars">ক্যালেন্ডার পরিচালনা</string>
     <string name="clear_search">খোঁজা মুছুন</string>

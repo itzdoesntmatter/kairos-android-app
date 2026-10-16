@@ -226,7 +226,6 @@
 
     <!-- Additional Strings -->
     <string name="settings">تنظیمات</string>
-    <string name="app_functions_description">اقدام‌های هوشمند Kairos برای مدیریت برنامه، هشدارها و خلاصه‌های روزانه.</string>
     <string name="import_calendar">وارد کردن تقویم ICS</string>
     <string name="manage_calendars">مدیریت تقویم‌ها</string>
     <string name="clear_search">پاک کردن جستجو</string>

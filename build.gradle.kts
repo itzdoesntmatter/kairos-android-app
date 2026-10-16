@@ -223,19 +223,13 @@ tasks.register<JacocoReport>("createJacocoMergedCoverageReport") {
             "**/Dagger*Module_Provide*Factory.class",
             "**/*_Provide*Factory*.*",
             "**/*_Factory*.*",
-            // KSP output of androidx.appfunctions: metadata tables, not app logic.
-            "**/*AppFunctionInventory*.class",
-            "**/*AppFunctionInvoker*.class",
-            "androidx/appfunctions/internal/**",
-            "appfunctions_aggregated_deps/**",
             // Other generated code: Room (*_Impl) and Hilt component tree metadata.
             "**/*_Impl.class",
             "**/*_Impl$*.class",
             "**/*_ComponentTreeDeps*.class",
-            // Thin wrappers over Play/Firebase/Wearable/TTS SDKs with no app logic of their own.
+            // Thin wrappers over Play/Wearable/TTS SDKs with no app logic of their own.
             "**/InAppUpdateManagerImpl*.class",
             "**/ReviewManagerImpl*.class",
-            "**/FirebaseAnalyticsImpl*.class",
             "**/TextToSpeechHelper*.class",
             "**/LocationRepositoryImpl*.class",
             "**/WearMessagingHelper*.class",

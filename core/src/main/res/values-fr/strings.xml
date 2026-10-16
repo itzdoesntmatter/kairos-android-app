@@ -235,7 +235,6 @@
 
     <!-- Additional Strings -->
     <string name="settings">Paramètres</string>
-    <string name="app_functions_description">Actions intelligentes de Kairos pour gérer votre emploi du temps, vos alarmes et vos résumés quotidiens.</string>
     <string name="import_calendar">Importer le calendrier ICS</string>
     <string name="manage_calendars">Gérer les calendriers</string>
     <string name="clear_search">Effacer la recherche</string>

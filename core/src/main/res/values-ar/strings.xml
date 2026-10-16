@@ -237,7 +237,6 @@
 
     <!-- Additional Strings -->
     <string name="settings">إعدادات</string>
-    <string name="app_functions_description">إجراءات Kairos الذكية لإدارة جدولك الزمني وتنبيهاتك وملخصاتك اليومية.</string>
     <string name="import_calendar">استيراد تقويم ICS</string>
     <string name="manage_calendars">إدارة التقاويم</string>
     <string name="clear_search">مسح البحث</string>

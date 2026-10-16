@@ -235,7 +235,6 @@
 
     <!-- Additional Strings -->
     <string name="settings">Einstellungen</string>
-    <string name="app_functions_description">Intelligente Kairos-Aktionen zur Verwaltung Ihres Zeitplans, Ihrer Alarme und täglichen Zusammenfassungen.</string>
     <string name="import_calendar">ICS-Kalender importieren</string>
     <string name="manage_calendars">Kalender verwalten</string>
     <string name="clear_search">Suche löschen</string>

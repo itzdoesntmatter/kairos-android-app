@@ -236,7 +236,6 @@
 
     <!-- Additional Strings -->
     <string name="settings">Настройки</string>
-    <string name="app_functions_description">Умные действия Kairos для управления вашим расписанием, будильниками и ежедневными сводками.</string>
     <string name="import_calendar">Импортировать календарь ICS</string>
     <string name="manage_calendars">Управление календарями</string>
     <string name="clear_search">Очистить поиск</string>

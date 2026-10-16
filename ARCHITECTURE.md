@@ -51,7 +51,7 @@ Every exception the app can raise must be handled deliberately — never allowed
 - **No silent swallowing**: an empty `catch`, or one that only returns a default value, is not allowed. Every `catch` must log with `logcat` (appropriate priority) **and** do one of:
   1. recover with a fallback that preserves the user-facing outcome (e.g. the alarm must still ring — see `AlarmFallbackNotification`);
   2. surface an error state to the UI through the ViewModel's `StateFlow`;
-  3. report it as a non-fatal to Crashlytics when it is unexpected and cannot be recovered.
+  3. report it as a non-fatal via the CrashReporter when it is unexpected and cannot be recovered.
 - **Catch narrowly**: catch the most specific exception type you can recover from and rethrow anything else. Never catch `CancellationException` inside coroutines without rethrowing it.
 - **Platform restrictions are expected failures**: background start limits (`ForegroundServiceStartNotAllowedException`), revoked permissions (`SecurityException`), missing system components (e.g. no WebView on Wear) and flaky Play/Google APIs must be anticipated and handled explicitly.
-- **Crash fixes need regression tests**: every crash fixed from Crashlytics gets a test that reproduces the failing condition.
+- **Crash fixes need regression tests**: every crash fix gets a test that reproduces the failing condition.

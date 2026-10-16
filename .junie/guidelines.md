@@ -17,17 +17,6 @@ This document provides essential information for developers working on the **Kai
 - **Check Style & Lint**: `./gradlew detekt`
 - **Sort Dependencies**: `./gradlew sortDependencies`
 
-
-### Firebase & AdMob Configuration
-For full functionality (Release builds):
-1. Place `google-services.json` in `app/` and `wear/` modules.
-2. Configure AdMob IDs and signing keys in `local.properties`:
-   - `admob.app.id`
-   - `admob.banner.ad.unit.home`
-   - `admob.banner.ad.unit.alarm_acitivity`
-   - `admob.rewarded.ad.unit.briefing`
-   - `admob.native.ad.unit.event_list`
-
 ## 🧪 Testing
 
 ### Running Tests

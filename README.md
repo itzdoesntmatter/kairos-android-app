@@ -4,6 +4,8 @@
 
 # Kairós - Calendar Alarms for Android & Wear OS powered by Gemini AI
 
+> ⚠️ **Disclaimer:** This project is largely AI-generated ("vibe-coded") — written with AI coding agents and minimal human review. It may contain bugs, security issues, or unexpected behavior, and comes with no warranty. Review the code before relying on it for anything important.
+
 Kairós is a modern application that transforms your calendar appointments into unmissable full-screen alarms, both on your smartphone and on your wrist with **Wear OS**. It intelligently synchronizes with the device's calendar and ensures you never miss an important event.
 
 **Kairós is now completely free** — no ads, no in-app purchases, and every feature available to everyone.

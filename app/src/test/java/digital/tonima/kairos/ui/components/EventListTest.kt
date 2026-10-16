@@ -39,7 +39,6 @@ class EventListTest {
     private val toggles = mutableListOf<Triple<EventUiModel, Boolean, Boolean>>()
     private val clicked = mutableListOf<EventUiModel>()
     private val searches = mutableListOf<String>()
-    private var upgradeRequests = 0
 
     private val single = event(id = 1L, title = "Dentist", hour = 10)
     private val weekly = event(id = 2L, title = "Weekly sync", hour = 14, isRecurring = true)
@@ -125,25 +124,6 @@ class EventListTest {
         compose.onNodeWithText("Dentist").performClick()
 
         assertEquals(listOf(single), clicked)
-    }
-
-    @Test
-    fun `free users see the upgrade card and can request the subscription`() {
-        render(events = emptyList(), isAiUser = false)
-
-        compose.onNodeWithText(string(R.string.try_pro_plan)).performClick()
-
-        assertEquals(1, upgradeRequests)
-    }
-
-    @Test
-    fun `the compact upgrade card stays above the events`() {
-        render(events = listOf(single), isAiUser = false)
-
-        val eventTop = compose.onNodeWithText("Dentist").fetchSemanticsNode().positionInRoot.y
-        val upgradeTop = compose.onNodeWithText(string(R.string.try_pro_plan)).fetchSemanticsNode().positionInRoot.y
-
-        assertTrue(upgradeTop < eventTop)
     }
 
     @Test

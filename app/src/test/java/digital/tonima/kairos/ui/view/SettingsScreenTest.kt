@@ -162,21 +162,6 @@ class SettingsScreenTest {
     // region Location alarm
 
     @Test
-    fun `location alarm explains it is an ai feature for free users`() {
-        render(SettingsUiState(isLocationAlarmEnabled = false), isAiUser = false)
-
-        compose.onNodeWithText(string(R.string.geo_alarm_pro_only)).performScrollTo().assertExists()
-        switchFor(R.string.location_alarm_title).assertIsOff()
-    }
-
-    @Test
-    fun `location alarm is shown as off for free users even if it was enabled before`() {
-        render(SettingsUiState(isLocationAlarmEnabled = true), isAiUser = false)
-
-        switchFor(R.string.location_alarm_title).performScrollTo().assertIsOff()
-    }
-
-    @Test
     fun `ai users can pick the transport mode once the location alarm is on`() {
         render(SettingsUiState(isLocationAlarmEnabled = true, preferredTransportMode = "driving"), isAiUser = true)
 

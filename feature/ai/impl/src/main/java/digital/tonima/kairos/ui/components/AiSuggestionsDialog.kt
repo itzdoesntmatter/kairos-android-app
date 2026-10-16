@@ -69,13 +69,6 @@ fun AiSuggestionsDialog(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(Dimensions.PaddingSmall),
             ) {
-                Text(
-                    text = stringResource(R.string.daily_briefing_trial_invite),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = Dimensions.PaddingSmall),
-                )
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(Dimensions.PaddingSmall),
                     modifier = Modifier.padding(bottom = Dimensions.PaddingSmall),

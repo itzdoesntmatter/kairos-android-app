@@ -469,7 +469,6 @@ private fun EventScreenContent(
                     eventActions,
                     settingsActions,
                     aiActions,
-                    isProUser,
                 )
             }
         }

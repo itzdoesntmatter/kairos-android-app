@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import com.google.common.collect.ImmutableList // Adicionado para manter a imutabilidade
 import com.google.common.collect.ImmutableMap
-import digital.tonima.core.viewmodel.AiUiState
 import digital.tonima.core.viewmodel.EventScreenUiState
 import digital.tonima.core.viewmodel.SettingsUiState
 import digital.tonima.kairos.core.ui.theme.Dimensions
@@ -28,10 +27,8 @@ import java.time.ZoneId
 fun MainContent(
     uiState: EventScreenUiState,
     settingsUiState: SettingsUiState,
-    aiUiState: AiUiState,
     eventActions: EventActions,
     settingsActions: SettingsActions,
-    aiActions: AiActions,
     windowSizeClass: WindowSizeClass? = null,
 ) {
     val configuration = LocalConfiguration.current
@@ -100,8 +97,6 @@ fun MainContent(
                 settingsUiState = settingsUiState,
                 eventsByDate = eventsByDate,
                 eventActions = eventActions,
-                aiActions = aiActions,
-                aiUiState = aiUiState,
             )
         }
     } else {
@@ -114,8 +109,6 @@ fun MainContent(
             settingsUiState = settingsUiState,
             eventsByDate = eventsByDate,
             eventActions = eventActions,
-            aiActions = aiActions,
-            aiUiState = aiUiState,
             compactHeader = true,
             settingsActions = settingsActions,
         )

@@ -1,20 +1,14 @@
 package digital.tonima.kairos.ui.view
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.speech.RecognizerIntent
 import android.widget.Toast
-import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.result.ActivityResult
 import digital.tonima.kairos.core.R
-import logcat.LogPriority
-import logcat.logcat
 
 fun Context.findActivity(): Activity? {
     var context = this
@@ -52,23 +46,5 @@ fun openFullScreenIntentSettings(context: Context) {
         context.startActivity(intent)
     } else {
         Toast.makeText(context, R.string.not_applicable_on_this_android_version, Toast.LENGTH_SHORT).show()
-    }
-}
-
-fun launchVoiceCapture(
-    context: Context,
-    voiceCapturePrompt: String,
-    speechRecognizerLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>,
-) {
-    val intent =
-        Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            putExtra(RecognizerIntent.EXTRA_PROMPT, voiceCapturePrompt)
-        }
-    try {
-        speechRecognizerLauncher.launch(intent)
-    } catch (e: ActivityNotFoundException) {
-        logcat("EventScreen", LogPriority.WARN) { "No speech recognizer available: ${e.message}" }
-        Toast.makeText(context, R.string.cannot_open_event, Toast.LENGTH_SHORT).show()
     }
 }

@@ -49,7 +49,6 @@ import digital.tonima.core.viewmodel.EventIntent.ShowCreateEventDialog
 import digital.tonima.core.viewmodel.EventIntent.ToggleCalendarFilter
 import digital.tonima.core.viewmodel.EventIntent.ToggleEventAlarm
 import digital.tonima.core.viewmodel.EventIntent.ToggleEventVibrate
-import digital.tonima.core.viewmodel.EventSideEffect.AIToolError
 import digital.tonima.core.viewmodel.EventSideEffect.CopyToClipboard
 import digital.tonima.core.viewmodel.EventSideEffect.OpenMeetingUrl
 import digital.tonima.core.viewmodel.EventSideEffect.ShowSnackbar
@@ -117,10 +116,6 @@ class EventViewModel
             viewModelScope.launch {
                 val stats = getMeetingTimeStatsUseCase(_uiState.value.selectedInsightsPeriod)
                 _uiState.update { it.copy(meetingStats = stats) }
-            }
-
-            viewModelScope.launch {
-                isAiUser.collect { isAi -> _uiState.update { it.copy(isAiUser = isAi) } }
             }
 
             viewModelScope.launch {
@@ -229,7 +224,7 @@ class EventViewModel
                         var departureTime: Long? = null
                         var travelTimeMinutes: Int? = null
 
-                        if (isAlarmEnabled && _uiState.value.isAiUser && event.location != null) {
+                        if (isAlarmEnabled && event.location != null) {
                             val departureInfo = calculateDepartureTimeUseCase(event)
                             departureTime = departureInfo?.departureTime
                             travelTimeMinutes = departureInfo?.travelTimeMinutes
@@ -290,7 +285,7 @@ class EventViewModel
             viewModelScope.launch {
                 events.filter { it.isAlarmEnabled }.forEach { event ->
                     val triggerTime =
-                        if (_uiState.value.isAiUser && event.location != null) {
+                        if (event.location != null) {
                             calculateDepartureTimeUseCase(event)?.departureTime
                         } else {
                             null
@@ -385,7 +380,7 @@ class EventViewModel
                     }
                 } else {
                     _uiState.update {
-                        it.copy(effect = AIToolError(StringResource(R.string.ai_agent_event_creation_error)))
+                        it.copy(effect = ShowSnackbar(StringResource(R.string.ai_agent_event_creation_error)))
                     }
                 }
             }

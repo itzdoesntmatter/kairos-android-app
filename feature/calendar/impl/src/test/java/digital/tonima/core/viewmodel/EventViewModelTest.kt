@@ -90,7 +90,6 @@ class EventViewModelTest {
 
     private val appPreferencesFlow = MutableStateFlow(defaultAppPreferences())
     private val isProUserFlow = MutableStateFlow(false)
-    private val isAiUserFlow = MutableStateFlow(false)
 
     private lateinit var viewModel: EventViewModel
 
@@ -99,7 +98,6 @@ class EventViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         every { mockProUserProvider.isProUser } returns isProUserFlow
-        every { mockProUserProvider.isAiUser } returns isAiUserFlow
         every { mockObserveAppPreferencesUseCase() } returns appPreferencesFlow
         every { mockCheckPermissionsUseCase() } returns
             PermissionState(
@@ -523,16 +521,15 @@ class EventViewModelTest {
             advanceUntilIdle()
 
             assertEquals(
-                EventSideEffect.AIToolError(UiText.StringResource(R.string.ai_agent_event_creation_error)),
+                EventSideEffect.ShowSnackbar(UiText.StringResource(R.string.ai_agent_event_creation_error)),
                 viewModel.uiState.value.effect,
             )
             coVerify(exactly = 0) { mockLogEventUseCase.logEventCreated() }
         }
 
     @Test
-    fun `AI users get the departure time for events with a location`() =
+    fun `events with a location get the departure time`() =
         runTest {
-            isAiUserFlow.value = true
             advanceUntilIdle()
             val start = System.currentTimeMillis() + 3 * 3_600_000L
             val event =
@@ -552,9 +549,8 @@ class EventViewModelTest {
         }
 
     @Test
-    fun `an AI user's alarm fires at the departure time when it is close`() =
+    fun `an alarm fires at the departure time when it is close`() =
         runTest {
-            isAiUserFlow.value = true
             advanceUntilIdle()
             val start = System.currentTimeMillis() + 2 * 3_600_000L
             val departure = System.currentTimeMillis() + 30 * 60_000L

@@ -1,6 +1,5 @@
 package digital.tonima.kairos.navigation
 
-import digital.tonima.feature.ai.bridge.AiNavKey
 import digital.tonima.feature.calendar.bridge.CalendarNavKey
 import digital.tonima.feature.settings.bridge.SettingsNavKey
 import org.junit.Assert.assertEquals
@@ -29,14 +28,14 @@ class NavigationStateNavigatorTest {
 
     @Test
     fun `popTo keeps or drops the target screen`() {
-        navigator.navigateTo(AiNavKey.ChatHistory)
-        navigator.navigateTo(AiNavKey.ChatDetail(1L))
-        navigator.navigateTo(AiNavKey.ChatDetail(2L))
+        navigator.navigateTo(SettingsNavKey.Root)
+        navigator.navigateTo(CalendarNavKey.ImportCalendar)
+        navigator.navigateTo(CalendarNavKey.ManageCalendars)
 
-        navigator.popTo(AiNavKey.ChatHistory, inclusive = false)
-        assertEquals(listOf(CalendarNavKey.Main, AiNavKey.ChatHistory), navigator.backStack.toList())
+        navigator.popTo(SettingsNavKey.Root, inclusive = false)
+        assertEquals(listOf(CalendarNavKey.Main, SettingsNavKey.Root), navigator.backStack.toList())
 
-        navigator.popTo(AiNavKey.ChatHistory, inclusive = true)
+        navigator.popTo(SettingsNavKey.Root, inclusive = true)
         assertEquals(listOf(CalendarNavKey.Main), navigator.backStack.toList())
     }
 
@@ -44,7 +43,7 @@ class NavigationStateNavigatorTest {
     fun `popTo a screen that is not open does nothing`() {
         navigator.navigateTo(SettingsNavKey.Root)
 
-        navigator.popTo(AiNavKey.ChatHistory, inclusive = true)
+        navigator.popTo(CalendarNavKey.ManageCalendars, inclusive = true)
 
         assertEquals(listOf(CalendarNavKey.Main, SettingsNavKey.Root), navigator.backStack.toList())
     }

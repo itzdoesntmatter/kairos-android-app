@@ -110,38 +110,6 @@ class CalendarCardsTest {
 
     // endregion
 
-    // region DailyBriefingCard
-
-    @Test
-    fun `briefing card invites generating a briefing when there is none`() {
-        briefingCard(briefing = null, generating = false)
-
-        compose.onNodeWithText(string(R.string.daily_briefing_placeholder)).assertExists()
-        compose.onNodeWithText(string(R.string.generate_briefing)).performClick()
-
-        assertEquals(listOf("generate"), calls)
-    }
-
-    @Test
-    fun `briefing card hides the generate button while generating`() {
-        briefingCard(briefing = null, generating = true)
-
-        compose.onAllNodesWithText(string(R.string.generate_briefing)).assertCountEquals(0)
-    }
-
-    @Test
-    fun `briefing card shows the briefing and lets the user refresh or ask the ai`() {
-        briefingCard(briefing = "Three meetings today.", generating = false)
-
-        compose.onNodeWithText("Three meetings today.").assertExists()
-        compose.onNodeWithContentDescription(string(R.string.cd_refresh_briefing)).performClick()
-        compose.onNodeWithText(string(R.string.ask_ai_label)).performClick()
-
-        assertEquals(listOf("generate", "interact"), calls)
-    }
-
-    // endregion
-
     // region EventCard
 
     @Test
@@ -250,20 +218,6 @@ class CalendarCardsTest {
                 isTemperatureInCelsius = celsius,
                 onFetchWeather = { calls += "fetch" },
                 compact = compact,
-            )
-        }
-    }
-
-    private fun briefingCard(
-        briefing: String?,
-        generating: Boolean,
-    ) {
-        compose.setContent {
-            DailyBriefingCard(
-                briefing = briefing,
-                isGenerating = generating,
-                onGenerateClick = { calls += "generate" },
-                onInteractClick = { calls += "interact" },
             )
         }
     }

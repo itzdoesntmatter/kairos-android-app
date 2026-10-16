@@ -59,10 +59,6 @@ sealed class EventIntent : BaseIntent {
 
     object DismissCreateEventDialog : EventIntent()
 
-    object ShowAiSuggestionsDialog : EventIntent()
-
-    data class GenerateDailyBriefing(val language: String) : EventIntent()
-
     data class ChangeInsightsPeriod(val period: InsightsPeriod) : EventIntent()
 
     data class NotifyRunningLate(val eventId: String, val message: String) : EventIntent()

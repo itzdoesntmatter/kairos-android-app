@@ -13,12 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.google.android.play.core.review.ReviewManagerFactory.create
-import digital.tonima.core.viewmodel.AiIntent
-import digital.tonima.core.viewmodel.AiSideEffect
-import digital.tonima.core.viewmodel.AiSideEffect.RequireUserConfirmation
-import digital.tonima.core.viewmodel.AiViewModel
 import digital.tonima.core.viewmodel.EventIntent
-import digital.tonima.core.viewmodel.EventSideEffect.AIToolError
 import digital.tonima.core.viewmodel.EventSideEffect.CopyToClipboard
 import digital.tonima.core.viewmodel.EventSideEffect.OpenMeetingUrl
 import digital.tonima.core.viewmodel.EventSideEffect.RequestAppReview
@@ -32,10 +27,8 @@ import logcat.logcat
 @Composable
 fun EventScreenInfrastructure(
     eventViewModel: EventViewModel,
-    aiViewModel: AiViewModel,
     settingsViewModel: SettingsViewModel,
     snackbarHostState: SnackbarHostState,
-    onSetAiConfirmationData: (RequireUserConfirmation) -> Unit,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -52,20 +45,16 @@ fun EventScreenInfrastructure(
 
     HandleSideEffects(
         eventViewModel = eventViewModel,
-        aiViewModel = aiViewModel,
         settingsViewModel = settingsViewModel,
         snackbarHostState = snackbarHostState,
-        onSetAiConfirmationData = onSetAiConfirmationData,
     )
 }
 
 @Composable
 private fun HandleSideEffects(
     eventViewModel: EventViewModel,
-    aiViewModel: AiViewModel,
     settingsViewModel: SettingsViewModel,
     snackbarHostState: SnackbarHostState,
-    onSetAiConfirmationData: (RequireUserConfirmation) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -74,10 +63,6 @@ private fun HandleSideEffects(
             if (effect != null) {
                 when (effect) {
                     is ShowSnackbar ->
-                        snackbarHostState.showSnackbar(
-                            effect.message.asString(context),
-                        )
-                    is AIToolError ->
                         snackbarHostState.showSnackbar(
                             effect.message.asString(context),
                         )
@@ -115,27 +100,6 @@ private fun HandleSideEffects(
                     }
                 }
                 eventViewModel.handleIntent(EventIntent.ConsumeEffect)
-            }
-        }
-    }
-
-    LaunchedEffect(aiViewModel.effect) {
-        aiViewModel.effect.collect { effect ->
-            if (effect != null) {
-                when (effect) {
-                    is RequireUserConfirmation -> onSetAiConfirmationData(effect)
-                    is AiSideEffect.ShowSnackbar -> snackbarHostState.showSnackbar(effect.message.asString(context))
-                    is AiSideEffect.AIToolError -> snackbarHostState.showSnackbar(effect.message.asString(context))
-                    is AiSideEffect.CalendarEventCreated -> {
-                        eventViewModel.handleIntent(EventIntent.RefreshEvents)
-                        snackbarHostState.showSnackbar(effect.message.asString(context))
-                    }
-                    is AiSideEffect.CalendarEventUpdated -> {
-                        eventViewModel.handleIntent(EventIntent.RefreshEvents)
-                        snackbarHostState.showSnackbar(effect.message.asString(context))
-                    }
-                }
-                aiViewModel.handleIntent(AiIntent.ConsumeEffect)
             }
         }
     }

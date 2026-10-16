@@ -46,7 +46,6 @@ class AppPreferencesRepositorySettingsTest {
                 assertRoundTrip(isEventSuggestionsEnabled(), default = false) { setEventSuggestionsEnabled(it) }
                 assertRoundTrip(isOnboardingCompleted(), default = false) { setOnboardingCompleted(it) }
                 assertRoundTrip(isProUser(), default = false) { setProUser(it) }
-                assertRoundTrip(isAiUser(), default = false) { setAiUser(it) }
             }
         }
 

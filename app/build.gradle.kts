@@ -1,10 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.androidx.baselineprofile)
-    alias(libs.plugins.crashlytics)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.firebase.perf)
-    alias(libs.plugins.google.services)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.jacoco.convention)
     alias(libs.plugins.kotlin.compose)
@@ -65,9 +62,6 @@ android {
         unitTests.isIncludeAndroidResources = true
     }
 
-    ksp {
-        arg("appfunctions:aggregateAppFunctions", "true")
-    }
     lint {
         baseline = file("lint-baseline.xml")
         abortOnError = true
@@ -91,12 +85,6 @@ androidComponents {
     }
 }
 
-// Benchmark builds are local measurements: never upload their R8 mapping to Crashlytics.
-tasks.matching {
-    it.name.startsWith("uploadCrashlyticsMappingFile") &&
-        (it.name.endsWith("BenchmarkRelease") || it.name.endsWith("NonMinifiedRelease"))
-}.configureEach { enabled = false }
-
 dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -111,7 +99,6 @@ dependencies {
 
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.appfunctions)
     implementation(libs.androidx.compose.calendar)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material3)
@@ -129,9 +116,7 @@ dependencies {
     implementation(libs.androidx.profileinstaller)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.compose.icons.extended)
-    implementation(libs.google.firebase.analytics)
-    implementation(libs.google.firebase.crashlytics)
-    implementation(libs.google.firebase.perf)
+    implementation(libs.coroutines.play.services)
     implementation(libs.google.inapp.update)
     implementation(libs.google.inapp.update.ktx)
     implementation(libs.guava)
@@ -146,20 +131,16 @@ dependencies {
     implementation(libs.vico.compose)
     implementation(libs.vico.compose.m3)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(platform(libs.google.firebase.bom))
     implementation(project(":core"))
     implementation(project(":core:data"))
     implementation(project(":core:navigation"))
     implementation(project(":core:ui"))
-    implementation(project(":feature:ai:bridge"))
-    implementation(project(":feature:ai:impl"))
     implementation(project(":feature:alarm:impl"))
     implementation(project(":feature:calendar:bridge"))
     implementation(project(":feature:calendar:impl"))
     implementation(project(":feature:settings:bridge"))
     implementation(project(":feature:settings:impl"))
 
-    ksp(libs.androidx.appfunctions.compiler)
     ksp(libs.androidx.hilt.compiler)
     ksp(libs.hilt.binder.compiler)
     ksp(libs.hilt.compiler)

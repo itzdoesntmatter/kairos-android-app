@@ -5,10 +5,8 @@ import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -38,17 +36,8 @@ class NavigationUiTest {
     // region Drawer
 
     @Test
-    fun `ai users reach the assistant`() {
-        drawer(isAiUser = true)
-
-        compose.onNodeWithText(string(R.string.drawer_ai_assistant)).performClick()
-
-        assertEquals(listOf("chat", "close"), calls)
-    }
-
-    @Test
     fun `drawer entries open their destinations and close the drawer`() {
-        drawer(isAiUser = false)
+        drawer()
 
         compose.onNodeWithText(string(R.string.settings)).performScrollTo().performClick()
         compose.onNodeWithText(string(R.string.import_calendar)).performScrollTo().performClick()
@@ -63,7 +52,7 @@ class NavigationUiTest {
 
     @Test
     fun `sharing the app opens the share sheet with the invite text`() {
-        drawer(isAiUser = false)
+        drawer()
 
         compose.onNodeWithText(string(R.string.share_app)).performScrollTo().performClick()
 
@@ -74,13 +63,11 @@ class NavigationUiTest {
         assertEquals(string(R.string.share_text), send.getStringExtra(Intent.EXTRA_TEXT))
     }
 
-    private fun drawer(isAiUser: Boolean) {
+    private fun drawer() {
         compose.setContent {
             DrawerContent(
-                isAiUser = isAiUser,
                 onOurOtherAppsClick = { calls += "otherApps" },
                 onSettingsClick = { calls += "settings" },
-                onChatHistoryClick = { calls += "chat" },
                 onImportCalendarClick = { calls += "import" },
                 onManageCalendarsClick = { calls += "manage" },
                 onCloseDrawer = { calls += "close" },
@@ -115,28 +102,18 @@ class NavigationUiTest {
 
     @Test
     fun `shell bottom bar switches tabs and the fab creates an event`() {
-        shell(isAiUser = false)
+        shell()
 
         compose.onNodeWithText(string(R.string.insights_title)).performClick()
         compose.onNodeWithText(string(R.string.alarms)).performClick()
         compose.onNodeWithContentDescription("Add Alarm").performClick()
 
         assertEquals(listOf("tab:1", "tab:0", "create"), calls)
-        compose.onAllNodesWithText(string(R.string.ai_tab_label)).assertCountEquals(0)
-    }
-
-    @Test
-    fun `ai users get the ai tab`() {
-        shell(isAiUser = true)
-
-        compose.onNodeWithText(string(R.string.ai_tab_label)).performClick()
-
-        assertEquals(listOf("ai"), calls)
     }
 
     @Test
     fun `menu button opens the drawer`() {
-        shell(isAiUser = false)
+        shell()
         compose.onNodeWithText(string(R.string.settings)).assertIsNotDisplayed()
 
         compose.onNodeWithContentDescription(string(R.string.cd_open_menu)).performClick()
@@ -145,18 +122,15 @@ class NavigationUiTest {
         assertEquals(listOf("settings"), calls)
     }
 
-    private fun shell(isAiUser: Boolean) {
+    private fun shell() {
         compose.setContent {
             EventScreenShell(
-                uiState = EventScreenUiState(isAiUser = isAiUser),
-                isAiUser = isAiUser,
+                uiState = EventScreenUiState(),
                 snackbarHostState = SnackbarHostState(),
                 onSettingsClick = { calls += "settings" },
-                onChatHistoryClick = { calls += "chat" },
                 onImportCalendarClick = { calls += "import" },
                 onManageCalendarsClick = { calls += "manage" },
                 onCreateEventClick = { calls += "create" },
-                onShowAiSuggestions = { calls += "ai" },
                 onBottomTabChange = { calls += "tab:$it" },
             ) { Text("content") }
         }

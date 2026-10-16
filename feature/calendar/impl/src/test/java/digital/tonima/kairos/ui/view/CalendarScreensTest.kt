@@ -79,15 +79,6 @@ class CalendarScreensTest {
         compose.onNodeWithText(string(R.string.insights_no_data)).performScrollTo().assertExists()
     }
 
-    @Test
-    fun `ai usage is only shown to ai users`() {
-        compose.setContent {
-            InsightsContent(uiState = EventScreenUiState(isAiUser = false), onPeriodChange = {})
-        }
-
-        compose.onAllNodesWithText(string(R.string.insights_ai_usage)).assertCountEquals(0)
-    }
-
     // endregion
 
     // region ManageCalendarsScreen

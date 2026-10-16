@@ -1,7 +1,6 @@
 package digital.tonima.kairos.ui.components
 
 import android.app.Application
-import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.isToggleable
@@ -13,7 +12,6 @@ import androidx.compose.ui.test.performTextInput
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableMap
-import digital.tonima.core.viewmodel.AiUiState
 import digital.tonima.core.viewmodel.EventScreenUiState
 import digital.tonima.core.viewmodel.SettingsUiState
 import digital.tonima.core.viewmodel.uimodel.EventUiModel
@@ -126,21 +124,9 @@ class EventListTest {
         assertEquals(listOf(single), clicked)
     }
 
-    @Test
-    fun `the briefing card for AI users comes after the day's events`() {
-        render(events = listOf(single), isAiUser = true)
-
-        val eventTop = compose.onNodeWithText("Dentist").fetchSemanticsNode().positionInRoot.y
-        val briefingTop =
-            compose.onNodeWithText(string(R.string.daily_briefing_title)).fetchSemanticsNode().positionInRoot.y
-
-        assertTrue(eventTop < briefingTop)
-    }
-
     private fun render(
         events: List<EventUiModel>,
         searchQuery: String = "",
-        isAiUser: Boolean = true,
     ) {
         compose.setContent {
             EventList(
@@ -148,9 +134,7 @@ class EventListTest {
                     EventScreenUiState(
                         selectedDate = today,
                         searchQuery = searchQuery,
-                        isAiUser = isAiUser,
                     ),
-                aiUiState = AiUiState(),
                 settingsUiState = SettingsUiState(isGlobalAlarmEnabled = true),
                 eventsByDate = ImmutableMap.of(today, ImmutableList.copyOf(events)),
                 eventActions =
@@ -164,7 +148,6 @@ class EventListTest {
                         onReturnToToday = {},
                         onSearchQueryChanged = { searches += it },
                     ),
-                aiActions = AiActions(),
             )
         }
     }

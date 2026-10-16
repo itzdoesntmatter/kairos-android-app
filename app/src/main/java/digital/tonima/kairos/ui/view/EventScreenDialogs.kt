@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -21,7 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import digital.tonima.core.viewmodel.AiSideEffect.RequireUserConfirmation
 import digital.tonima.core.viewmodel.EventScreenUiState
 import digital.tonima.kairos.core.R
 import digital.tonima.kairos.core.ui.theme.Dimensions
@@ -29,13 +27,9 @@ import digital.tonima.kairos.core.ui.theme.Dimensions
 @Composable
 fun EventScreenDialogs(
     uiState: EventScreenUiState,
-    aiConfirmationData: RequireUserConfirmation?,
-    onClearAiConfirmation: () -> Unit,
     onRateNow: () -> Unit,
     onRateLater: () -> Unit,
     onRateNeverShow: () -> Unit,
-    onApproveAiAction: () -> Unit,
-    onRejectAiAction: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -45,33 +39,6 @@ fun EventScreenDialogs(
             onRateNow = onRateNow,
             onRateLater = onRateLater,
             onRateNeverShow = onRateNeverShow,
-        )
-    }
-
-    aiConfirmationData?.let { data ->
-        AlertDialog(
-            onDismissRequest = {
-                onClearAiConfirmation()
-                onRejectAiAction()
-            },
-            title = { Text(text = data.title.asString(context)) },
-            text = { Text(text = data.message.asString(context)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    onClearAiConfirmation()
-                    onApproveAiAction()
-                }) {
-                    Text(text = stringResource(R.string.confirm))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    onClearAiConfirmation()
-                    onRejectAiAction()
-                }) {
-                    Text(text = stringResource(R.string.cancel))
-                }
-            },
         )
     }
 }

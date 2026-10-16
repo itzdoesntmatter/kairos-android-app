@@ -13,7 +13,6 @@ import androidx.compose.material.icons.rounded.Alarm
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material.icons.rounded.SmartToy
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -49,14 +48,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun EventScreenShell(
     uiState: EventScreenUiState,
-    isAiUser: Boolean,
     snackbarHostState: SnackbarHostState,
     onSettingsClick: () -> Unit,
-    onChatHistoryClick: () -> Unit,
     onImportCalendarClick: () -> Unit,
     onManageCalendarsClick: () -> Unit,
     onCreateEventClick: () -> Unit,
-    onShowAiSuggestions: () -> Unit,
     onBottomTabChange: (Int) -> Unit,
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -70,7 +66,6 @@ fun EventScreenShell(
         gesturesEnabled = drawerState.isOpen,
         drawerContent = {
             DrawerContent(
-                isAiUser = isAiUser,
                 onOurOtherAppsClick = {
                     val browserIntent =
                         Intent(
@@ -80,7 +75,6 @@ fun EventScreenShell(
                     context.startActivity(browserIntent)
                 },
                 onSettingsClick = onSettingsClick,
-                onChatHistoryClick = onChatHistoryClick,
                 onImportCalendarClick = onImportCalendarClick,
                 onManageCalendarsClick = onManageCalendarsClick,
                 onCloseDrawer = { scope.launch { drawerState.close() } },
@@ -92,7 +86,6 @@ fun EventScreenShell(
             bottomBar = {
                 EventBottomBar(
                     uiState = uiState,
-                    isAiUser = isAiUser,
                     onOpenCalendar = {
                         val intent =
                             context.packageManager
@@ -104,7 +97,6 @@ fun EventScreenShell(
                         }
                     },
                     onBottomTabChange = onBottomTabChange,
-                    onShowAiSuggestions = onShowAiSuggestions,
                 )
             },
             floatingActionButton = {
@@ -163,10 +155,8 @@ private fun EventTopBar(onOpenMenu: () -> Unit) {
 @Composable
 private fun EventBottomBar(
     uiState: EventScreenUiState,
-    isAiUser: Boolean,
     onOpenCalendar: () -> Unit,
     onBottomTabChange: (Int) -> Unit,
-    onShowAiSuggestions: () -> Unit,
 ) {
     NavigationBar(
         containerColor = Color(0xFF2C2C38),
@@ -210,18 +200,5 @@ private fun EventBottomBar(
             label = { Text(stringResource(R.string.calendar)) },
             colors = navItemColors,
         )
-
-        if (isAiUser) {
-            // Single AI entry point: opens a bottom sheet with chat, voice and daily-briefing
-            // actions, instead of spreading them across separate nav items (each of which used
-            // to trigger a side effect rather than switch destinations, like this one still does).
-            NavigationBarItem(
-                selected = false,
-                onClick = onShowAiSuggestions,
-                icon = { Icon(Icons.Rounded.SmartToy, contentDescription = stringResource(R.string.ask_ai_label)) },
-                label = { Text(stringResource(R.string.ai_tab_label)) },
-                colors = navItemColors,
-            )
-        }
     }
 }

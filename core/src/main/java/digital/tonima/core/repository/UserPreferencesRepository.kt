@@ -22,8 +22,4 @@ interface UserPreferencesRepository {
     fun isProUser(): Flow<Boolean>
 
     suspend fun setProUser(isPro: Boolean)
-
-    fun isAiUser(): Flow<Boolean>
-
-    suspend fun setAiUser(isAi: Boolean)
 }

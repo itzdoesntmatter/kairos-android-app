@@ -7,16 +7,12 @@ import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.Manifest.permission.READ_CALENDAR
 import android.Manifest.permission.WRITE_CALENDAR
-import android.app.Activity.RESULT_OK
 import android.content.ActivityNotFoundException
 import android.content.ContentUris
 import android.content.Intent
 import android.os.Build
 import android.provider.CalendarContract.Events.CONTENT_URI
-import android.speech.RecognizerIntent.EXTRA_RESULTS
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,9 +23,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -42,23 +36,6 @@ import androidx.navigation3.ui.NavDisplay
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import digital.tonima.core.viewmodel.AiIntent
-import digital.tonima.core.viewmodel.AiIntent.AskAi
-import digital.tonima.core.viewmodel.AiIntent.ClearAiResponse
-import digital.tonima.core.viewmodel.AiIntent.CloseChatDetail
-import digital.tonima.core.viewmodel.AiIntent.CloseChatHistoryScreen
-import digital.tonima.core.viewmodel.AiIntent.CreateNewChat
-import digital.tonima.core.viewmodel.AiIntent.DeleteChat
-import digital.tonima.core.viewmodel.AiIntent.DismissAiSuggestionsDialog
-import digital.tonima.core.viewmodel.AiIntent.GenerateDailyBriefing
-import digital.tonima.core.viewmodel.AiIntent.OpenChatDetail
-import digital.tonima.core.viewmodel.AiIntent.OpenChatHistoryScreen
-import digital.tonima.core.viewmodel.AiIntent.ShowAiSuggestionsDialog
-import digital.tonima.core.viewmodel.AiIntent.SpeakAiResponse
-import digital.tonima.core.viewmodel.AiIntent.StopSpeaking
-import digital.tonima.core.viewmodel.AiSideEffect
-import digital.tonima.core.viewmodel.AiUiState
-import digital.tonima.core.viewmodel.AiViewModel
 import digital.tonima.core.viewmodel.EventIntent
 import digital.tonima.core.viewmodel.EventIntent.ChangeBottomTab
 import digital.tonima.core.viewmodel.EventIntent.ChangeInsightsPeriod
@@ -108,13 +85,10 @@ import digital.tonima.core.viewmodel.SettingsIntent.UpdateSnoozeTime
 import digital.tonima.core.viewmodel.SettingsUiState
 import digital.tonima.core.viewmodel.SettingsViewModel
 import digital.tonima.core.viewmodel.uimodel.EventUiModel
-import digital.tonima.feature.ai.bridge.AiNavKey
 import digital.tonima.feature.calendar.bridge.CalendarNavKey
 import digital.tonima.feature.settings.bridge.SettingsNavKey
 import digital.tonima.kairos.core.R
 import digital.tonima.kairos.navigation.AppNavHostViewModel
-import digital.tonima.kairos.ui.components.AiActions
-import digital.tonima.kairos.ui.components.AiSuggestionsDialog
 import digital.tonima.kairos.ui.components.CreateEventDialog
 import digital.tonima.kairos.ui.components.EventActions
 import digital.tonima.kairos.ui.components.InsightsContent
@@ -128,18 +102,13 @@ import logcat.logcat
 @Composable
 fun EventScreen(
     eventViewModel: EventViewModel = hiltViewModel(),
-    aiViewModel: AiViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel(),
     snackbarHostState: SnackbarHostState,
     windowSizeClass: WindowSizeClass? = null,
 ) {
     val uiState by eventViewModel.uiState.collectAsStateWithLifecycle()
-    val aiUiState by aiViewModel.uiState.collectAsStateWithLifecycle()
     val settingsUiState by settingsViewModel.uiState.collectAsStateWithLifecycle()
 
-    val isAiUser by eventViewModel.isAiUser.collectAsStateWithLifecycle()
-
-    var aiConfirmationData by remember { mutableStateOf<AiSideEffect.RequireUserConfirmation?>(null) }
     val context = LocalContext.current
 
     val standardPermissionsToRequest =
@@ -158,28 +127,10 @@ fun EventScreen(
         }
     val locationPermissionState = rememberMultiplePermissionsState(permissions = locationPermissionsToRequest)
 
-    val aiInstruction = stringResource(R.string.ai_briefing_instruction)
-    val voiceCapturePrompt = stringResource(R.string.cd_voice_capture)
-    val newConversationTitle = stringResource(R.string.new_conversation_title)
-
-    val speechRecognizerLauncher =
-        rememberLauncherForActivityResult(
-            contract = StartActivityForResult(),
-        ) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val results = result.data?.getStringArrayListExtra(EXTRA_RESULTS)
-                results?.firstOrNull()?.let { spokenText ->
-                    aiViewModel.handleIntent(AskAi(spokenText, aiInstruction))
-                }
-            }
-        }
-
     EventScreenInfrastructure(
         eventViewModel = eventViewModel,
-        aiViewModel = aiViewModel,
         settingsViewModel = settingsViewModel,
         snackbarHostState = snackbarHostState,
-        onSetAiConfirmationData = { aiConfirmationData = it },
     )
 
     val settingsActions =
@@ -262,35 +213,6 @@ fun EventScreen(
             )
         }
 
-    val aiActions =
-        remember(aiViewModel, eventViewModel) {
-            AiActions(
-                onGenerateBriefing = { aiViewModel.handleIntent(GenerateDailyBriefing(aiInstruction)) },
-                onVoiceCaptureClick = { aiViewModel.handleIntent(ShowAiSuggestionsDialog) },
-                onClearAiResponse = { aiViewModel.handleIntent(ClearAiResponse) },
-                onSpeakAiResponse = { aiViewModel.handleIntent(SpeakAiResponse) },
-                onStopSpeaking = { aiViewModel.handleIntent(StopSpeaking) },
-                onReply = {
-                    launchVoiceCapture(
-                        context,
-                        voiceCapturePrompt,
-                        speechRecognizerLauncher,
-                    )
-                },
-                onOpenChat = { aiViewModel.handleIntent(CreateNewChat(newConversationTitle)) },
-                onDismissSuggestions = { aiViewModel.handleIntent(DismissAiSuggestionsDialog) },
-                onSuggestionClick = { suggestion ->
-                    aiViewModel.handleIntent(
-                        CreateNewChat(
-                            title = suggestion,
-                            initialQuestion = suggestion,
-                            language = aiInstruction,
-                        ),
-                    )
-                },
-            )
-        }
-
     val navHostViewModel: AppNavHostViewModel = hiltViewModel()
 
     NavDisplay(
@@ -301,34 +223,22 @@ fun EventScreen(
                 entry<CalendarNavKey.Main> {
                     EventScreenShell(
                         uiState = uiState,
-                        isAiUser = isAiUser,
                         snackbarHostState = snackbarHostState,
                         onSettingsClick = { settingsViewModel.handleIntent(OpenSettings) },
-                        onChatHistoryClick = { aiViewModel.handleIntent(OpenChatHistoryScreen) },
                         onImportCalendarClick = { eventViewModel.handleIntent(OpenImportCalendarScreen) },
                         onManageCalendarsClick = { eventViewModel.handleIntent(OpenManageCalendarsScreen) },
                         onCreateEventClick = { eventViewModel.handleIntent(ShowCreateEventDialog()) },
-                        onShowAiSuggestions = { aiViewModel.handleIntent(ShowAiSuggestionsDialog) },
                         onBottomTabChange = { eventViewModel.handleIntent(ChangeBottomTab(it)) },
                     ) { paddingValues ->
                         EventScreenContent(
                             paddingValues = paddingValues,
                             uiState = uiState,
-                            aiUiState = aiUiState,
                             settingsUiState = settingsUiState,
                             standardPermissionState = standardPermissionState,
                             locationPermissionState = locationPermissionState,
                             windowSizeClass = windowSizeClass,
                             settingsActions = settingsActions,
                             eventActions = eventActions,
-                            aiActions = aiActions,
-                            launchVoiceCapture = {
-                                launchVoiceCapture(
-                                    context,
-                                    voiceCapturePrompt,
-                                    speechRecognizerLauncher,
-                                )
-                            },
                         )
                     }
                 }
@@ -337,32 +247,6 @@ fun EventScreen(
                         uiState = uiState,
                         settingsUiState = settingsUiState,
                         settingsActions = settingsActions,
-                    )
-                }
-                entry<AiNavKey.ChatHistory> {
-                    ChatHistoryScreen(
-                        conversations = aiUiState.conversations,
-                        onBack = { aiViewModel.handleIntent(CloseChatHistoryScreen) },
-                        onConversationClick = { aiViewModel.handleIntent(OpenChatDetail(it)) },
-                        onCreateNewChat = { aiViewModel.handleIntent(CreateNewChat(it)) },
-                        onDeleteConversation = { aiViewModel.handleIntent(DeleteChat(it)) },
-                    )
-                }
-                entry<AiNavKey.ChatDetail> {
-                    ChatDetailScreen(
-                        messages = aiUiState.chatHistory,
-                        isAsking = aiUiState.isAskingAi,
-                        isSpeaking = aiUiState.isSpeaking,
-                        streamingText = aiUiState.streamingText,
-                        onBack = { aiViewModel.handleIntent(CloseChatDetail) },
-                        onSendMessage = { aiViewModel.handleIntent(AskAi(it, aiInstruction)) },
-                        onSpeakToggle = {
-                            launchVoiceCapture(
-                                context,
-                                voiceCapturePrompt,
-                                speechRecognizerLauncher,
-                            )
-                        },
                     )
                 }
                 entry<CalendarNavKey.ImportCalendar> {
@@ -380,13 +264,9 @@ fun EventScreen(
 
     EventScreenDialogs(
         uiState = uiState,
-        aiConfirmationData = aiConfirmationData,
-        onClearAiConfirmation = { aiConfirmationData = null },
         onRateNow = { eventViewModel.handleIntent(EventIntent.RateNow) },
         onRateLater = { eventViewModel.handleIntent(EventIntent.RateLater) },
         onRateNeverShow = { eventViewModel.handleIntent(EventIntent.RateNever) },
-        onApproveAiAction = { aiViewModel.handleIntent(AiIntent.ApprovePendingAction) },
-        onRejectAiAction = { aiViewModel.handleIntent(AiIntent.RejectPendingAction) },
     )
 }
 
@@ -395,15 +275,12 @@ fun EventScreen(
 private fun EventScreenContent(
     paddingValues: PaddingValues,
     uiState: EventScreenUiState,
-    aiUiState: AiUiState,
     settingsUiState: SettingsUiState,
     standardPermissionState: MultiplePermissionsState?,
     locationPermissionState: MultiplePermissionsState?,
     windowSizeClass: WindowSizeClass?,
     settingsActions: SettingsActions,
     eventActions: EventActions,
-    aiActions: AiActions,
-    launchVoiceCapture: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -413,20 +290,6 @@ private fun EventScreenContent(
             onCreate = eventActions.onCreateEvent,
             availableCalendars = uiState.availableCalendars,
             initialDateEpochDays = uiState.selectedDate,
-            voiceEventData = aiUiState.voiceEventData,
-        )
-    }
-
-    if (aiUiState.showAiSuggestionsDialog) {
-        AiSuggestionsDialog(
-            onDismiss = aiActions.onDismissSuggestions,
-            onSuggestionClick = aiActions.onSuggestionClick,
-            onVoiceClick = {
-                aiActions.onDismissSuggestions()
-                launchVoiceCapture()
-            },
-            onOpenChat = aiActions.onOpenChat,
-            onGenerateBriefing = aiActions.onGenerateBriefing,
         )
     }
 
@@ -452,11 +315,9 @@ private fun EventScreenContent(
                     EventScreenTabContent(
                         uiState,
                         settingsUiState,
-                        aiUiState,
                         windowSizeClass,
                         eventActions,
                         settingsActions,
-                        aiActions,
                     )
                 }
             } else {
@@ -464,11 +325,9 @@ private fun EventScreenContent(
                 EventScreenTabContent(
                     uiState,
                     settingsUiState,
-                    aiUiState,
                     windowSizeClass,
                     eventActions,
                     settingsActions,
-                    aiActions,
                 )
             }
         }
@@ -479,11 +338,9 @@ private fun EventScreenContent(
 private fun EventScreenTabContent(
     uiState: EventScreenUiState,
     settingsUiState: SettingsUiState,
-    aiUiState: AiUiState,
     windowSizeClass: WindowSizeClass?,
     eventActions: EventActions,
     settingsActions: SettingsActions,
-    aiActions: AiActions,
 ) {
     if (uiState.selectedBottomTab == 1) {
         InsightsContent(
@@ -496,9 +353,7 @@ private fun EventScreenTabContent(
             settingsUiState = settingsUiState,
             eventActions = eventActions,
             settingsActions = settingsActions,
-            aiActions = aiActions,
             windowSizeClass = windowSizeClass,
-            aiUiState = aiUiState,
         )
     }
 }
@@ -510,7 +365,6 @@ fun EventScreenContentPreview() {
     EventScreenContent(
         paddingValues = PaddingValues(0.dp),
         uiState = EventScreenUiState(),
-        aiUiState = AiUiState(),
         settingsUiState = SettingsUiState(),
         standardPermissionState = null,
         locationPermissionState = null,
@@ -553,17 +407,5 @@ fun EventScreenContentPreview() {
                 onDismissCreateEvent = {},
                 onInsightsPeriodChange = {},
             ),
-        aiActions =
-            AiActions(
-                onGenerateBriefing = {},
-                onVoiceCaptureClick = {},
-                onClearAiResponse = {},
-                onSpeakAiResponse = {},
-                onStopSpeaking = {},
-                onReply = {},
-                onDismissSuggestions = {},
-                onSuggestionClick = {},
-            ),
-        launchVoiceCapture = {},
     )
 }

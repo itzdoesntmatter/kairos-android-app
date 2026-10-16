@@ -16,10 +16,6 @@ material1 = "1.12.1"
 compose-calendar = "2.10.1"
 wear = "1.4.0"
 workManager="2.12.0"
-google-services = "4.5.0"
-firebase-bom = "34.19.0"
-firebase-perf = "2.0.2"
-crashlytics = "3.0.8"
 hilt = "2.60.1"
 hilt-worker="1.4.0"
 hilt-binder = "1.1.4"
@@ -56,12 +52,10 @@ kotlinxSerializationJson = "1.11.0"
 retrofitKotlinxSerializationConverter = "1.0.0"
 splashscreen = "1.2.0"
 vico = "3.3.1"
-androidx-appfunctions = "1.0.0-alpha11"
 benchmark = "1.5.0"
 profileinstaller = "1.4.1"
 uiautomator = "2.4.0"
 stabilityAnalyzer= "0.15.0"
-firebaseAiOnDevice = "16.0.0-beta05"
 guava = "33.7.2-android"
 compose-multiplatform = "1.12.1"
 
@@ -100,20 +94,12 @@ androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx"
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "workManager" }
 location-play-services = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
-google-firebase-perf = { group = "com.google.firebase", name = "firebase-perf" }
-google-firebase-ia = { group = "com.google.firebase", name = "firebase-ai" }
-google-firebase-ia-ondevice = { group = "com.google.firebase", name = "firebase-ai-ondevice", version.ref = "firebaseAiOnDevice" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-binder = { group = "com.paulrybitskyi", name = "hilt-binder", version.ref = "hilt-binder" }
 hilt-binder-compiler = { group = "com.paulrybitskyi", name = "hilt-binder-compiler", version.ref = "hilt-binder" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigations-compose" }
 hilt-worker = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-worker" }
-androidx-appfunctions = { group = "androidx.appfunctions", name = "appfunctions", version.ref = "androidx-appfunctions" }
-androidx-appfunctions-compiler = { group = "androidx.appfunctions", name = "appfunctions-compiler", version.ref = "androidx-appfunctions" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 logcat = { group = "com.squareup.logcat", name = "logcat", version.ref = "logcat" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }
@@ -165,10 +151,7 @@ android-test = { id = "com.android.test", version.ref = "agp" }
 androidx-baselineprofile = { id = "androidx.baselineprofile", version.ref = "benchmark" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
-firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-perf" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }

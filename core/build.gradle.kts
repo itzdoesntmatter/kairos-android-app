@@ -79,8 +79,7 @@ dependencies {
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.datastore.preferences.core)
-    implementation(libs.google.firebase.analytics)
-    implementation(libs.google.firebase.crashlytics)
+    implementation(libs.coroutines.play.services)
     implementation(libs.google.inapp.update)
     implementation(libs.google.inapp.update.ktx)
     implementation(libs.hilt.android)
@@ -89,7 +88,6 @@ dependencies {
     implementation(libs.play.review)
     implementation(libs.play.review.ktx)
     implementation(libs.play.services.wearable)
-    implementation(platform(libs.google.firebase.bom))
 
     ksp(libs.hilt.binder.compiler)
     ksp(libs.hilt.compiler)

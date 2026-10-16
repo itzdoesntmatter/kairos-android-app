@@ -54,15 +54,3 @@ data class SettingsActions(
     val onSkipExactAlarmPermission: () -> Unit = {},
     val onSkipFullScreenIntentPermission: () -> Unit = {},
 )
-
-data class AiActions(
-    val onGenerateBriefing: () -> Unit = {},
-    val onVoiceCaptureClick: () -> Unit = {},
-    val onClearAiResponse: () -> Unit = {},
-    val onSpeakAiResponse: () -> Unit = {},
-    val onStopSpeaking: () -> Unit = {},
-    val onReply: () -> Unit = {},
-    val onOpenChat: () -> Unit = {},
-    val onDismissSuggestions: () -> Unit = {},
-    val onSuggestionClick: (String) -> Unit = {},
-)

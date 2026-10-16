@@ -12,13 +12,9 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.test.core.app.ApplicationProvider
-import digital.tonima.core.viewmodel.AiSideEffect.RequireUserConfirmation
-import digital.tonima.core.viewmodel.AiUiState
 import digital.tonima.core.viewmodel.EventScreenUiState
 import digital.tonima.core.viewmodel.SettingsUiState
-import digital.tonima.core.viewmodel.UiText
 import digital.tonima.kairos.core.R
-import digital.tonima.kairos.ui.components.AiActions
 import digital.tonima.kairos.ui.components.EventActions
 import digital.tonima.kairos.ui.components.MainContent
 import digital.tonima.kairos.ui.components.SettingsActions
@@ -78,9 +74,8 @@ class MainScreenPartsTest {
     private fun mainContent(windowSizeClass: WindowSizeClass?) {
         compose.setContent {
             MainContent(
-                uiState = EventScreenUiState(isAiUser = true),
+                uiState = EventScreenUiState(),
                 settingsUiState = SettingsUiState(),
-                aiUiState = AiUiState(),
                 eventActions =
                     EventActions(
                         onRefresh = {},
@@ -100,7 +95,6 @@ class MainScreenPartsTest {
                         onAllDayAlarmHourChanged = {},
                         onAlarmOffsetChanged = {},
                     ),
-                aiActions = AiActions(),
                 windowSizeClass = windowSizeClass,
             )
         }
@@ -109,26 +103,6 @@ class MainScreenPartsTest {
     // endregion
 
     // region EventScreenDialogs
-
-    @Test
-    fun `ai actions need explicit confirmation`() {
-        dialogs(aiConfirmation = confirmation)
-
-        compose.onNodeWithText("Delete event?").assertExists()
-        compose.onNodeWithText("The dentist appointment will be removed.").assertExists()
-        compose.onNodeWithText(string(R.string.confirm)).performClick()
-
-        assertEquals(listOf("clear", "approve"), calls)
-    }
-
-    @Test
-    fun `cancelling an ai action rejects it`() {
-        dialogs(aiConfirmation = confirmation)
-
-        compose.onNodeWithText(string(R.string.cancel)).performClick()
-
-        assertEquals(listOf("clear", "reject"), calls)
-    }
 
     @Test
     fun `rating sheet offers rate now, later and never`() {
@@ -150,26 +124,13 @@ class MainScreenPartsTest {
         compose.onAllNodesWithText(string(R.string.rate_now)).assertCountEquals(0)
     }
 
-    private val confirmation =
-        RequireUserConfirmation(
-            title = UiText.DynamicString("Delete event?"),
-            message = UiText.DynamicString("The dentist appointment will be removed."),
-        )
-
-    private fun dialogs(
-        aiConfirmation: RequireUserConfirmation? = null,
-        showRating: Boolean = false,
-    ) {
+    private fun dialogs(showRating: Boolean = false) {
         compose.setContent {
             EventScreenDialogs(
                 uiState = EventScreenUiState(showRatingBottomSheet = showRating),
-                aiConfirmationData = aiConfirmation,
-                onClearAiConfirmation = { calls += "clear" },
                 onRateNow = { calls += "rateNow" },
                 onRateLater = { calls += "rateLater" },
                 onRateNeverShow = { calls += "rateNever" },
-                onApproveAiAction = { calls += "approve" },
-                onRejectAiAction = { calls += "reject" },
             )
         }
     }

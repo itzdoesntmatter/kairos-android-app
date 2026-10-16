@@ -27,10 +27,7 @@ plugins {
     alias(libs.plugins.android.test) apply false
     alias(libs.plugins.androidx.baselineprofile) apply false
     alias(libs.plugins.compose.multiplatform) apply false
-    alias(libs.plugins.crashlytics) apply false
     alias(libs.plugins.detekt)
-    alias(libs.plugins.firebase.perf) apply false
-    alias(libs.plugins.google.services) apply false
     alias(libs.plugins.hilt.android) apply false
     alias(libs.plugins.jacoco.convention) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false

@@ -22,7 +22,6 @@ import digital.tonima.core.utils.NotificationHelper
 import digital.tonima.kairos.core.R.string
 import digital.tonima.kairos.core.model.Event
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
@@ -134,11 +133,10 @@ class AlarmSchedulingWorker
                         logcat(LogPriority.INFO) { "Nenhum evento encontrado para agendar nesta janela de tempo." }
                     } else {
                         logcat(LogPriority.INFO) { "Encontrados ${eventsToSchedule.size} evento(s) para agendar:" }
-                        val isAiUser = proUserProvider.isAiUser.first()
 
                         eventsToSchedule.forEach { event ->
                             var triggerTime: Long? = null
-                            if (isAiUser && event.location != null) {
+                            if (event.location != null) {
                                 logcat {
                                     "Dynamic Traffic Watch: Calculando " +
                                         "tempo de deslocamento para '${event.title}'"
@@ -159,7 +157,7 @@ class AlarmSchedulingWorker
                             scheduler.schedule(event, triggerTime)
                         }
                         selectEventForHealthCheck(eventsToSchedule)?.let { nextEvent ->
-                            checkDeviceHealth(isAiUser, nextEvent)
+                            checkDeviceHealth(nextEvent)
                         }
                     }
                     logcat { "Worker concluído com sucesso." }
@@ -170,12 +168,7 @@ class AlarmSchedulingWorker
                 }
             }
 
-        private fun checkDeviceHealth(
-            isAiUser: Boolean,
-            nextEvent: Event,
-        ) {
-            if (!isAiUser) return
-
+        private fun checkDeviceHealth(nextEvent: Event) {
             val batteryStatus: Intent? =
                 IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
                     applicationContext.registerReceiver(null, ifilter)

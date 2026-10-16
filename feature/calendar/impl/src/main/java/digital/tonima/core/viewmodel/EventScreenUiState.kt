@@ -28,7 +28,6 @@ data class EventScreenUiState(
     val enabledCalendarIds: Set<Long> = emptySet(),
     val searchQuery: String = "",
     val isProUser: Boolean = false,
-    val isAiUser: Boolean = false,
     val showCreateEventDialog: Boolean = false,
     val weather: Weather? = null,
     val isWeatherLoading: Boolean = false,

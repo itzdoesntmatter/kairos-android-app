@@ -13,12 +13,6 @@ class DefaultProUserProviderTest {
         }
 
     @Test
-    fun `every user is an AI user`() =
-        runTest {
-            assertTrue(DefaultProUserProvider().isAiUser.first())
-        }
-
-    @Test
     fun `refresh keeps everyone free`() =
         runTest {
             val provider = DefaultProUserProvider()
@@ -26,6 +20,5 @@ class DefaultProUserProviderTest {
             provider.refresh()
 
             assertTrue(provider.isProUser.first())
-            assertTrue(provider.isAiUser.first())
         }
 }

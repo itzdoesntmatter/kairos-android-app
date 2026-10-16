@@ -33,7 +33,6 @@ internal fun EventListHeader(
     settingsUiState: SettingsUiState,
     settingsActions: SettingsActions?,
     eventActions: EventActions,
-    aiActions: AiActions,
     compact: Boolean,
 ) {
     Column {

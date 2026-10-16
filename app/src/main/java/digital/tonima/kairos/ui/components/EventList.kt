@@ -35,7 +35,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableMap
-import digital.tonima.core.viewmodel.AiUiState
 import digital.tonima.core.viewmodel.EventScreenUiState
 import digital.tonima.core.viewmodel.SettingsUiState
 import digital.tonima.core.viewmodel.uimodel.EventUiModel
@@ -48,11 +47,9 @@ import java.time.LocalDate
 fun EventList(
     modifier: Modifier = Modifier,
     uiState: EventScreenUiState,
-    aiUiState: AiUiState,
     settingsUiState: SettingsUiState,
     eventsByDate: ImmutableMap<Long, ImmutableList<EventUiModel>>,
     eventActions: EventActions,
-    aiActions: AiActions,
     compactHeader: Boolean = false,
     settingsActions: SettingsActions? = null,
 ) {
@@ -72,8 +69,6 @@ fun EventList(
 
     val pendingToggle = remember { mutableStateOf<Pair<EventUiModel, Boolean>?>(null) }
 
-    val showBriefingCard = uiState.selectedDate == today && uiState.searchQuery.isBlank()
-
     Box(modifier = modifier.pullRefresh(pullRefreshState)) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -88,7 +83,6 @@ fun EventList(
                     settingsUiState = settingsUiState,
                     settingsActions = settingsActions,
                     eventActions = eventActions,
-                    aiActions = aiActions,
                     compact = compactHeader,
                 )
             }
@@ -132,19 +126,6 @@ fun EventList(
                         onEventClick = { eventActions.onEventClick(event) },
                         onJoinMeeting = eventActions.onJoinMeeting,
                         onCopyMeetingUrl = eventActions.onCopyMeetingUrl,
-                    )
-                }
-            }
-
-            // The AI daily briefing entry point, shown under the day's events.
-            if (showBriefingCard) {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    DailyBriefingCard(
-                        briefing = aiUiState.dailyBriefing,
-                        isGenerating = aiUiState.isGeneratingBriefing,
-                        onGenerateClick = aiActions.onGenerateBriefing,
-                        onInteractClick = aiActions.onOpenChat,
-                        modifier = Modifier.padding(bottom = Dimensions.PaddingSmall),
                     )
                 }
             }

@@ -27,7 +27,6 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -56,7 +55,6 @@ class PhoneEventSyncWorkerTest {
         mockkStatic(Wearable::class)
         every { Wearable.getDataClient(any<Context>()) } returns dataClient
         every { dataClient.putDataItem(capture(sent)) } returns Tasks.forResult(mockk())
-        every { proUserProvider.isAiUser } returns MutableStateFlow(false)
     }
 
     @After
@@ -129,9 +127,8 @@ class PhoneEventSyncWorkerTest {
         }
 
     @Test
-    fun `ai users get location and departure time`() =
+    fun `events with a location get departure time`() =
         runTest {
-            every { proUserProvider.isAiUser } returns MutableStateFlow(true)
             val located =
                 Event(
                     id = 1L,

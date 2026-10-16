@@ -8,6 +8,4 @@ sealed class EventSideEffect {
     data class CopyToClipboard(val text: String, val message: UiText) : EventSideEffect()
 
     data object RequestAppReview : EventSideEffect()
-
-    data class AIToolError(val message: UiText) : EventSideEffect()
 }

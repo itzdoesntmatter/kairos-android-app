@@ -59,7 +59,6 @@ class AlarmSchedulingWorkerDoWorkTest {
         every { preferences.getAllDayAlarmHour() } returns flowOf(9)
         every { preferences.getDisabledEventIds() } returns flowOf(emptySet())
         every { preferences.getDisabledSeriesIds() } returns flowOf(emptySet())
-        every { proUserProvider.isAiUser } returns MutableStateFlow(false)
         every { ringerModeRepository.ringerMode } returns MutableStateFlow(AudioWarningState.NORMAL)
     }
 
@@ -225,7 +224,6 @@ class AlarmSchedulingWorkerDoWorkTest {
     @Test
     fun `ai users with a located event get a traffic-aware trigger time`() =
         runTest {
-            every { proUserProvider.isAiUser } returns MutableStateFlow(true)
             val now = System.currentTimeMillis()
             val located = timedEvent(1, now + hours(3)).copy(location = "Av. Paulista, 1000")
             val remote = timedEvent(2, now + hours(4))
@@ -243,7 +241,6 @@ class AlarmSchedulingWorkerDoWorkTest {
     @Test
     fun `ai users fall back to the regular alarm when departure time is unknown`() =
         runTest {
-            every { proUserProvider.isAiUser } returns MutableStateFlow(true)
             val located = timedEvent(1, System.currentTimeMillis() + hours(3)).copy(location = "Somewhere")
             coEvery { calculateDepartureTime(located) } returns null
             givenEvents(located)
@@ -289,7 +286,6 @@ class AlarmSchedulingWorkerDoWorkTest {
     @Test
     fun `ai users are warned about a low battery before the next event`() =
         runTest {
-            every { proUserProvider.isAiUser } returns MutableStateFlow(true)
             givenBattery(level = 10, status = BatteryManager.BATTERY_STATUS_DISCHARGING)
             givenEvents(timedEvent(1, System.currentTimeMillis() + hours(2)))
 
@@ -301,7 +297,6 @@ class AlarmSchedulingWorkerDoWorkTest {
     @Test
     fun `a low battery that is charging is not a problem`() =
         runTest {
-            every { proUserProvider.isAiUser } returns MutableStateFlow(true)
             givenBattery(level = 10, status = BatteryManager.BATTERY_STATUS_CHARGING)
             givenEvents(timedEvent(1, System.currentTimeMillis() + hours(2)))
 
@@ -313,7 +308,6 @@ class AlarmSchedulingWorkerDoWorkTest {
     @Test
     fun `ai users are warned when the phone is silenced before the next event`() =
         runTest {
-            every { proUserProvider.isAiUser } returns MutableStateFlow(true)
             every { ringerModeRepository.ringerMode } returns MutableStateFlow(AudioWarningState.SILENT)
             givenBattery(level = 80, status = BatteryManager.BATTERY_STATUS_FULL)
             givenEvents(timedEvent(1, System.currentTimeMillis() + hours(2)))

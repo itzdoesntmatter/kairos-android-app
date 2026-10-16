@@ -19,7 +19,6 @@ import dagger.hilt.internal.GeneratedComponentManager
 import digital.tonima.core.analytics.CrashReporter
 import digital.tonima.core.repository.AppPreferencesRepository
 import digital.tonima.core.service.AlarmSchedulingWorker
-import digital.tonima.core.service.DailyBriefingWorker
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
@@ -109,18 +108,15 @@ class WakeUpReceiverTest {
         WakeUpReceiver().onReceive(app, Intent(Intent.ACTION_SCREEN_ON))
 
         assertTrue(workInfos(RESCHEDULE_WORK).isEmpty())
-        assertTrue(workInfos(BRIEFING_WORK).isEmpty())
     }
 
     @Test
-    fun `first unlock of the day records the wake-up and requests the daily briefing`() {
+    fun `first unlock of the day records the wake-up`() {
         every { preferences.getWakeUpHistory() } returns flowOf(listOf(yesterdayAtNine()))
 
         WakeUpReceiver().onReceive(app, Intent(Intent.ACTION_USER_PRESENT))
 
         coVerify(timeout = 5_000) { preferences.addWakeUpTimestamp(any()) }
-        awaitWork(BRIEFING_WORK)
-        assertTrue(workInfos(BRIEFING_WORK).single().tags.contains(DailyBriefingWorker::class.java.name))
     }
 
     @Test
@@ -132,7 +128,6 @@ class WakeUpReceiverTest {
         coVerify(timeout = 5_000) { preferences.getWakeUpHistory() }
         Thread.sleep(200) // the receiver works on Dispatchers.IO; give it time to (not) write
         coVerify(exactly = 0) { preferences.addWakeUpTimestamp(any()) }
-        assertTrue(workInfos(BRIEFING_WORK).isEmpty())
     }
 
     @Test
@@ -143,18 +138,12 @@ class WakeUpReceiverTest {
         WakeUpReceiver().onReceive(app, Intent(Intent.ACTION_USER_PRESENT))
 
         verify(timeout = 5_000) { crashReporter.recordNonFatal(failure, any()) }
-        assertTrue(workInfos(BRIEFING_WORK).isEmpty())
     }
 
     private fun assertRescheduleEnqueued() {
         val infos = workInfos(RESCHEDULE_WORK)
         assertEquals(1, infos.size)
         assertTrue(infos.single().tags.contains(AlarmSchedulingWorker::class.java.name))
-    }
-
-    private fun awaitWork(name: String) {
-        val deadline = System.currentTimeMillis() + 5_000
-        while (workInfos(name).isEmpty() && System.currentTimeMillis() < deadline) Thread.sleep(20)
     }
 
     private fun workInfos(name: String): List<WorkInfo> =
@@ -176,6 +165,5 @@ class WakeUpReceiverTest {
 
     private companion object {
         const val RESCHEDULE_WORK = "reschedule_alarms_boot"
-        const val BRIEFING_WORK = "daily_briefing_wakeup"
     }
 }

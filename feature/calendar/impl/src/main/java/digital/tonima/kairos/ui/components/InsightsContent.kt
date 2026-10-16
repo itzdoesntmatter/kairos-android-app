@@ -16,7 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Bedtime
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.LocalFireDepartment
@@ -102,17 +101,6 @@ fun InsightsContent(
         )
 
         PunctualityCard(score = uiState.punctualityScore)
-
-        if (uiState.isAiUser) {
-            InsightCard(
-                modifier = Modifier.fillMaxWidth(),
-                title = stringResource(id = R.string.insights_ai_usage),
-                value = "${uiState.aiUsageCount}",
-                icon = Icons.Rounded.AutoAwesome,
-                iconTint = Color(0xFFDEFA5F),
-                backgroundColor = Color(0xFF2C2C38),
-            )
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
     }

@@ -162,8 +162,8 @@ class SettingsScreenTest {
     // region Location alarm
 
     @Test
-    fun `ai users can pick the transport mode once the location alarm is on`() {
-        render(SettingsUiState(isLocationAlarmEnabled = true, preferredTransportMode = "driving"), isAiUser = true)
+    fun `users can pick the transport mode once the location alarm is on`() {
+        render(SettingsUiState(isLocationAlarmEnabled = true, preferredTransportMode = "driving"))
 
         compose.onNodeWithText(string(R.string.transport_driving)).performScrollTo().performClick()
         compose.onNodeWithText(string(R.string.transport_transit)).performClick()
@@ -173,7 +173,7 @@ class SettingsScreenTest {
 
     @Test
     fun `transport mode is hidden while the location alarm is off`() {
-        render(SettingsUiState(isLocationAlarmEnabled = false), isAiUser = true)
+        render(SettingsUiState(isLocationAlarmEnabled = false))
 
         compose.onAllNodesWithText(string(R.string.transport_mode_label)).assertCountEquals(0)
     }
@@ -230,7 +230,6 @@ class SettingsScreenTest {
 
     private fun render(
         settings: SettingsUiState,
-        isAiUser: Boolean = true,
         calendars: List<DeviceCalendar> = emptyList(),
         enabledCalendarIds: Set<Long> = emptySet(),
     ) {
@@ -238,7 +237,6 @@ class SettingsScreenTest {
             SettingsScreen(
                 uiState =
                     EventScreenUiState(
-                        isAiUser = isAiUser,
                         availableCalendars = calendars,
                         enabledCalendarIds = enabledCalendarIds,
                     ),

@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Share
@@ -47,10 +46,8 @@ import logcat.logcat
 
 @Composable
 fun DrawerContent(
-    isAiUser: Boolean,
     onOurOtherAppsClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onChatHistoryClick: () -> Unit,
     onImportCalendarClick: () -> Unit,
     onManageCalendarsClick: () -> Unit,
     onCloseDrawer: () -> Unit,
@@ -117,25 +114,6 @@ fun DrawerContent(
             }
 
             Spacer(Modifier.height(Dimensions.PaddingDefault))
-
-            if (isAiUser) {
-                NavigationDrawerItem(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Rounded.AutoAwesome,
-                            contentDescription = stringResource(R.string.drawer_ai_assistant),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    },
-                    label = { Text(stringResource(R.string.drawer_ai_assistant), fontWeight = FontWeight.Medium) },
-                    selected = false,
-                    onClick = {
-                        onChatHistoryClick()
-                        onCloseDrawer()
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                )
-            }
 
             HorizontalDivider(
                 modifier =
@@ -256,10 +234,8 @@ fun DrawerContent(
 @Composable
 fun DrawerContentPreview() {
     DrawerContent(
-        isAiUser = true,
         onOurOtherAppsClick = {},
         onSettingsClick = {},
-        onChatHistoryClick = {},
         onImportCalendarClick = {},
         onManageCalendarsClick = {},
         onCloseDrawer = {},

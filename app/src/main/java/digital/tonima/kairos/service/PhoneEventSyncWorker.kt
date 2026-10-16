@@ -36,7 +36,6 @@ import digital.tonima.core.sync.WearSyncSchema.KEY_TITLE
 import digital.tonima.core.sync.WearSyncSchema.KEY_TRAVEL_TIME
 import digital.tonima.core.sync.WearSyncSchema.PATH_EVENTS_24H
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
 import logcat.LogPriority
 import logcat.logcat
@@ -56,7 +55,6 @@ class PhoneEventSyncWorker
     ) : CoroutineWorker(appContext, workerParams) {
         override suspend fun doWork(): Result =
             try {
-                val isAiUser = proUserProvider.isAiUser.first()
                 val now = System.currentTimeMillis()
                 val end = now + TimeUnit.HOURS.toMillis(24)
                 val ymNow = now()
@@ -71,7 +69,7 @@ class PhoneEventSyncWorker
                             getEventsForMonthUseCase(ymNext.atDay(1).toEpochDay())
                     ).filter { it.startTime in now..end }
                         .sortedBy { it.startTime }
-                logcat { "Phone→Wear sync: sending ${monthEvents.size} events (Pro: $isAiUser)." }
+                logcat { "Phone→Wear sync: sending ${monthEvents.size} events." }
 
                 val dataClient: DataClient = Wearable.getDataClient(applicationContext)
                 val putReq = PutDataMapRequest.create(PATH_EVENTS_24H)
@@ -90,7 +88,7 @@ class PhoneEventSyncWorker
                     dm.putBoolean(KEY_ALL_DAY, e.isAllDay)
 
                     val loc = e.location
-                    if (isAiUser && !loc.isNullOrBlank()) {
+                    if (!loc.isNullOrBlank()) {
                         dm.putString(KEY_LOCATION, loc)
                         val departureInfo = calculateDepartureTimeUseCase.invoke(e)
                         if (departureInfo != null) {

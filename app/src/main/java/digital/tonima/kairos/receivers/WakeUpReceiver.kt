@@ -13,7 +13,6 @@ import dagger.hilt.components.SingletonComponent
 import digital.tonima.core.analytics.CrashReporter
 import digital.tonima.core.repository.AppPreferencesRepository
 import digital.tonima.core.service.AlarmSchedulingWorker
-import digital.tonima.core.service.DailyBriefingWorker
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -95,14 +94,6 @@ class WakeUpReceiver : BroadcastReceiver() {
         if (!alreadyRegisteredToday) {
             logcat { "WakeUpReceiver: Registering first wake-up of the day: $now" }
             repository.addWakeUpTimestamp(now)
-
-            // Disparar o DailyBriefingWorker para usuários PRO
-            val workRequest = OneTimeWorkRequestBuilder<DailyBriefingWorker>().build()
-            WorkManager.getInstance(context.applicationContext).enqueueUniqueWork(
-                "daily_briefing_wakeup",
-                REPLACE,
-                workRequest,
-            )
         }
     }
 }

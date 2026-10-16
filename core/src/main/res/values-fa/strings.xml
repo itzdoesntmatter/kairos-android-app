@@ -98,7 +98,6 @@
     <string name="cd_expand_settings">باز کردن تنظیمات</string>
     <string name="cd_collapse_settings">جمع کردن تنظیمات</string>
     <string name="cd_event_recurring">رویداد تکرارشونده</string>
-    <string name="daily_briefing_title">خلاصهٔ دستیار</string>
     <string name="cd_speak">شنیدن پاسخ</string>
     <string name="cd_stop_speaking">توقف گفتار</string>
     <string name="cd_close">بستن پاسخ هوش مصنوعی</string>

@@ -98,7 +98,6 @@
     <string name="cd_expand_settings">設定を展開</string>
     <string name="cd_collapse_settings">設定を折りたたむ</string>
     <string name="cd_event_recurring">繰り返しイベント</string>
-    <string name="daily_briefing_title">アシスタント要約</string>
     <string name="cd_speak">回答を聴く</string>
     <string name="cd_stop_speaking">読み上げを停止</string>
     <string name="cd_close">AIの応答を閉じる</string>

@@ -103,7 +103,6 @@
     <string name="cd_expand_settings">Expandir configurações</string>
     <string name="cd_collapse_settings">Recolher configurações</string>
     <string name="cd_event_recurring">Evento recorrente</string>
-    <string name="daily_briefing_title">Resumo do Assistente</string>
     <string name="cd_speak">Ouvir resposta</string>
     <string name="cd_stop_speaking">Parar de falar</string>
     <string name="cd_close">Fechar resposta da IA</string>

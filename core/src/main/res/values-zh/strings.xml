@@ -98,7 +98,6 @@
     <string name="cd_expand_settings">展开设置</string>
     <string name="cd_collapse_settings">收起设置</string>
     <string name="cd_event_recurring">周期性事件</string>
-    <string name="daily_briefing_title">助手摘要</string>
     <string name="cd_speak">听取回答</string>
     <string name="cd_stop_speaking">停止播放</string>
     <string name="cd_close">关闭 AI 响应</string>

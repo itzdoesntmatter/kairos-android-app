@@ -101,7 +101,6 @@
     <string name="cd_expand_settings">توسيع الإعدادات</string>
     <string name="cd_collapse_settings">طي الإعدادات</string>
     <string name="cd_event_recurring">حدث متكرر</string>
-    <string name="daily_briefing_title">ملخص المساعد</string>
     <string name="cd_speak">استمع إلى الإجابة</string>
     <string name="cd_stop_speaking">توقف عن التحدث</string>
     <string name="cd_close">إغلاق استجابة الذكاء الاصطناعي</string>

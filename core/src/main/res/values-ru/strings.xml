@@ -102,7 +102,6 @@
     <string name="cd_expand_settings">Развернуть настройки</string>
     <string name="cd_collapse_settings">Свернуть настройки</string>
     <string name="cd_event_recurring">Повторяющееся событие</string>
-    <string name="daily_briefing_title">Сводка ассистента</string>
     <string name="cd_speak">Прослушать ответ</string>
     <string name="cd_stop_speaking">Остановить чтение</string>
     <string name="cd_close">Закрыть ответ ИИ</string>

@@ -14,9 +14,7 @@ import logcat.LogPriority
 import logcat.logcat
 
 object NotificationHelper {
-    const val CHANNEL_DAILY_BRIEFING = "daily_briefing_channel"
     const val CHANNEL_DEVICE_HEALTH_ALERT = "device_health_alert_channel"
-    private const val NOTIFICATION_ID_DAILY_BRIEFING = 1001
     const val CHANNEL_FOCUS_DIGEST = "focus_digest_channel"
     const val CHANNEL_EVENT_SUGGESTION = "event_suggestion_channel"
     private const val NOTIFICATION_ID_DEVICE_HEALTH_ALERT = 1002
@@ -25,16 +23,8 @@ object NotificationHelper {
 
     fun createNotificationChannels(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = context.getString(R.string.daily_briefing_title)
-            val descriptionText = context.getString(R.string.notification_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel =
-                NotificationChannel(CHANNEL_DAILY_BRIEFING, name, importance).apply {
-                    description = descriptionText
-                }
             val notificationManager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
 
             // Device Health Alert Channel
             val healthName = context.getString(R.string.device_health_alert_title)
@@ -56,30 +46,6 @@ object NotificationHelper {
                     NotificationManager.IMPORTANCE_DEFAULT,
                 ),
             )
-        }
-    }
-
-    fun showDailyBriefingNotification(
-        context: Context,
-        title: String,
-        content: String,
-    ) {
-        val cleanedContent = content.replace("**", "")
-        val builder =
-            NotificationCompat.Builder(context, CHANNEL_DAILY_BRIEFING)
-                .setSmallIcon(R.drawable.ic_k_monochrome)
-                .setContentTitle(title)
-                .setContentText(cleanedContent)
-                .setStyle(NotificationCompat.BigTextStyle().bigText(cleanedContent))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true)
-
-        with(NotificationManagerCompat.from(context)) {
-            try {
-                notify(NOTIFICATION_ID_DAILY_BRIEFING, builder.build())
-            } catch (e: SecurityException) {
-                logcat(LogPriority.WARN) { "Daily briefing not shown, notification permission denied: ${e.message}" }
-            }
         }
     }
 

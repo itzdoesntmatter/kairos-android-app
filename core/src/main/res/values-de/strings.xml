@@ -103,7 +103,6 @@
     <string name="cd_expand_settings">Einstellungen erweitern</string>
     <string name="cd_collapse_settings">Einstellungen einklappen</string>
     <string name="cd_event_recurring">Wiederkehrendes Ereignis</string>
-    <string name="daily_briefing_title">Zusammenfassung des Assistenten</string>
     <string name="cd_speak">Antwort anhören</string>
     <string name="cd_stop_speaking">Sprachausgabe stoppen</string>
     <string name="cd_close">KI-Antwort schließen</string>

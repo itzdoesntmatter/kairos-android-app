@@ -104,7 +104,6 @@
     <string name="cd_expand_settings">Développer les paramètres</string>
     <string name="cd_collapse_settings">Réduire les paramètres</string>
     <string name="cd_event_recurring">Événement récurrent</string>
-    <string name="daily_briefing_title">Résumé de l\'Assistant</string>
     <string name="cd_speak">Écouter la réponse</string>
     <string name="cd_stop_speaking">Arrêter de parler</string>
     <string name="cd_close">Fermer la réponse de l\'IA</string>

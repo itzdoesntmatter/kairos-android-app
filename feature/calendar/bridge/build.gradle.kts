@@ -6,9 +6,8 @@ android {
     namespace = "digital.tonima.kairos.feature.calendar.bridge"
 }
 
-// EventIntent lives here (not in :impl) because feature:ai:impl needs it purely as a data
-// vocabulary — an AI tool builds an EventIntent and AiViewModel re-executes it with its own
-// usecases, never touching EventViewModel or any calendar UI. See CreateEventTool etc.
+// EventIntent lives here (not in :impl) so other features can build and dispatch calendar
+// intents as a plain data vocabulary, without depending on the calendar implementation.
 dependencies {
     api(project(":core"))
     api(project(":core:navigation"))

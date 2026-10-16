@@ -104,7 +104,6 @@
     <string name="cd_expand_settings">Expand settings</string>
     <string name="cd_collapse_settings">Collapse settings</string>
     <string name="cd_event_recurring">Recurring event</string>
-    <string name="daily_briefing_title">Assistant Summary</string>
     <string name="cd_speak">Listen to response</string>
     <string name="cd_stop_speaking">Stop speaking</string>
     <string name="cd_close">Close AI response</string>

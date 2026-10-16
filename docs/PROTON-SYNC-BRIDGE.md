@@ -195,11 +195,29 @@ What is encrypted where:
   {proton.me, protonmail.com, hcaptcha.com} before use; Custom Tabs only, never an
   embedded WebView. (UI wiring status: see Known limitations.)
 
-Open audit items (not blockers for the current state; tracked for W3):
+Open audit items and wave-3 release conditions — `security-audit.md` v3.0 §10 audited the
+shipped wave-2 code and returned **GO (conditional)**; these conditions are the release
+gate:
 
-- `CalendarRepositoryImpl.isProtonBacked()` still matches any account whose name/type
-  *contains* `proton` — a spoofable provenance path for the Proton read filter
-  (security-audit ME-4; tighten to the exact account type for bridge rows).
+- **C1 (must land before release):** payload size caps per security-audit §3.5b — 1 MB
+  armored / 256 KB JSON / per-part length caps at the DTO or decryptor boundary (N-1).
+- **C2 (must land before release):** wire the human-verification flow — Custom Tab
+  launcher + resolved-URL allowlist re-check + a `resumeAfterHv` call site — or get
+  explicit operator acceptance that HV-gated accounts cannot complete login (N-3).
+- **C3 (must land before release):** iteration cap / progress check on the
+  `fetchAllEventIds` walk (N-2).
+- **C4 (release or immediate fast-follow):** date sanity on the metadata-fallback path;
+  try/catch around the observer's Proton hook (N-4, N-10).
+- **C5 (device-gated, W3):** live SRP exchange capture, real Go-library KATs,
+  pin-rotation drill, scope re-validation on start (N-9).
+- **C6 (deferred, tracked):** `isProtonBacked()` read-path tightening (ME-4 — substring
+  `proton` matching still lets foreign accounts into the Proton read path), UID_2445
+  insert retry (S-12), single-account rejection strictness (S-10), reminder/RRULE clamps
+  (N-6/N-7), error-string trimming (N-15).
+
+Resolved and verified in shipped code (audit §10.1): CR-1 backup-rule exclusions, CR-2
+modulus pinning, HI-1 SRP hygiene, HI-2 consent gate, HI-3 verify-or-drop, ME-1/ME-2
+observer gating, ME-3 permission minimization.
 
 ## Known limitations
 
@@ -278,7 +296,8 @@ a16827a LOD-11 wave 2b: Proton sync crypto envelope, engine, storage, settings U
 12008bb feat: add :proton-sync module — sync account, native calendar writer, WorkManager skeleton
 ```
 
-Module size at `a16827a`: 46 main sources / ~6,600 lines; 39 test sources / ~6,700 lines.
+Module size at `a16827a`: 46 Kotlin main sources / ~6,600 lines; 39 test sources /
+~6,700 lines.
 
 Related documents: `docs/PROTON-SYNC-DIVERGENCE-LOG.md` (where we intentionally differ
 from the reference app); campaign specs under

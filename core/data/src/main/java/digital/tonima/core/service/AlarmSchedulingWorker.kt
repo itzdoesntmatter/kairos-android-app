@@ -12,7 +12,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import digital.tonima.core.data.usecases.CalculateDepartureTimeUseCase
 import digital.tonima.core.data.usecases.GetEventsForMonthUseCase
-import digital.tonima.core.delegates.ProUserProvider
 import digital.tonima.core.permissions.PermissionManager
 import digital.tonima.core.repository.AppPreferencesRepository
 import digital.tonima.core.repository.AudioWarningState
@@ -45,7 +44,6 @@ class AlarmSchedulingWorker
         private val scheduler: EventAlarmScheduler,
         private val permissionManager: PermissionManager,
         private val appPreferencesRepository: AppPreferencesRepository,
-        private val proUserProvider: ProUserProvider,
         private val calculateDepartureTimeUseCase: CalculateDepartureTimeUseCase,
         private val ringerModeRepository: RingerModeRepository,
     ) : CoroutineWorker(appContext, workerParams) {

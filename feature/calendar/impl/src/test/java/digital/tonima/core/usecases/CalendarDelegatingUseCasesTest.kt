@@ -68,8 +68,6 @@ class CalendarDelegatingUseCasesTest {
                 mapOf(Analytics.PARAM_CALENDAR_ID to 7L, Analytics.PARAM_ENABLED to true),
             )
         }
-        verify { analytics.logEvent(Analytics.EVENT_UPGRADE_REQUEST) }
-        verify { analytics.logEvent(Analytics.EVENT_UPGRADE_IA_REQUEST) }
         verify { analytics.logEvent(Analytics.EVENT_RATE_NOW) }
         verify { analytics.logEvent(Analytics.EVENT_RATE_LATER) }
         verify { analytics.logEvent(Analytics.EVENT_RATE_NEVER) }

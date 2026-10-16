@@ -12,7 +12,6 @@ import androidx.work.WorkerParameters
 import digital.tonima.core.data.usecases.CalculateDepartureTimeUseCase
 import digital.tonima.core.data.usecases.DepartureInfo
 import digital.tonima.core.data.usecases.GetEventsForMonthUseCase
-import digital.tonima.core.delegates.ProUserProvider
 import digital.tonima.core.permissions.PermissionManager
 import digital.tonima.core.repository.AppPreferencesRepository
 import digital.tonima.core.repository.AudioWarningState
@@ -46,7 +45,6 @@ class AlarmSchedulingWorkerDoWorkTest {
     private val scheduler: EventAlarmScheduler = mockk(relaxed = true)
     private val permissionManager: PermissionManager = mockk()
     private val preferences: AppPreferencesRepository = mockk()
-    private val proUserProvider: ProUserProvider = mockk()
     private val calculateDepartureTime: CalculateDepartureTimeUseCase = mockk()
     private val ringerModeRepository: RingerModeRepository = mockk()
 
@@ -222,7 +220,7 @@ class AlarmSchedulingWorkerDoWorkTest {
         }
 
     @Test
-    fun `ai users with a located event get a traffic-aware trigger time`() =
+    fun `a located event gets a traffic-aware trigger time`() =
         runTest {
             val now = System.currentTimeMillis()
             val located = timedEvent(1, now + hours(3)).copy(location = "Av. Paulista, 1000")
@@ -239,7 +237,7 @@ class AlarmSchedulingWorkerDoWorkTest {
         }
 
     @Test
-    fun `ai users fall back to the regular alarm when departure time is unknown`() =
+    fun `users fall back to the regular alarm when departure time is unknown`() =
         runTest {
             val located = timedEvent(1, System.currentTimeMillis() + hours(3)).copy(location = "Somewhere")
             coEvery { calculateDepartureTime(located) } returns null
@@ -251,14 +249,14 @@ class AlarmSchedulingWorkerDoWorkTest {
         }
 
     @Test
-    fun `non ai users never query traffic`() =
+    fun `events without a location never query traffic`() =
         runTest {
-            val located = timedEvent(1, System.currentTimeMillis() + hours(3)).copy(location = "Somewhere")
-            givenEvents(located)
+            val plain = timedEvent(1, System.currentTimeMillis() + hours(3))
+            givenEvents(plain)
 
             worker().doWork()
 
-            verify(exactly = 1) { scheduler.schedule(located, null) }
+            verify(exactly = 1) { scheduler.schedule(plain, null) }
             coVerify(exactly = 0) { calculateDepartureTime(any()) }
         }
 
@@ -284,7 +282,7 @@ class AlarmSchedulingWorkerDoWorkTest {
         }
 
     @Test
-    fun `ai users are warned about a low battery before the next event`() =
+    fun `users are warned about a low battery before the next event`() =
         runTest {
             givenBattery(level = 10, status = BatteryManager.BATTERY_STATUS_DISCHARGING)
             givenEvents(timedEvent(1, System.currentTimeMillis() + hours(2)))
@@ -306,7 +304,7 @@ class AlarmSchedulingWorkerDoWorkTest {
         }
 
     @Test
-    fun `ai users are warned when the phone is silenced before the next event`() =
+    fun `users are warned when the phone is silenced before the next event`() =
         runTest {
             every { ringerModeRepository.ringerMode } returns MutableStateFlow(AudioWarningState.SILENT)
             givenBattery(level = 80, status = BatteryManager.BATTERY_STATUS_FULL)
@@ -318,10 +316,9 @@ class AlarmSchedulingWorkerDoWorkTest {
         }
 
     @Test
-    fun `other users never get device health warnings`() =
+    fun `a healthy phone posts no device health warnings`() =
         runTest {
-            every { ringerModeRepository.ringerMode } returns MutableStateFlow(AudioWarningState.ALARM_MUTED)
-            givenBattery(level = 5, status = BatteryManager.BATTERY_STATUS_DISCHARGING)
+            givenBattery(level = 80, status = BatteryManager.BATTERY_STATUS_FULL)
             givenEvents(timedEvent(1, System.currentTimeMillis() + hours(2)))
 
             worker().doWork()
@@ -359,7 +356,6 @@ class AlarmSchedulingWorkerDoWorkTest {
             scheduler,
             permissionManager,
             preferences,
-            proUserProvider,
             calculateDepartureTime,
             ringerModeRepository,
         )

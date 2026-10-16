@@ -17,7 +17,6 @@ import digital.tonima.core.analytics.CrashReporter
 import digital.tonima.core.data.usecases.CalculateDepartureTimeUseCase
 import digital.tonima.core.data.usecases.DepartureInfo
 import digital.tonima.core.data.usecases.GetEventsForMonthUseCase
-import digital.tonima.core.delegates.ProUserProvider
 import digital.tonima.core.sync.WearSyncSchema
 import digital.tonima.kairos.core.model.Event
 import io.mockk.coEvery
@@ -44,7 +43,6 @@ import java.util.concurrent.TimeUnit
 class PhoneEventSyncWorkerTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
     private val getEventsForMonth: GetEventsForMonthUseCase = mockk()
-    private val proUserProvider: ProUserProvider = mockk()
     private val calculateDepartureTime: CalculateDepartureTimeUseCase = mockk()
     private val dataClient: DataClient = mockk()
     private val crashReporter: CrashReporter = mockk(relaxed = true)
@@ -107,22 +105,22 @@ class PhoneEventSyncWorkerTest {
         }
 
     @Test
-    fun `location and traffic data are only sent to ai users`() =
+    fun `events without a location omit location and departure keys`() =
         runTest {
-            val located =
+            val plain =
                 Event(
                     id = 1L,
                     title = "Dentist",
                     startTime = System.currentTimeMillis() + hours(2),
-                    location = "Rua Augusta",
                 )
-            givenEvents(located)
+            givenEvents(plain)
 
             worker().doWork()
 
             with(sentEvents().single()) {
                 assertFalse(containsKey(WearSyncSchema.KEY_LOCATION))
                 assertFalse(containsKey(WearSyncSchema.KEY_DEPARTURE_TIME))
+                assertFalse(containsKey(WearSyncSchema.KEY_TRAVEL_TIME))
             }
         }
 
@@ -194,7 +192,6 @@ class PhoneEventSyncWorkerTest {
             context,
             mockk<WorkerParameters>(relaxed = true),
             getEventsForMonth,
-            proUserProvider,
             calculateDepartureTime,
             crashReporter,
         )

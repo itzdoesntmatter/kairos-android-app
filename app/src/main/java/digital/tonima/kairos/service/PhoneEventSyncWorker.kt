@@ -21,7 +21,6 @@ import dagger.assisted.AssistedInject
 import digital.tonima.core.analytics.CrashReporter
 import digital.tonima.core.data.usecases.CalculateDepartureTimeUseCase
 import digital.tonima.core.data.usecases.GetEventsForMonthUseCase
-import digital.tonima.core.delegates.ProUserProvider
 import digital.tonima.core.sync.WearSyncSchema.KEY_ALL_DAY
 import digital.tonima.core.sync.WearSyncSchema.KEY_DEPARTURE_TIME
 import digital.tonima.core.sync.WearSyncSchema.KEY_END
@@ -49,7 +48,6 @@ class PhoneEventSyncWorker
         @Assisted appContext: Context,
         @Assisted workerParams: WorkerParameters,
         private val getEventsForMonthUseCase: GetEventsForMonthUseCase,
-        private val proUserProvider: ProUserProvider,
         private val calculateDepartureTimeUseCase: CalculateDepartureTimeUseCase,
         private val crashReporter: CrashReporter,
     ) : CoroutineWorker(appContext, workerParams) {

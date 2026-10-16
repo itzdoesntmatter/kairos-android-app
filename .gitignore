@@ -53,3 +53,7 @@ X#
 # Claude Code local state
 .claude/settings.local.json
 .claude/.verify/
+
+# Signing keys (local only; CI decodes from secrets)
+*.jks
+keystore.properties

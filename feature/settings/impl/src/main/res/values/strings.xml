@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- In-app Proton Calendar sync bridge settings section (architecture §4/§8). -->
+    <string name="proton_sync_section_title">Calendar sync</string>
+    <string name="proton_sync_connect">Connect Proton Calendar</string>
+    <string name="proton_sync_login_title">Connect your Proton Calendar</string>
+    <string name="proton_sync_email_label">Proton email</string>
+    <string name="proton_sync_password_label">Password</string>
+    <string name="proton_sync_consent_text">I understand that my Proton Calendar events will be written into this device\'s system calendar and become readable by other calendar apps on this device.</string>
+    <string name="proton_sync_continue">Continue</string>
+    <string name="proton_sync_two_factor_label">Two-factor code (6 digits)</string>
+    <string name="proton_sync_mailbox_password_label">Mailbox password</string>
+    <string name="proton_sync_hv_title">Verification required</string>
+    <string name="proton_sync_hv_text">Proton requires an additional check. A browser tab opens; solve the challenge there and return here.</string>
+    <string name="proton_sync_hv_open">Open verification page</string>
+    <string name="proton_sync_hv_done">I have completed the verification</string>
+    <string name="proton_sync_cancel">Cancel</string>
+    <string name="proton_sync_connected">Connected · %1$s</string>
+    <string name="proton_sync_last_sync">Last sync: %1$s</string>
+    <string name="proton_sync_syncing">Syncing…</string>
+    <string name="proton_sync_error">Sync error: %1$s</string>
+    <string name="proton_sync_session_expired">Session expired — log in again</string>
+    <string name="proton_sync_sync_now">Sync now</string>
+    <string name="proton_sync_disconnect">Disconnect</string>
+    <string name="proton_sync_frequency_label">Sync frequency</string>
+    <string name="proton_sync_frequency_1h">Every hour</string>
+    <string name="proton_sync_frequency_6h">Every 6 hours</string>
+    <string name="proton_sync_frequency_12h">Every 12 hours</string>
+    <string name="proton_sync_frequency_24h">Daily</string>
+    <string name="proton_sync_counters">%1$d synced · %2$d deleted · %3$d decrypt failures · %4$d verify failures</string>
+</resources>

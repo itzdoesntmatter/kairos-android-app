@@ -15,6 +15,22 @@
         Explicit no-cleartext policy for the bridge (security-audit.md §4.2). Merges into
         :app, which has no networkSecurityConfig of its own.
     -->
-    <application android:networkSecurityConfig="@xml/network_security_config" />
+    <application android:networkSecurityConfig="@xml/network_security_config">
+
+        <!--
+            Stub authenticator (architecture §2): exported=false, only the
+            AccountAuthenticator intent-filter — the system binds it, no other app can
+            (security-audit §9.7, checklist §7.13).
+        -->
+        <service android:name="digital.tonima.protonsync.account.AuthenticatorService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/proton_authenticator" />
+        </service>
+
+    </application>
 
 </manifest>

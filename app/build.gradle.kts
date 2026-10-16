@@ -140,6 +140,7 @@ dependencies {
     implementation(project(":feature:calendar:impl"))
     implementation(project(":feature:settings:bridge"))
     implementation(project(":feature:settings:impl"))
+    implementation(project(":proton-sync"))
 
     ksp(libs.androidx.hilt.compiler)
     ksp(libs.hilt.binder.compiler)

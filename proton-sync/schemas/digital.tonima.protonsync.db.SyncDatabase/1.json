@@ -1,0 +1,225 @@
+{
+    "formatVersion": 1,
+    "database": {
+        "version": 1,
+        "identityHash": "00000000000000000000000000000000",
+        "entities": [
+            {
+                "tableName": "native_event_map",
+                "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountName` TEXT NOT NULL, `protonCalendarId` TEXT NOT NULL, `protonEventId` TEXT NOT NULL, `androidEventId` INTEGER, `lastModified` INTEGER NOT NULL, `isException` INTEGER NOT NULL, `parentProtonEventId` TEXT, PRIMARY KEY(`accountName`, `protonCalendarId`, `protonEventId`))",
+                "fields": [
+                    {
+                        "fieldPath": "accountName",
+                        "columnName": "accountName",
+                        "affinity": "TEXT",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "protonCalendarId",
+                        "columnName": "protonCalendarId",
+                        "affinity": "TEXT",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "protonEventId",
+                        "columnName": "protonEventId",
+                        "affinity": "TEXT",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "androidEventId",
+                        "columnName": "androidEventId",
+                        "affinity": "INTEGER"
+                    },
+                    {
+                        "fieldPath": "lastModified",
+                        "columnName": "lastModified",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "isException",
+                        "columnName": "isException",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "parentProtonEventId",
+                        "columnName": "parentProtonEventId",
+                        "affinity": "TEXT"
+                    }
+                ],
+                "primaryKey": {
+                    "autoGenerate": false,
+                    "columnNames": [
+                        "accountName",
+                        "protonCalendarId",
+                        "protonEventId"
+                    ]
+                }
+            },
+            {
+                "tableName": "calendar_sync_state",
+                "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountName` TEXT NOT NULL, `protonCalendarId` TEXT NOT NULL, `androidCalendarId` INTEGER, `displayName` TEXT NOT NULL, `color` INTEGER NOT NULL, `lastSyncEpochMs` INTEGER NOT NULL, `errorCount` INTEGER NOT NULL, PRIMARY KEY(`accountName`, `protonCalendarId`))",
+                "fields": [
+                    {
+                        "fieldPath": "accountName",
+                        "columnName": "accountName",
+                        "affinity": "TEXT",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "protonCalendarId",
+                        "columnName": "protonCalendarId",
+                        "affinity": "TEXT",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "androidCalendarId",
+                        "columnName": "androidCalendarId",
+                        "affinity": "INTEGER"
+                    },
+                    {
+                        "fieldPath": "displayName",
+                        "columnName": "displayName",
+                        "affinity": "TEXT",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "color",
+                        "columnName": "color",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "lastSyncEpochMs",
+                        "columnName": "lastSyncEpochMs",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "errorCount",
+                        "columnName": "errorCount",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    }
+                ],
+                "primaryKey": {
+                    "autoGenerate": false,
+                    "columnNames": [
+                        "accountName",
+                        "protonCalendarId"
+                    ]
+                }
+            },
+            {
+                "tableName": "tombstone",
+                "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountName` TEXT NOT NULL, `protonCalendarId` TEXT NOT NULL, `protonEventId` TEXT NOT NULL, `successfulRunsSince` INTEGER NOT NULL, `createdAtEpochMs` INTEGER NOT NULL, PRIMARY KEY(`accountName`, `protonCalendarId`, `protonEventId`))",
+                "fields": [
+                    {
+                        "fieldPath": "accountName",
+                        "columnName": "accountName",
+                        "affinity": "TEXT",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "protonCalendarId",
+                        "columnName": "protonCalendarId",
+                        "affinity": "TEXT",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "protonEventId",
+                        "columnName": "protonEventId",
+                        "affinity": "TEXT",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "successfulRunsSince",
+                        "columnName": "successfulRunsSince",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "createdAtEpochMs",
+                        "columnName": "createdAtEpochMs",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    }
+                ],
+                "primaryKey": {
+                    "autoGenerate": false,
+                    "columnNames": [
+                        "accountName",
+                        "protonCalendarId",
+                        "protonEventId"
+                    ]
+                }
+            },
+            {
+                "tableName": "sync_run_stats",
+                "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountName` TEXT NOT NULL, `eventsSynced` INTEGER NOT NULL, `eventsDeleted` INTEGER NOT NULL, `decryptFailures` INTEGER NOT NULL, `verifyFailures` INTEGER NOT NULL, `apiErrors` INTEGER NOT NULL, `lastRunDurationMs` INTEGER NOT NULL, `lastSuccessEpochMs` INTEGER NOT NULL, PRIMARY KEY(`accountName`))",
+                "fields": [
+                    {
+                        "fieldPath": "accountName",
+                        "columnName": "accountName",
+                        "affinity": "TEXT",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "eventsSynced",
+                        "columnName": "eventsSynced",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "eventsDeleted",
+                        "columnName": "eventsDeleted",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "decryptFailures",
+                        "columnName": "decryptFailures",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "verifyFailures",
+                        "columnName": "verifyFailures",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "apiErrors",
+                        "columnName": "apiErrors",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "lastRunDurationMs",
+                        "columnName": "lastRunDurationMs",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    },
+                    {
+                        "fieldPath": "lastSuccessEpochMs",
+                        "columnName": "lastSuccessEpochMs",
+                        "affinity": "INTEGER",
+                        "notNull": true
+                    }
+                ],
+                "primaryKey": {
+                    "autoGenerate": false,
+                    "columnNames": [
+                        "accountName"
+                    ]
+                }
+            }
+        ],
+        "setupQueries": [
+            "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+            "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7e3a8b352a84c75bd8ddb97d64ee4a7a')"
+        ]
+    }
+}

@@ -387,5 +387,16 @@ class NativeCalendarWriterTest {
         allDay: Boolean = false,
         recurrence: String? = null,
         attendees: List<Attendee> = emptyList(),
-    ) = ProtonEventData(id, title, start, end, timezone, description, location, allDay, recurrence, attendees)
+    ) = ProtonEventData(
+        protonEventId = id,
+        title = title,
+        startMillis = start,
+        endMillis = end,
+        timezone = timezone,
+        description = description,
+        location = location,
+        isAllDay = allDay,
+        recurrenceRule = recurrence,
+        attendees = attendees,
+    )
 }

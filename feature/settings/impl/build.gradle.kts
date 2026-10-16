@@ -10,6 +10,7 @@ android {
 dependencies {
     api(project(":core"))
     api(project(":core:data"))
+    implementation(project(":proton-sync"))
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 

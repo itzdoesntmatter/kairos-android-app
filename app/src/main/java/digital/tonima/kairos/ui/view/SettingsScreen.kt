@@ -64,6 +64,7 @@ import digital.tonima.kairos.core.R
 import digital.tonima.kairos.core.model.AlarmOffset
 import digital.tonima.kairos.core.model.DeviceCalendar
 import digital.tonima.kairos.core.ui.theme.Dimensions
+import digital.tonima.kairos.ui.components.ProtonCalendarSettingsSection
 import digital.tonima.kairos.ui.components.SettingsActions
 import java.time.LocalTime
 import kotlin.math.roundToInt
@@ -173,6 +174,10 @@ fun SettingsScreen(
                 hour = settingsUiState.allDayAlarmHour,
                 onHourChange = settingsActions.onAllDayAlarmHourChanged,
             )
+
+            // In-app Proton Calendar sync bridge (architecture §1 item 4): self-contained
+            // section, owns its own ViewModel; no change to SettingsViewModel.
+            ProtonCalendarSettingsSection()
 
             var offsetExpanded by remember { mutableStateOf(false) }
             AlarmOffsetDropdown(

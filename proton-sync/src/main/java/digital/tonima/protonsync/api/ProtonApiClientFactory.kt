@@ -55,6 +55,28 @@ class ProtonApiClientFactory(
     fun create(
         sessionManager: SessionManager,
         tokenRefresher: TokenRefresher,
+    ): ProtonApiClient =
+        buildClient(
+            sessionManager = sessionManager,
+            authenticator =
+                TokenRefreshAuthenticator(
+                    sessionManager = sessionManager,
+                    tokenRefresher = tokenRefresher,
+                ),
+        )
+
+    /**
+     * The same stack WITHOUT the 401 authenticator — used to break the construction cycle
+     * between the API client and its [TokenRefresher]: the refresher's own `auth/v4/refresh`
+     * call rides on this client (same headers, rate limiting and pinning; refresh never
+     * needs the authenticator — a rejected refresh means `needs_reauth`, not a retry).
+     */
+    fun createBare(sessionManager: SessionManager): ProtonApiClient =
+        buildClient(sessionManager = sessionManager, authenticator = null)
+
+    private fun buildClient(
+        sessionManager: SessionManager,
+        authenticator: okhttp3.Authenticator?,
     ): ProtonApiClient {
         val json =
             Json {
@@ -88,12 +110,9 @@ class ProtonApiClientFactory(
                     ),
                 )
                 .addInterceptor(RateLimitInterceptor())
-                .authenticator(
-                    TokenRefreshAuthenticator(
-                        sessionManager = sessionManager,
-                        tokenRefresher = tokenRefresher,
-                    ),
-                )
+                .apply {
+                    if (authenticator != null) authenticator(authenticator)
+                }
                 .build()
 
         return Retrofit.Builder()

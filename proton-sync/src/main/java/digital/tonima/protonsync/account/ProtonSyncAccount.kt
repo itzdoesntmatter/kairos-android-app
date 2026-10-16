@@ -3,6 +3,7 @@ package digital.tonima.protonsync.account
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.Context
+import digital.tonima.kairos.core.model.KairosProtonSync
 
 /**
  * Owns the Android account that backs every native calendar row written by the in-app Proton
@@ -28,7 +29,8 @@ import android.content.Context
  * key material) lives in the wave-2 encrypted session store, away from AccountManager.
  */
 object ProtonSyncAccount {
-    const val ACCOUNT_TYPE = "digital.tonima.kairos.proton"
+    /** The sync contract constant (architecture §0), single-sourced in core:model. */
+    const val ACCOUNT_TYPE = KairosProtonSync.ACCOUNT_TYPE
 
     /** Returns the single Proton account, or null while logged out (v1: one account, D4). */
     fun findAccount(context: Context): Account? =

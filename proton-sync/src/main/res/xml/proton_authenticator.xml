@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The account-authenticator declaration (architecture §1 item 3). accountType is the sync
+    contract constant (core/model KairosProtonSync.ACCOUNT_TYPE) as a literal — the system
+    resolves this XML before any code runs, so it must not depend on a resource indirection.
+    No icon/label: the account is never shown in system account UI (login is in-app only).
+-->
+<account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accountType="digital.tonima.kairos.proton" />

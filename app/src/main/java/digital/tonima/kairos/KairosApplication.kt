@@ -20,6 +20,7 @@ import digital.tonima.core.utils.DeviceInfoUtils
 import digital.tonima.core.utils.NotificationHelper
 import digital.tonima.kairos.service.CalendarChangeObserver
 import digital.tonima.kairos.service.PhoneEventSyncWorker.Companion.enqueuePeriodic
+import digital.tonima.protonsync.sync.ProtonSyncScheduler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -69,6 +70,14 @@ class KairosApplication :
 
         setupRecurringWork()
         enqueuePeriodic(this)
+        try {
+            // Re-asserts the bridge's periodic sync (architecture §1 item 5): cheap, KEEP
+            // policy, and a strict no-op while no Proton account exists (security-audit
+            // checklist §7.15).
+            ProtonSyncScheduler.ensurePeriodic(this)
+        } catch (e: Exception) {
+            crashReporter.recordNonFatal(e, "KairosApplication: failed to ensure Proton periodic sync")
+        }
         try {
             CalendarChangeObserver.init(this)
         } catch (e: Exception) {

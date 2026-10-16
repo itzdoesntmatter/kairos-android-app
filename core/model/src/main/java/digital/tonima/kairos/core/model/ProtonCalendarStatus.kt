@@ -11,4 +11,10 @@ data class ProtonCalendarStatus(
     val protonCalendarAppInstalled: Boolean,
     val syncBridgeInstalled: Boolean,
     val protonCalendarVisible: Boolean,
+    /**
+     * True when the in-app bridge is connected: an Android account of type
+     * [KairosProtonSync.ACCOUNT_TYPE] exists (architecture §2 — the account IS the
+     * connection state). Replaces the external-bridge package probe for the in-app path.
+     */
+    val inAppBridgeConnected: Boolean = false,
 )

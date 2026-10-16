@@ -41,7 +41,12 @@ class SessionCryptoException(message: String, cause: Throwable? = null) :
  * wave-2 key-material file (`keys.dat`) gets its own alias so one key's loss never unlocks
  * the other (security-audit.md §3.2).
  */
-class AndroidKeyStoreSessionCrypto(context: Context) : SessionCrypto {
+class AndroidKeyStoreSessionCrypto(
+    context: Context,
+    keyAlias: String = KEY_ALIAS,
+) : SessionCrypto {
+
+    private val keyAlias = keyAlias
 
     private val keyStore: KeyStore =
         try {
@@ -84,12 +89,12 @@ class AndroidKeyStoreSessionCrypto(context: Context) : SessionCrypto {
     }
 
     private fun getOrCreateKey(): SecretKey {
-        (keyStore.getKey(KEY_ALIAS, null) as? SecretKey)?.let { return it }
+        (keyStore.getKey(keyAlias, null) as? SecretKey)?.let { return it }
         return try {
             val generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, KEYSTORE_PROVIDER)
             generator.init(
                 KeyGenParameterSpec.Builder(
-                    KEY_ALIAS,
+                    keyAlias,
                     KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT,
                 )
                     .setBlockModes(KeyProperties.BLOCK_MODE_GCM)

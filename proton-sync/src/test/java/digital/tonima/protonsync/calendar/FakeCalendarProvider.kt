@@ -24,6 +24,10 @@ import android.provider.CalendarContract
  *   must also clean up;
  * - [rejectUid2445Column] emulates OEM providers that predate the API-35 UID_2445 column by
  *   throwing on queries that project it.
+ *
+ * Selection grammar (superset of the wave-1 fake): equality conjunctions, parenthesised
+ * OR/AND groups, and `IN (...)` lists — the writer's event sweep, exception-row reconcile
+ * and default-reminder queries.
  */
 class FakeCalendarProvider : ContentProvider() {
     /** When true, any query whose projection contains UID_2445 throws IllegalArgumentException. */
@@ -59,6 +63,7 @@ class FakeCalendarProvider : ContentProvider() {
     private val events = Table()
     private val instances = Table()
     private val attendees = Table()
+    private val reminders = Table()
 
     override fun onCreate(): Boolean = true
 
@@ -89,8 +94,9 @@ class FakeCalendarProvider : ContentProvider() {
         return cursor
     }
 
-    /** The "attendees" path segment (see NativeCalendarWriter.ATTENDEES_PATH rationale). */
+    /** The "attendees"/"reminders" path segments (see NativeCalendarWriter rationale). */
     private val attendeesPath = "attendees"
+    private val remindersPath = "reminders"
 
     override fun insert(
         uri: Uri,
@@ -109,6 +115,13 @@ class FakeCalendarProvider : ContentProvider() {
                         segments.getOrNull(2) == attendeesPath
                 ) ->
                 attendees.insert(CalendarContract.Attendees.CONTENT_URI, values)
+
+            segments.firstOrNull() == "events" &&
+                (
+                    segments.getOrNull(1) == remindersPath ||
+                        segments.getOrNull(2) == remindersPath
+                ) ->
+                reminders.insert(CalendarContract.Reminders.CONTENT_URI, values)
 
             segments.firstOrNull() == "events" -> {
                 val eventUri = events.insert(CalendarContract.Events.CONTENT_URI, values)
@@ -173,9 +186,15 @@ class FakeCalendarProvider : ContentProvider() {
 
             segments.firstOrNull() == "attendees" -> Triple(attendees, segments.getOrNull(1)?.toLongOrNull(), null)
 
+            segments.firstOrNull() == "reminders" -> Triple(reminders, segments.getOrNull(1)?.toLongOrNull(), null)
+
             segments.firstOrNull() == "events" &&
                 segments.getOrNull(2) == attendeesPath ->
                 Triple(attendees, null, "event_id=${segments[1]}")
+
+            segments.firstOrNull() == "events" &&
+                segments.getOrNull(2) == remindersPath ->
+                Triple(reminders, null, "event_id=${segments[1]}")
 
             segments.firstOrNull() == "events" -> Triple(events, segments.getOrNull(1)?.toLongOrNull(), null)
 
@@ -183,26 +202,71 @@ class FakeCalendarProvider : ContentProvider() {
         }
     }
 
-    /** Only the equality-conjunction grammar the writer emits ("col=? AND col=?"). */
+    /**
+     * The selection grammar the writer emits: equality conjunctions, parenthesised OR/AND
+     * groups (`(a=? AND (b=? OR c=?))`) and `IN (...)` lists. A tiny recursive evaluator —
+     * deliberately not a full SQL engine.
+     */
     private fun matches(
         selection: String?,
         selectionArgs: Array<String>?,
         row: MutableMap<String, Any?>,
     ): Boolean {
         if (selection.isNullOrBlank()) return true
-        val clauses = selection.split(Regex("\\s+AND\\s+", RegexOption.IGNORE_CASE))
+        val args = selectionArgs?.toList() ?: emptyList()
         var argIndex = 0
-        for (clause in clauses) {
-            val match =
-                Regex("^\\s*(\\w+)\\s*=\\s*\\?\\s*$").find(clause)
-                    ?: throw IllegalArgumentException("Unsupported selection: $selection")
-            val column = match.groupValues[1]
-            val arg =
-                selectionArgs?.getOrNull(argIndex++)
-                    ?: throw IllegalArgumentException("Missing selection arg for '$selection'")
-            if (row[column]?.toString() != arg) return false
+
+        fun findTopLevel(expr: String, operator: String): List<Int> {
+            val result = mutableListOf<Int>()
+            var depth = 0
+            var i = 0
+            while (i <= expr.length - operator.length) {
+                val c = expr[i]
+                if (c == '(') depth++
+                if (c == ')') depth--
+                if (depth == 0 && expr.startsWith(operator, i)) {
+                    result += i
+                    i += operator.length
+                } else {
+                    i++
+                }
+            }
+            return result
         }
-        return true
+
+        fun eval(expr: String): Boolean {
+            // Strip wrapping parens FIRST: the OR/AND scan below only splits at top level,
+            // so a fully wrapped group like "(a=? AND (b=? OR c=?))" would otherwise fall
+            // through to the leaf matchers unhandled.
+            var current = expr.trim()
+            while (current.startsWith("(") && current.endsWith(")")) {
+                current = current.removePrefix("(").removeSuffix(")").trim()
+            }
+            for (orIndex in findTopLevel(current, " OR ")) {
+                return eval(current.substring(0, orIndex)) || eval(current.substring(orIndex + 4))
+            }
+            for (andIndex in findTopLevel(current, " AND ")) {
+                return eval(current.substring(0, andIndex)) && eval(current.substring(andIndex + 5))
+            }
+            val equality = Regex("^(\\w+)\\s*=\\s*\\?$").find(current)
+            if (equality != null) {
+                val column = equality.groupValues[1]
+                val arg = args.getOrNull(argIndex++)
+                    ?: throw IllegalArgumentException("Missing selection arg for '$selection'")
+                return row[column]?.toString() == arg
+            }
+            val inList = Regex("^(\\w+)\\s+IN\\s+\\((.*)\\)$").find(current)
+            if (inList != null) {
+                val column = inList.groupValues[1]
+                val values = inList.groupValues[2].split(",").map { it.trim() }
+                val argsSlice = args.subList(argIndex, argIndex + values.size)
+                argIndex += values.size
+                return row[column]?.toString() in argsSlice
+            }
+            throw IllegalArgumentException("Unsupported selection: $selection")
+        }
+
+        return eval(selection)
     }
 
     private fun matchesExtra(

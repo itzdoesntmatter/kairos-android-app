@@ -49,6 +49,8 @@ androix-test-core = "1.7.0"
 retrofit = "3.0.0"
 okhttp = "5.5.0"
 bouncycastle = "1.78.1"
+protonCrypto = "36.6.2"
+ical4j = "4.0.6"
 kotlinxSerializationJson = "1.11.0"
 retrofitKotlinxSerializationConverter = "1.0.0"
 splashscreen = "1.2.0"
@@ -119,6 +121,12 @@ robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
+# ProtonCore OpenPGP (architecture D1, GPL-3.0, distribution obligations §9 item 13): wraps the
+# exact gomobile crypto the reference app binds (me.proton.crypto:android-golib, transitively).
+proton-crypto-android = { group = "me.proton.core", name = "crypto-android", version.ref = "protonCrypto" }
+proton-crypto-common = { group = "me.proton.core", name = "crypto-common", version.ref = "protonCrypto" }
+# iCal parsing for decrypted event parts (architecture §3; same parser family as the reference).
+ical4j = { group = "org.mnode.ical4j", name = "ical4j", version.ref = "ical4j" }
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 retrofit-kotlin-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerializationConverter" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
@@ -126,6 +134,7 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
 vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }

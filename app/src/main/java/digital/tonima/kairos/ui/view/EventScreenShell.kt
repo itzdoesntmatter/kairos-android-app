@@ -49,10 +49,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun EventScreenShell(
     uiState: EventScreenUiState,
-    isProUser: Boolean,
     isAiUser: Boolean,
     snackbarHostState: SnackbarHostState,
-    onUpgradeToPro: () -> Unit,
     onSettingsClick: () -> Unit,
     onChatHistoryClick: () -> Unit,
     onImportCalendarClick: () -> Unit,
@@ -72,9 +70,7 @@ fun EventScreenShell(
         gesturesEnabled = drawerState.isOpen,
         drawerContent = {
             DrawerContent(
-                isProUser = isProUser,
                 isAiUser = isAiUser,
-                onUpgradeToProClick = onUpgradeToPro,
                 onOurOtherAppsClick = {
                     val browserIntent =
                         Intent(

@@ -6,9 +6,7 @@ plugins {
 // with zero cross-feature coupling (parseMarkdownToAnnotatedString). Components that take a
 // feature's UiState directly (e.g. PermissionGate today needs SettingsUiState) deliberately stay
 // out of this module for now rather than pull :core in here backwards — see the modularization
-// plan's Phase 2/6 notes. AdBannerView lives in :core:ads instead, so modules that don't show
-// ads (e.g. :wear, via feature:calendar:impl / feature:settings:impl) never pull in the AdMob
-// SDK's manifest.
+// plan's Phase 2/6 notes.
 kotlin {
     androidLibrary {
         namespace = "digital.tonima.kairos.core.ui"

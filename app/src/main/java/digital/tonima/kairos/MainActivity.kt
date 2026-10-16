@@ -17,27 +17,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
-import digital.tonima.core.billing.BillingManager
-import digital.tonima.core.billing.SubscriptionManager
 import digital.tonima.core.inappupdate.InAppUpdateManager
-import digital.tonima.kairos.core.ads.consent.AdsConsent
 import digital.tonima.kairos.core.ui.theme.KairosTheme
 import digital.tonima.kairos.inappupdate.InAppUpdateDelegate
 import digital.tonima.kairos.ui.view.EventScreen
 import digital.tonima.kairos.ui.widget.UpcomingEventWidgetRefresh
-import kotlinx.coroutines.launch
 import logcat.logcat
 import javax.inject.Inject
 import digital.tonima.kairos.core.R as CoreR
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Inject
-    lateinit var billingManager: BillingManager
-
-    @Inject
-    lateinit var subscriptionManager: SubscriptionManager
-
     @Inject
     lateinit var inAppUpdateManager: InAppUpdateManager
     private lateinit var inAppUpdateDelegate: InAppUpdateDelegate
@@ -60,10 +50,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        billingManager.connect()
-        subscriptionManager.connect()
-        // Shows the consent form when required; ad requests stay blocked until it allows them.
-        AdsConsent.gather(this)
         setContent {
             KairosTheme {
                 val windowSizeClass = calculateWindowSizeClass(this)
@@ -89,27 +75,8 @@ class MainActivity : ComponentActivity() {
                         inAppUpdateDelegate.onCreate()
                     }
 
-                    LaunchedEffect(billingManager, subscriptionManager) {
-                        launch {
-                            billingManager.purchaseErrors.collect {
-                                rememberSnackbarHostState.showSnackbar(
-                                    message = getString(CoreR.string.billing_store_unavailable),
-                                )
-                            }
-                        }
-                        launch {
-                            subscriptionManager.subscriptionErrors.collect {
-                                rememberSnackbarHostState.showSnackbar(
-                                    message = getString(CoreR.string.billing_store_unavailable),
-                                )
-                            }
-                        }
-                    }
-
                     EventScreen(
                         snackbarHostState = rememberSnackbarHostState,
-                        onPurchaseRequest = { billingManager.launchPurchaseFlow(this) },
-                        onSubscriptionRequest = { subscriptionManager.launchSubscriptionFlow(this) },
                         windowSizeClass = windowSizeClass,
                     )
                 }

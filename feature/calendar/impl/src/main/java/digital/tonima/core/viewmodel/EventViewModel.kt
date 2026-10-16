@@ -49,13 +49,9 @@ import digital.tonima.core.viewmodel.EventIntent.ShowCreateEventDialog
 import digital.tonima.core.viewmodel.EventIntent.ToggleCalendarFilter
 import digital.tonima.core.viewmodel.EventIntent.ToggleEventAlarm
 import digital.tonima.core.viewmodel.EventIntent.ToggleEventVibrate
-import digital.tonima.core.viewmodel.EventIntent.UpgradeToProIARequest
-import digital.tonima.core.viewmodel.EventIntent.UpgradeToProRequest
 import digital.tonima.core.viewmodel.EventSideEffect.AIToolError
 import digital.tonima.core.viewmodel.EventSideEffect.CopyToClipboard
 import digital.tonima.core.viewmodel.EventSideEffect.OpenMeetingUrl
-import digital.tonima.core.viewmodel.EventSideEffect.RequestPurchase
-import digital.tonima.core.viewmodel.EventSideEffect.RequestSubscription
 import digital.tonima.core.viewmodel.EventSideEffect.ShowSnackbar
 import digital.tonima.core.viewmodel.UiText.StringResource
 import digital.tonima.core.viewmodel.uimodel.EventUiModel
@@ -168,14 +164,6 @@ class EventViewModel
                         )
                     is ToggleEventVibrate -> toggleEventVibrateUseCase(intent.event.toDomainModel(), intent.enabled)
                     FetchWeather -> fetchWeather()
-                    UpgradeToProRequest ->
-                        _uiState.update {
-                            it.copy(effect = RequestPurchase)
-                        }
-                    UpgradeToProIARequest ->
-                        _uiState.update {
-                            it.copy(effect = RequestSubscription)
-                        }
                     is ChangeBottomTab -> _uiState.update { it.copy(selectedBottomTab = intent.tabIndex) }
                     OpenImportCalendarScreen -> appNavigator.navigateTo(CalendarNavKey.ImportCalendar)
                     CloseImportCalendarScreen -> appNavigator.popBackStack()

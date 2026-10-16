@@ -17,8 +17,6 @@ compose-calendar = "2.10.1"
 wear = "1.4.0"
 workManager="2.12.0"
 google-services = "4.5.0"
-playServicesAdsApi = "25.5.0"
-userMessagingPlatform = "4.0.0"
 firebase-bom = "34.19.0"
 firebase-perf = "2.0.2"
 crashlytics = "3.0.8"
@@ -27,7 +25,6 @@ hilt-worker="1.4.0"
 hilt-binder = "1.1.4"
 hilt-navigations-compose = "1.4.0"
 ksp = "2.3.12"
-paywall = "0.11.0"
 appcompat = "1.8.0"
 wear-compose = "1.7.0"
 wearToolingPreview = "1.0.0"
@@ -101,8 +98,6 @@ accompanist-permissions = { group = "com.google.accompanist", name = "accompanis
 androidx-compose-calendar = { group = "com.kizitonwose.calendar", name = "compose", version.ref = "compose-calendar" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "workManager" }
-play-services-ads-api = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "playServicesAdsApi" }
-user-messaging-platform = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "userMessagingPlatform" }
 location-play-services = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
@@ -117,8 +112,6 @@ hilt-binder = { group = "com.paulrybitskyi", name = "hilt-binder", version.ref =
 hilt-binder-compiler = { group = "com.paulrybitskyi", name = "hilt-binder-compiler", version.ref = "hilt-binder" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigations-compose" }
 hilt-worker = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-worker" }
-paywall-core = { group = "com.github.tonimadev.PayWall", name = "paywall-core", version.ref = "paywall" }
-paywall-play = { group = "com.github.tonimadev.PayWall", name = "paywall-play", version.ref = "paywall" }
 androidx-appfunctions = { group = "androidx.appfunctions", name = "appfunctions", version.ref = "androidx-appfunctions" }
 androidx-appfunctions-compiler = { group = "androidx.appfunctions", name = "appfunctions-compiler", version.ref = "androidx-appfunctions" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }

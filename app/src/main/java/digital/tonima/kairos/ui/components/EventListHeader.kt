@@ -102,10 +102,6 @@ internal fun EventListHeader(
             )
         }
 
-        if (!uiState.isAiUser) {
-            ProUpgradeCard(onUpgradeClick = aiActions.onSubscriptionRequest)
-        }
-
         if (compact) {
             DayStrip(
                 selectedDate = uiState.selectedDate,

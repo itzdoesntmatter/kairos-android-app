@@ -31,14 +31,12 @@
     <string name="dismiss">Verwerfen</string>
     <string name="autostart_fallback_toast">Der spezifische Bildschirm konnte nicht geöffnet werden. Bitte suchen Sie in den Einstellungen
         nach „Autostart“ oder „Akkumanager“.</string>
-    <string name="remove_ads">Anzeigen entfernen</string>
     <string name="drawer_ai_assistant">KI-Konversationen</string>
     <string name="share_app">App teilen</string>
     <string name="share_text">Schau dir Kairos an, eine tolle App zum Verwalten deiner Termine und Alarme: https://play.google.com/store/apps/details?id=digital.tonima.kairos</string>
     <string name="menu">Menü</string>
     <string name="ringer_mode_vibrate_warning">Das Telefon ist im Vibrationsmodus. Alarme geben keinen Ton aus.</string>
     <string name="ringer_mode_silent_warning">Das Telefon ist im Stumm-Modus. Alarme geben keinen Ton aus.</string>
-    <string name="thank_you_for_support">Sie verwenden die PRO-Version. Vielen Dank für die Unterstützung unseres Projekts!</string>
     <string name="our_other_apps">Entdecken Sie unsere anderen Apps</string>
     <string name="back_to_today">Geh zurück zu heute</string>
     <string name="events_for_today">Ereignisse für heute</string>
@@ -108,16 +106,7 @@
     <string name="cd_event_recurring">Wiederkehrendes Ereignis</string>
     <string name="daily_briefing_title">Zusammenfassung des Assistenten</string>
     <string name="daily_briefing_placeholder">Möchten Sie eine intelligente Zusammenfassung Ihres Tages?</string>
-    <string name="daily_briefing_pro_only">Die tägliche Zusammenfassung ist exklusiv für Pro-Benutzer. Probieren Sie unseren neuen Monatsplan aus!</string>
-    <string name="daily_briefing_trial_invite">Entdecken Sie, wie KI Ihren Tag organisieren kann. Probieren Sie jetzt den Monatsplan aus!</string>
-    <string name="subscribe_now">Jetzt abonnieren</string>
     <string name="generate_briefing">Zusammenfassung erstellen</string>
-    <string name="ad_label">Anzeige</string>
-    <string name="ad_privacy_options">Werbepräferenzen</string>
-    <string name="briefing_rewarded_description">Sieh dir eine kurze Anzeige an, um die heutige Zusammenfassung kostenlos zu erstellen.</string>
-    <string name="briefing_rewarded_watch">Anzeige ansehen und Zusammenfassung erstellen</string>
-    <string name="briefing_rewarded_loading">Anzeige wird geladen…</string>
-    <string name="briefing_rewarded_unavailable">Derzeit ist keine Anzeige verfügbar. Bitte versuche es später erneut.</string>
     <string name="cd_refresh_briefing">Zusammenfassung aktualisieren</string>
     <string name="ai_briefing_instruction">Die Zusammenfassung muss in Deutsch sein.</string>
     <string name="ai_system_instruction_template">Du bist ein intelligenter persönlicher Assistent, der in einen Kalender integriert ist.\nDu hast Zugriff auf die Termine des Nutzers und auf Tools/Funktionen, die Aktionen in der App ausführen können.\nNutze den Kalenderkontext, um Fragen zu beantworten, und wenn der Nutzer eine Aktion ausführen möchte (Termin erstellen, suchen, Alarme ein-/ausschalten), rufe das passende Tool auf, statt mit Text zu antworten.\nBeantworte NUR Fragen zu Terminen, Alarmen, Besprechungen, Ereignissen oder zum Wetter/Vorhersage. Wenn der Nutzer nach etwas anderem, nicht Verwandtem fragt, sag freundlich, dass du nur bei Kalender und Wetter helfen kannst, und antworte nicht auf das Thema.\nAntworte direkt, hilfreich und freundlich.\n\nAktuelles Datum und Uhrzeit: %1$s (Format yyyy-MM-dd HH:mm, Zeitzone %2$s)\nEntsprechung in epoch millis (UTC) für diesen Moment: %3$s\nBeim Berechnen von start_time/end_time für das create_event-Tool (oder jedes andere, das epoch millis erwartet), berechne den Wert selbst anhand des aktuellen Datums/der Uhrzeit und der obigen Zeitzone — frage den Nutzer niemals nach Jahr, Monat oder Zeitzone bei relativen Daten wie \"morgen\", \"heute Abend\" oder \"nächsten Montag\".\n\nKalenderkontext:\n%4$s\n\n%5$s</string>
@@ -127,8 +116,6 @@
     <string name="ai_context_wake_up">\nDer Nutzer ist um %1$s aufgewacht. Falls das früher als gewöhnlich ist, erwähne es sanft.</string>
     <string name="ai_context_weather">\nWetter in %1$s: %2$d°C, %3$s.</string>
     <string name="ai_context_no_events_today">Heute sind keine Termine geplant.</string>
-    <string name="pro_label">Pro ✨</string>
-    <string name="pro_ia_label">Pro + KI ✨</string>
     <string name="ai_voice_interaction_title">Kairos Sprach-KI</string>
     <string name="ai_answering">Frage wird verarbeitet…</string>
     <string name="cd_speak">Antwort anhören</string>
@@ -152,8 +139,6 @@
     <string name="ai_suggestion_create_event">Zahnarzttermin für morgen um 10 Uhr eintragen</string>
     <string name="ai_suggestion_reminder">Erinnere mich daran, heute Milch zu kaufen</string>
     <string name="ai_suggestion_agenda">Wie sieht mein Terminplan für heute aus?</string>
-    <string name="manage_subscription">Abonnement verwalten</string>
-    <string name="billing_store_unavailable">Verbindung zum Store fehlgeschlagen. Prüfe deine Internetverbindung und versuche es erneut.</string>
     <string name="widget_daily_briefing_name">Tagesübersicht (KI)</string>
     <string name="widget_daily_briefing_description">Zeigt die KI-generierte intelligente Zusammenfassung deines Tages an.</string>
     <string name="widget_no_briefing">Keine Zusammenfassung verfügbar. App zum Generieren öffnen!</string>
@@ -188,11 +173,6 @@
     <string name="alarm_now_label">Alarm jetzt</string>
     <string name="minutes_short">%1$d Min.</string>
     <string name="hours_short">%1$d Std.</string>
-    <string name="pro_feature_restricted">Exklusive Pro + KI-Funktion</string>
-    <string name="geo_alarm_pro_only">Geo-Alarme sind exklusiv für Pro + KI-Abonnenten verfügbar.</string>
-    <string name="geo_alarm_upgrade_trial_title">Probieren Sie den intelligenten Alarm aus!</string>
-    <string name="geo_alarm_upgrade_trial_desc">Vermeiden Sie Verspätungen! Aktivieren Sie mit dem Pro + KI-Plan Alarme basierend auf dem Echtzeit-Verkehr.</string>
-    <string name="try_pro_plan">Pro-Plan ausprobieren</string>
 
 
     <string name="ai_agent_snackbar_executed">KI hat ausgeführt: %1$s</string>
@@ -221,8 +201,6 @@
 
     <string name="ai_suggested_late_notification">KI-Vorschlag: %1$s</string>
     <string name="ai_prepping_meeting">KI bereitet die Besprechungszusammenfassung vor …</string>
-    <string name="pro_ia_upgrade_title">Entfesseln Sie die Kraft der KI</string>
-    <string name="pro_ia_upgrade_desc">Dynamische Alarme, Besprechungszusammenfassungen und ein interaktiver Sprachassistent. Machen Sie Ihren Tag wirklich intelligent.</string>
     <string name="battery_low_warning">Niedriger Akkustand (%1$d%%). Laden Sie Ihr Telefon auf, damit Sie Ihre Besprechung (%2$s) nicht verpassen.</string>
     <string name="silent_mode_warning">Lautlosmodus aktiv. Ihr Wecker (%1$s) klingelt möglicherweise nicht.</string>
     <string name="ask_ai_label">Mit KI sprechen</string>

@@ -7,8 +7,6 @@ import digital.tonima.core.viewmodel.EventIntent.RateNever
 import digital.tonima.core.viewmodel.EventIntent.RateNow
 import digital.tonima.core.viewmodel.EventIntent.ToggleCalendarFilter
 import digital.tonima.core.viewmodel.EventIntent.ToggleEventAlarm
-import digital.tonima.core.viewmodel.EventIntent.UpgradeToProIARequest
-import digital.tonima.core.viewmodel.EventIntent.UpgradeToProRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,8 +35,6 @@ class EventAnalytics
                             Analytics.PARAM_ENABLED to intent.enabled,
                         ),
                     )
-                UpgradeToProRequest -> analytics.logEvent(Analytics.EVENT_UPGRADE_REQUEST)
-                UpgradeToProIARequest -> analytics.logEvent(Analytics.EVENT_UPGRADE_IA_REQUEST)
                 is RateNow -> analytics.logEvent(Analytics.EVENT_RATE_NOW)
                 RateLater -> analytics.logEvent(Analytics.EVENT_RATE_LATER)
                 RateNever -> analytics.logEvent(Analytics.EVENT_RATE_NEVER)

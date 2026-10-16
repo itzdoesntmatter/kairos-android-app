@@ -31,14 +31,12 @@
     <string name="dismiss">Dispensar</string>
     <string name="autostart_fallback_toast">Não foi possível abrir a tela específica. Por favor, procure por "Início Automático" ou
         "Gerenciador de Bateria" nas configurações.</string>
-    <string name="remove_ads">Remover Anúncios</string>
     <string name="drawer_ai_assistant">Conversas com a IA</string>
     <string name="share_app">Compartilhar aplicativo</string>
     <string name="share_text">Confira o Kairos, um aplicativo incrível para gerenciar seus eventos e alarmes: https://play.google.com/store/apps/details?id=digital.tonima.kairos</string>
     <string name="menu">Menu</string>
     <string name="ringer_mode_vibrate_warning">O celular está no modo de vibração. Os alarmes não tocarão som.</string>
     <string name="ringer_mode_silent_warning">O celular está no modo silencioso. Os alarmes não tocarão som.</string>
-    <string name="thank_you_for_support">Usando a versão PRO. Obrigado por apoiar nosso projeto</string>
     <string name="our_other_apps">Conheça nossos outros apps</string>
     <string name="back_to_today">Voltar para hoje</string>
     <string name="events_for_today">Eventos para hoje</string>
@@ -108,19 +106,8 @@
     <string name="cd_event_recurring">Evento recorrente</string>
     <string name="daily_briefing_title">Resumo do Assistente</string>
     <string name="daily_briefing_placeholder">Deseja um resumo inteligente do seu dia?</string>
-    <string name="daily_briefing_pro_only">O Resumo Diário é exclusivo para usuários Pro. Experimente nosso novo Plano Mensal!</string>
-    <string name="daily_briefing_trial_invite">Descubra como a IA pode organizar seu dia. Teste o Plano Mensal agora!</string>
-    <string name="subscribe_now">Assinar Agora</string>
     <string name="generate_briefing">Gerar Resumo</string>
-    <string name="ad_label">Anúncio</string>
-    <string name="ad_privacy_options">Preferências de anúncios</string>
-    <string name="briefing_rewarded_description">Assista a um anúncio curto para gerar o resumo de hoje, sem custo.</string>
-    <string name="briefing_rewarded_watch">Assistir anúncio e gerar resumo</string>
-    <string name="briefing_rewarded_loading">Carregando anúncio…</string>
-    <string name="briefing_rewarded_unavailable">Anúncio indisponível agora. Tente novamente mais tarde.</string>
     <string name="cd_refresh_briefing">Atualizar resumo</string>
-    <string name="pro_label">Pro ✨</string>
-    <string name="pro_ia_label">Pro + IA ✨</string>
     <string name="ai_voice_interaction_title">Kairos Voice AI</string>
     <string name="ai_answering">Processando sua pergunta…</string>
     <string name="cd_speak">Ouvir resposta</string>
@@ -144,8 +131,6 @@
     <string name="ai_suggestion_create_event">Marcar dentista amanhã às 10h</string>
     <string name="ai_suggestion_reminder">Lembrar de comprar leite hoje</string>
     <string name="ai_suggestion_agenda">Como está minha agenda de hoje?</string>
-    <string name="manage_subscription">Gerenciar assinatura</string>
-    <string name="billing_store_unavailable">Não foi possível conectar à loja. Verifique sua conexão e tente novamente.</string>
     <string name="ai_briefing_instruction">O resumo deve ser em Português.</string>
     <string name="ai_system_instruction_template">Você é um assistente pessoal inteligente integrado a um calendário.\nVocê tem acesso aos eventos do usuário e a ferramentas (tools/functions) que podem executar ações no app.\nUse o contexto do calendário para responder perguntas e, quando o usuário pedir para executar uma ação (criar evento, buscar, ligar/desligar alarmes), invoque a ferramenta apropriada em vez de responder com texto.\nResponda APENAS perguntas relacionadas à agenda, alarmes, reuniões, eventos, ou sobre o clima/previsão do tempo. Se o usuário perguntar qualquer outra coisa não relacionada, diga gentilmente que você só pode ajudar com calendário e clima e não responda ao assunto.\nResponda de forma direta, útil e amigável.\n\nData e Hora atual: %1$s (formato yyyy-MM-dd HH:mm, fuso horário %2$s)\nEquivalente em epoch millis (UTC) deste instante: %3$s\nAo calcular start_time/end_time para a ferramenta create_event (ou qualquer outra que peça epoch millis), derive o valor você mesmo a partir da Data e Hora atual e do fuso horário acima — nunca pergunte ao usuário o ano, mês ou fuso horário de datas relativas como \"amanhã\", \"hoje à noite\" ou \"próxima segunda\".\n\nContexto do Calendário:\n%4$s\n\n%5$s</string>
     <string name="ai_daily_briefing_prompt_template">Você é um assistente pessoal inteligente.\nResuma os eventos de hoje do calendário abaixo e dê conselhos proativos.\nConsidere o clima atual para dar dicas (ex: se vai chover, sugira levar guarda-chuva ou sair mais cedo).\nSeja breve (máximo 3-4 frases).\nIdentifique conflitos ou horários apertados.\nSugira silenciar o celular se houver muitas reuniões seguidas.\nUse um tom amigável e proativo.%1$s%2$s\n%3$s\n\nEventos de hoje:\n%4$s</string>
@@ -189,13 +174,6 @@
     <string name="alarm_now_label">Alarme agora</string>
     <string name="minutes_short">%1$d min</string>
     <string name="hours_short">%1$d h</string>
-    <string name="pro_feature_restricted">Recurso Exclusivo Pro + IA</string>
-    <string name="geo_alarm_pro_only">Geoalarmes são exclusivos para assinantes do plano Pro + IA.</string>
-    <string name="geo_alarm_upgrade_trial_title">Experimente o Alarme Inteligente!</string>
-    <string name="geo_alarm_upgrade_trial_desc">Evite atrasos! Ative alarmes baseados no trânsito em tempo real com o plano Pro + IA.</string>
-    <string name="try_pro_plan">Testar Plano Pro</string>
-    <string name="pro_ia_upgrade_title">Desbloqueie o Poder da IA</string>
-    <string name="pro_ia_upgrade_desc">Alarmes dinâmicos, resumos de reuniões e assistente de voz interativo. Torne seu dia verdadeiramente inteligente.</string>
 
 
     <string name="ai_agent_snackbar_executed">IA executou: %1$s</string>

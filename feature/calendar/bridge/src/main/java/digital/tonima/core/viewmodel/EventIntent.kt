@@ -51,10 +51,6 @@ sealed class EventIntent : BaseIntent {
 
     object RateNever : EventIntent()
 
-    object UpgradeToProRequest : EventIntent()
-
-    object UpgradeToProIARequest : EventIntent()
-
     data class SearchQueryChanged(val query: String) : EventIntent()
 
     data class ChangeBottomTab(val tabIndex: Int) : EventIntent()

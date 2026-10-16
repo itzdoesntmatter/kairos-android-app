@@ -45,7 +45,6 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import digital.tonima.core.ai.repository.DailyBriefingRepository
 import digital.tonima.core.analytics.CrashReporter
-import digital.tonima.core.billing.SubscriptionManager
 import digital.tonima.core.data.repository.CalendarRepository
 import digital.tonima.core.utils.LocalizedDateTime
 import digital.tonima.kairos.MainActivity
@@ -68,8 +67,6 @@ class DailyBriefingWidget : GlanceAppWidget() {
 
         fun calendarRepository(): CalendarRepository
 
-        fun subscriptionManager(): SubscriptionManager
-
         fun crashReporter(): CrashReporter
     }
 
@@ -84,7 +81,6 @@ class DailyBriefingWidget : GlanceAppWidget() {
             )
         val repository = entryPoint.dailyBriefingRepository()
         val calendarRepo = entryPoint.calendarRepository()
-        val subscriptionManager = entryPoint.subscriptionManager()
 
         // Buscar eventos de hoje
         val today = LocalDate.now()
@@ -114,10 +110,9 @@ class DailyBriefingWidget : GlanceAppWidget() {
 
         provideContent {
             val briefing by repository.getDailyBriefing().collectAsState(initial = null)
-            val isPro by subscriptionManager.isProUser.collectAsState()
 
             GlanceTheme {
-                WidgetContent(briefing, events, isPro)
+                WidgetContent(briefing, events)
             }
         }
     }
@@ -126,7 +121,6 @@ class DailyBriefingWidget : GlanceAppWidget() {
     private fun WidgetContent(
         briefing: String?,
         events: ImmutableList<Event>,
-        isPro: Boolean,
     ) {
         val context = LocalContext.current
 
@@ -138,43 +132,41 @@ class DailyBriefingWidget : GlanceAppWidget() {
                     .padding(12.dp)
                     .clickable(actionStartActivity<MainActivity>()),
         ) {
-            if (isPro) {
-                Row(
-                    modifier = GlanceModifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = "✨ " + context.getString(R.string.daily_briefing_title),
-                        style =
-                            TextStyle(
-                                color = GlanceTheme.colors.primary,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                            ),
-                    )
-                }
-
-                Spacer(modifier = GlanceModifier.height(8.dp))
-
-                Box(
-                    modifier =
-                        GlanceModifier
-                            .fillMaxWidth()
-                            .background(GlanceTheme.colors.surface)
-                            .padding(8.dp),
-                ) {
-                    Text(
-                        text = briefing ?: context.getString(R.string.widget_no_briefing),
-                        style =
-                            TextStyle(
-                                color = GlanceTheme.colors.onSurface,
-                                fontSize = 14.sp,
-                            ),
-                    )
-                }
-
-                Spacer(modifier = GlanceModifier.height(12.dp))
+            Row(
+                modifier = GlanceModifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "✨ " + context.getString(R.string.daily_briefing_title),
+                    style =
+                        TextStyle(
+                            color = GlanceTheme.colors.primary,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                )
             }
+
+            Spacer(modifier = GlanceModifier.height(8.dp))
+
+            Box(
+                modifier =
+                    GlanceModifier
+                        .fillMaxWidth()
+                        .background(GlanceTheme.colors.surface)
+                        .padding(8.dp),
+            ) {
+                Text(
+                    text = briefing ?: context.getString(R.string.widget_no_briefing),
+                    style =
+                        TextStyle(
+                            color = GlanceTheme.colors.onSurface,
+                            fontSize = 14.sp,
+                        ),
+                )
+            }
+
+            Spacer(modifier = GlanceModifier.height(12.dp))
 
             Row(
                 modifier = GlanceModifier.fillMaxWidth(),

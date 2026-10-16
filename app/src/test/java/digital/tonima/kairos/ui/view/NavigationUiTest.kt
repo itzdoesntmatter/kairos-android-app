@@ -38,38 +38,17 @@ class NavigationUiTest {
     // region Drawer
 
     @Test
-    fun `free users are offered to remove ads`() {
-        drawer(isProUser = false, isAiUser = false)
-
-        compose.onNodeWithText(string(R.string.remove_ads)).performClick()
-
-        assertEquals(listOf("upgrade", "close"), calls)
-        compose.onAllNodesWithText(string(R.string.drawer_ai_assistant)).assertCountEquals(0)
-    }
-
-    @Test
-    fun `pro users see their plan and no remove ads entry`() {
-        drawer(isProUser = true, isAiUser = false)
-
-        compose.onNodeWithText(string(R.string.pro_label)).assertExists()
-        compose.onAllNodesWithText(string(R.string.remove_ads)).assertCountEquals(0)
-    }
-
-    @Test
-    fun `ai users reach the assistant and can manage the subscription in the Play Store`() {
-        drawer(isProUser = true, isAiUser = true)
+    fun `ai users reach the assistant`() {
+        drawer(isAiUser = true)
 
         compose.onNodeWithText(string(R.string.drawer_ai_assistant)).performClick()
-        compose.onNodeWithText(string(R.string.manage_subscription)).performClick()
 
-        assertEquals(listOf("chat", "close", "close"), calls)
-        val store = shadowOf(compose.activity).nextStartedActivity
-        assertEquals("https://play.google.com/store/account/subscriptions", store.dataString)
+        assertEquals(listOf("chat", "close"), calls)
     }
 
     @Test
     fun `drawer entries open their destinations and close the drawer`() {
-        drawer(isProUser = true, isAiUser = false)
+        drawer(isAiUser = false)
 
         compose.onNodeWithText(string(R.string.settings)).performScrollTo().performClick()
         compose.onNodeWithText(string(R.string.import_calendar)).performScrollTo().performClick()
@@ -84,7 +63,7 @@ class NavigationUiTest {
 
     @Test
     fun `sharing the app opens the share sheet with the invite text`() {
-        drawer(isProUser = true, isAiUser = false)
+        drawer(isAiUser = false)
 
         compose.onNodeWithText(string(R.string.share_app)).performScrollTo().performClick()
 
@@ -95,15 +74,10 @@ class NavigationUiTest {
         assertEquals(string(R.string.share_text), send.getStringExtra(Intent.EXTRA_TEXT))
     }
 
-    private fun drawer(
-        isProUser: Boolean,
-        isAiUser: Boolean,
-    ) {
+    private fun drawer(isAiUser: Boolean) {
         compose.setContent {
             DrawerContent(
-                isProUser = isProUser,
                 isAiUser = isAiUser,
-                onUpgradeToProClick = { calls += "upgrade" },
                 onOurOtherAppsClick = { calls += "otherApps" },
                 onSettingsClick = { calls += "settings" },
                 onChatHistoryClick = { calls += "chat" },
@@ -175,10 +149,8 @@ class NavigationUiTest {
         compose.setContent {
             EventScreenShell(
                 uiState = EventScreenUiState(isAiUser = isAiUser),
-                isProUser = true,
                 isAiUser = isAiUser,
                 snackbarHostState = SnackbarHostState(),
-                onUpgradeToPro = { calls += "upgrade" },
                 onSettingsClick = { calls += "settings" },
                 onChatHistoryClick = { calls += "chat" },
                 onImportCalendarClick = { calls += "import" },

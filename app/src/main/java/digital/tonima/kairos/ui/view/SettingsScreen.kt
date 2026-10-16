@@ -7,7 +7,6 @@ import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -52,7 +51,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -187,7 +185,6 @@ fun SettingsScreen(
             HorizontalDivider(modifier = Modifier.padding(vertical = Dimensions.PaddingTiny))
 
             LocationAlarmSection(
-                isAiUser = uiState.isAiUser,
                 isEnabled = settingsUiState.isLocationAlarmEnabled,
                 onToggle = settingsActions.onLocationAlarmToggle,
                 preferredTransportMode = settingsUiState.preferredTransportMode,
@@ -235,8 +232,6 @@ fun SettingsScreen(
             HorizontalDivider(modifier = Modifier.padding(vertical = Dimensions.PaddingTiny))
 
             NotificationAccessSection(settingsUiState = settingsUiState, settingsActions = settingsActions)
-
-            AdPrivacyOptionsSection()
 
             if (uiState.availableCalendars.isNotEmpty()) {
                 CalendarFilterSection(
@@ -513,7 +508,6 @@ private fun AlarmOffsetDropdown(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LocationAlarmSection(
-    isAiUser: Boolean,
     isEnabled: Boolean,
     onToggle: (Boolean) -> Unit,
     preferredTransportMode: String,
@@ -537,36 +531,16 @@ private fun LocationAlarmSection(
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
                 )
-                if (!isAiUser) {
-                    Text(
-                        text = stringResource(R.string.pro_ia_label),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold,
-                        modifier =
-                            Modifier
-                                .clip(RoundedCornerShape(Dimensions.RadiusSmall))
-                                .background(
-                                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
-                                )
-                                .padding(horizontal = 6.dp, vertical = 2.dp),
-                    )
-                }
             }
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text =
-                    if (isAiUser) {
-                        stringResource(R.string.location_alarm_description)
-                    } else {
-                        stringResource(R.string.geo_alarm_pro_only)
-                    },
+                text = stringResource(R.string.location_alarm_description),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
         Switch(
-            checked = isEnabled && isAiUser,
+            checked = isEnabled,
             onCheckedChange = onToggle,
         )
     }

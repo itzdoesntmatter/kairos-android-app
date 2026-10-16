@@ -80,8 +80,6 @@ import digital.tonima.core.viewmodel.EventIntent.ShowCreateEventDialog
 import digital.tonima.core.viewmodel.EventIntent.ToggleCalendarFilter
 import digital.tonima.core.viewmodel.EventIntent.ToggleEventAlarm
 import digital.tonima.core.viewmodel.EventIntent.ToggleEventVibrate
-import digital.tonima.core.viewmodel.EventIntent.UpgradeToProIARequest
-import digital.tonima.core.viewmodel.EventIntent.UpgradeToProRequest
 import digital.tonima.core.viewmodel.EventScreenUiState
 import digital.tonima.core.viewmodel.EventViewModel
 import digital.tonima.core.viewmodel.SettingsIntent.ChangeTransportMode
@@ -113,9 +111,7 @@ import digital.tonima.core.viewmodel.uimodel.EventUiModel
 import digital.tonima.feature.ai.bridge.AiNavKey
 import digital.tonima.feature.calendar.bridge.CalendarNavKey
 import digital.tonima.feature.settings.bridge.SettingsNavKey
-import digital.tonima.kairos.BuildConfig.ADMOB_BANNER_AD_UNIT_HOME
 import digital.tonima.kairos.core.R
-import digital.tonima.kairos.core.ads.components.AdBannerView
 import digital.tonima.kairos.navigation.AppNavHostViewModel
 import digital.tonima.kairos.ui.components.AiActions
 import digital.tonima.kairos.ui.components.AiSuggestionsDialog
@@ -135,15 +131,12 @@ fun EventScreen(
     aiViewModel: AiViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel(),
     snackbarHostState: SnackbarHostState,
-    onPurchaseRequest: () -> Unit,
-    onSubscriptionRequest: () -> Unit,
     windowSizeClass: WindowSizeClass? = null,
 ) {
     val uiState by eventViewModel.uiState.collectAsStateWithLifecycle()
     val aiUiState by aiViewModel.uiState.collectAsStateWithLifecycle()
     val settingsUiState by settingsViewModel.uiState.collectAsStateWithLifecycle()
 
-    val isProUser by eventViewModel.isProUser.collectAsStateWithLifecycle()
     val isAiUser by eventViewModel.isAiUser.collectAsStateWithLifecycle()
 
     var aiConfirmationData by remember { mutableStateOf<AiSideEffect.RequireUserConfirmation?>(null) }
@@ -186,8 +179,6 @@ fun EventScreen(
         aiViewModel = aiViewModel,
         settingsViewModel = settingsViewModel,
         snackbarHostState = snackbarHostState,
-        onSubscriptionRequest = onSubscriptionRequest,
-        onPurchaseRequest = onPurchaseRequest,
         onSetAiConfirmationData = { aiConfirmationData = it },
     )
 
@@ -272,11 +263,9 @@ fun EventScreen(
         }
 
     val aiActions =
-        remember(aiViewModel, eventViewModel, onSubscriptionRequest) {
+        remember(aiViewModel, eventViewModel) {
             AiActions(
                 onGenerateBriefing = { aiViewModel.handleIntent(GenerateDailyBriefing(aiInstruction)) },
-                onUpgradeToPro = { eventViewModel.handleIntent(UpgradeToProIARequest) },
-                onSubscriptionRequest = onSubscriptionRequest,
                 onVoiceCaptureClick = { aiViewModel.handleIntent(ShowAiSuggestionsDialog) },
                 onClearAiResponse = { aiViewModel.handleIntent(ClearAiResponse) },
                 onSpeakAiResponse = { aiViewModel.handleIntent(SpeakAiResponse) },
@@ -312,10 +301,8 @@ fun EventScreen(
                 entry<CalendarNavKey.Main> {
                     EventScreenShell(
                         uiState = uiState,
-                        isProUser = isProUser,
                         isAiUser = isAiUser,
                         snackbarHostState = snackbarHostState,
-                        onUpgradeToPro = { eventViewModel.handleIntent(UpgradeToProRequest) },
                         onSettingsClick = { settingsViewModel.handleIntent(OpenSettings) },
                         onChatHistoryClick = { aiViewModel.handleIntent(OpenChatHistoryScreen) },
                         onImportCalendarClick = { eventViewModel.handleIntent(OpenImportCalendarScreen) },
@@ -329,7 +316,6 @@ fun EventScreen(
                             uiState = uiState,
                             aiUiState = aiUiState,
                             settingsUiState = settingsUiState,
-                            isProUser = isProUser,
                             standardPermissionState = standardPermissionState,
                             locationPermissionState = locationPermissionState,
                             windowSizeClass = windowSizeClass,
@@ -411,7 +397,6 @@ private fun EventScreenContent(
     uiState: EventScreenUiState,
     aiUiState: AiUiState,
     settingsUiState: SettingsUiState,
-    isProUser: Boolean,
     standardPermissionState: MultiplePermissionsState?,
     locationPermissionState: MultiplePermissionsState?,
     windowSizeClass: WindowSizeClass?,
@@ -451,8 +436,6 @@ private fun EventScreenContent(
                 .fillMaxSize()
                 .padding(paddingValues),
     ) {
-        AdBannerView(adId = ADMOB_BANNER_AD_UNIT_HOME, isProUser = isProUser)
-
         Box(modifier = Modifier.weight(1f)) {
             if (standardPermissionState != null && locationPermissionState != null) {
                 PermissionGate(
@@ -474,7 +457,6 @@ private fun EventScreenContent(
                         eventActions,
                         settingsActions,
                         aiActions,
-                        isProUser,
                     )
                 }
             } else {
@@ -503,7 +485,6 @@ private fun EventScreenTabContent(
     eventActions: EventActions,
     settingsActions: SettingsActions,
     aiActions: AiActions,
-    isProUser: Boolean,
 ) {
     if (uiState.selectedBottomTab == 1) {
         InsightsContent(
@@ -519,7 +500,6 @@ private fun EventScreenTabContent(
             aiActions = aiActions,
             windowSizeClass = windowSizeClass,
             aiUiState = aiUiState,
-            isProUser = isProUser,
         )
     }
 }
@@ -533,7 +513,6 @@ fun EventScreenContentPreview() {
         uiState = EventScreenUiState(),
         aiUiState = AiUiState(),
         settingsUiState = SettingsUiState(),
-        isProUser = true,
         standardPermissionState = null,
         locationPermissionState = null,
         windowSizeClass = null,
@@ -578,8 +557,6 @@ fun EventScreenContentPreview() {
         aiActions =
             AiActions(
                 onGenerateBriefing = {},
-                onUpgradeToPro = {},
-                onSubscriptionRequest = {},
                 onVoiceCaptureClick = {},
                 onClearAiResponse = {},
                 onSpeakAiResponse = {},

@@ -37,29 +37,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import digital.tonima.core.analytics.Analytics
-import digital.tonima.core.delegates.ProUserProvider
-import digital.tonima.core.di.AlarmBannerAdUnitId
 import digital.tonima.core.receiver.AlarmReceiver
 import digital.tonima.core.service.AlarmSoundAndVibrateService
 import digital.tonima.core.viewmodel.AlarmIntent
 import digital.tonima.core.viewmodel.AlarmSideEffect
 import digital.tonima.core.viewmodel.AlarmViewModel
 import digital.tonima.kairos.core.R
-import digital.tonima.kairos.core.ads.components.AdBannerView
 import digital.tonima.kairos.core.ui.theme.KairosTheme
 import kotlinx.coroutines.launch
 import logcat.logcat
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AlarmActivity : ComponentActivity() {
-    @Inject
-    lateinit var proUserProvider: ProUserProvider
-
-    @Inject
-    @AlarmBannerAdUnitId
-    lateinit var alarmBannerAdUnitId: String
-
     private val viewModel: AlarmViewModel by viewModels()
 
     private val finishReceiver =
@@ -79,8 +68,6 @@ class AlarmActivity : ComponentActivity() {
         setTurnScreenOn(true)
 
         super.onCreate(savedInstanceState)
-
-        proUserProvider.refresh()
 
         viewModel.handleIntent(
             AlarmIntent.Init(
@@ -116,7 +103,6 @@ class AlarmActivity : ComponentActivity() {
         collectSideEffects()
 
         setContent {
-            val isProUser by proUserProvider.isProUser.collectAsStateWithLifecycle()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
             KairosTheme {
@@ -128,10 +114,6 @@ class AlarmActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        AdBannerView(
-                            adId = alarmBannerAdUnitId,
-                            isProUser = isProUser,
-                        )
                         Column(
                             modifier =
                                 Modifier

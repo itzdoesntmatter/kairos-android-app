@@ -1,6 +1,3 @@
-import java.io.FileInputStream
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.androidx.baselineprofile)
@@ -15,11 +12,6 @@ plugins {
     alias(libs.plugins.spotless)
     alias(libs.plugins.stability.analyzer)
 }
-
-val isRunningReleaseTask: Boolean = gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }
-
-// AdMob ids that were not configured for a release build; see verifyReleaseAdMobConfig below.
-val missingReleaseAdMobConfig = mutableListOf<String>()
 
 android {
     namespace = "digital.tonima.kairos"
@@ -47,93 +39,12 @@ android {
     }
 
     buildTypes {
-        debug {
-            val admobAppIdTest = "ca-app-pub-3940256099942544~3347511713"
-            val admobBannerAdUnitIdTest = "ca-app-pub-3940256099942544/6300978111"
-            val admobRewardedAdUnitIdTest = "ca-app-pub-3940256099942544/5224354917"
-            val admobNativeAdUnitIdTest = "ca-app-pub-3940256099942544/2247696110"
-
-            resValue("string", "admob_app_id", admobAppIdTest)
-            buildConfigField("String", "ADMOB_BANNER_AD_UNIT_HOME", "\"$admobBannerAdUnitIdTest\"")
-            buildConfigField("String", "ADMOB_BANNER_AD_UNIT_ALARM_ACTIVITY", "\"$admobBannerAdUnitIdTest\"")
-            buildConfigField("String", "ADMOB_REWARDED_AD_UNIT_BRIEFING", "\"$admobRewardedAdUnitIdTest\"")
-            buildConfigField("String", "ADMOB_NATIVE_AD_UNIT_EVENT_LIST", "\"$admobNativeAdUnitIdTest\"")
-        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
             signingConfig = signingConfigs.getByName("release")
-
-            val admobAppIdTest = "ca-app-pub-3940256099942544~3347511713"
-            val admobBannerAdUnitIdTest = "ca-app-pub-3940256099942544/9214589741"
-            val admobRewardedAdUnitIdTest = "ca-app-pub-3940256099942544/5224354917"
-            val admobNativeAdUnitIdTest = "ca-app-pub-3940256099942544/2247696110"
-
-            val admobAppId: String
-            val admobBannerAdUnitIdHome: String
-            val admobBannerAdUnitIdAlarm: String
-            val admobRewardedAdUnitIdBriefing: String
-            val admobNativeAdUnitIdEventList: String
-
-            if (isRunningReleaseTask) {
-                val localProperties = Properties()
-                val localPropertiesFile = rootProject.file("local.properties")
-                if (localPropertiesFile.exists()) {
-                    localProperties.load(FileInputStream(localPropertiesFile))
-                }
-
-                // Unset GitHub secrets expand to an empty string rather than a missing variable, so
-                // blank values must fall through too.
-                fun admobValue(
-                    name: String,
-                    vararg localKeys: String,
-                ): String? =
-                    (
-                        listOf(findProperty(name)?.toString(), System.getenv(name)) +
-                            localKeys.map { localProperties.getProperty(it) }
-                    ).firstOrNull { !it.isNullOrBlank() }
-
-                val resolvedAppId = admobValue("ADMOB_APP_ID", "admob.app.id")
-                val resolvedHome = admobValue("ADMOB_BANNER_AD_UNIT_HOME", "admob.banner.ad.unit.home")
-                val resolvedAlarm =
-                    admobValue(
-                        "ADMOB_BANNER_AD_UNIT_ALARM_ACTIVITY",
-                        "admob.banner.ad.unit.alarm_activity",
-                        "admob.banner.ad.unit.alarm_acitivity",
-                    )
-                val resolvedRewardedBriefing =
-                    admobValue("ADMOB_REWARDED_AD_UNIT_BRIEFING", "admob.rewarded.ad.unit.briefing")
-                val resolvedNativeEventList =
-                    admobValue("ADMOB_NATIVE_AD_UNIT_EVENT_LIST", "admob.native.ad.unit.event_list")
-                missingReleaseAdMobConfig +=
-                    listOf(
-                        "ADMOB_APP_ID" to resolvedAppId,
-                        "ADMOB_BANNER_AD_UNIT_HOME" to resolvedHome,
-                        "ADMOB_BANNER_AD_UNIT_ALARM_ACTIVITY" to resolvedAlarm,
-                        "ADMOB_REWARDED_AD_UNIT_BRIEFING" to resolvedRewardedBriefing,
-                        "ADMOB_NATIVE_AD_UNIT_EVENT_LIST" to resolvedNativeEventList,
-                    ).filter { (_, value) -> value == null }.map { it.first }
-
-                admobAppId = resolvedAppId ?: admobAppIdTest
-                admobBannerAdUnitIdHome = resolvedHome ?: admobBannerAdUnitIdTest
-                admobBannerAdUnitIdAlarm = resolvedAlarm ?: admobBannerAdUnitIdTest
-                admobRewardedAdUnitIdBriefing = resolvedRewardedBriefing ?: admobRewardedAdUnitIdTest
-                admobNativeAdUnitIdEventList = resolvedNativeEventList ?: admobNativeAdUnitIdTest
-            } else {
-                admobAppId = admobAppIdTest
-                admobBannerAdUnitIdHome = admobBannerAdUnitIdTest
-                admobBannerAdUnitIdAlarm = admobBannerAdUnitIdTest
-                admobRewardedAdUnitIdBriefing = admobRewardedAdUnitIdTest
-                admobNativeAdUnitIdEventList = admobNativeAdUnitIdTest
-            }
-
-            resValue("string", "admob_app_id", admobAppId)
-            buildConfigField("String", "ADMOB_BANNER_AD_UNIT_HOME", "\"$admobBannerAdUnitIdHome\"")
-            buildConfigField("String", "ADMOB_BANNER_AD_UNIT_ALARM_ACTIVITY", "\"$admobBannerAdUnitIdAlarm\"")
-            buildConfigField("String", "ADMOB_REWARDED_AD_UNIT_BRIEFING", "\"$admobRewardedAdUnitIdBriefing\"")
-            buildConfigField("String", "ADMOB_NATIVE_AD_UNIT_EVENT_LIST", "\"$admobNativeAdUnitIdEventList\"")
         }
     }
 
@@ -231,16 +142,12 @@ dependencies {
     implementation(libs.logcat)
     implementation(libs.play.review)
     implementation(libs.play.review.ktx)
-    implementation(libs.play.services.ads.api)
     implementation(libs.play.services.wearable)
     implementation(libs.vico.compose)
     implementation(libs.vico.compose.m3)
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.google.firebase.bom))
     implementation(project(":core"))
-    implementation(project(":core:ads"))
-    implementation(project(":core:billing:bridge"))
-    implementation(project(":core:billing:impl"))
     implementation(project(":core:data"))
     implementation(project(":core:navigation"))
     implementation(project(":core:ui"))
@@ -281,27 +188,6 @@ tasks.withType<Test>().configureEach {
         "--add-opens=java.desktop/java.awt.font=ALL-UNNAMED",
         "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
     )
-}
-
-// A release built without the real AdMob ids silently ships Google's test ids, and the published
-// app earns nothing. Fail the packaging of the phone release instead. The check runs at execution
-// time, not while configuring, so :wear:bundleRelease (which also configures this project) is not
-// affected. Pass -Pkairos.allowTestAdMobIds=true to build a local release with test ads.
-val verifyReleaseAdMobConfig by tasks.registering {
-    val missing = missingReleaseAdMobConfig.joinToString()
-    val allowTestIds = findProperty("kairos.allowTestAdMobIds")?.toString().toBoolean()
-    doLast {
-        if (missing.isNotEmpty() && !allowTestIds) {
-            throw GradleException(
-                "Release build is missing AdMob config ($missing); it would ship test ads. " +
-                    "Set them as Gradle properties, env vars or in local.properties, " +
-                    "or pass -Pkairos.allowTestAdMobIds=true for a local test build.",
-            )
-        }
-    }
-}
-tasks.matching { it.name == "packageRelease" || it.name == "bundleRelease" }.configureEach {
-    dependsOn(verifyReleaseAdMobConfig)
 }
 
 apply(from = "../spotless.gradle")

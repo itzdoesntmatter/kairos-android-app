@@ -6,6 +6,8 @@
 
 Kairós is a modern application that transforms your calendar appointments into unmissable full-screen alarms, both on your smartphone and on your wrist with **Wear OS**. It intelligently synchronizes with the device's calendar and ensures you never miss an important event.
 
+**Kairós is now completely free** — no ads, no in-app purchases, and every feature available to everyone.
+
 ## 🚀 Download
 
 <a href='https://play.google.com/store/apps/details?id=digital.tonima.kairos' target="_blank" rel="noopener noreferrer"><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width='200'/></a>
@@ -91,8 +93,7 @@ kairos-android-app/
 │                                  features (calendar data, weather/directions, focus mode, etc.)
 ├── core/model/                 → Pure Kotlin domain models (Event, Weather, AlarmOffset, …)
 ├── core/navigation/            → The `AppNavigator` / `FeatureNavKey` / `BaseIntent` contracts
-├── core/ui/                    → Shared design system (KairosTheme, Dimensions, AdBannerView, …)
-├── core/billing/{bridge,impl}/ → Billing/subscription contract + implementation
+├── core/ui/                    → Shared design system (KairosTheme, Dimensions, …)
 ├── feature/calendar/{bridge,impl}/ → Home screen, event CRUD, import/manage calendars, auth
 ├── feature/settings/{bridge,impl}/ → Settings screen, permission gating
 ├── feature/ai/{bridge,impl}/       → AI agent, chat history, daily briefing
@@ -303,9 +304,9 @@ Kairos leverages the **Android AppFunctions** framework (available from Android 
 
 ## ⚙️ Additional Configuration
 
-For **Release** builds or full **Firebase/AdMob** integration, it is necessary:
+For **Release** builds or full **Firebase** integration, it is necessary:
 1. Add `google-services.json` in `app/` and `wear/` folders.
-2. Configure signing keys and ad IDs in `local.properties` or environment variables. See `build.gradle.kts` for details on expected properties.
+2. Configure signing keys in `local.properties` or environment variables. See `build.gradle.kts` for details on expected properties.
 
 ---
 
@@ -314,4 +315,8 @@ Contributions are welcome! Make sure to run `./gradlew spotlessApply` before ope
 
 ---
 Developed by **tonimadev**
+
+## License
+
+This project is licensed under the MIT License — see [LICENSE](LICENSE).
 

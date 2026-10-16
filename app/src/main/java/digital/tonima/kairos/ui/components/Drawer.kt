@@ -22,8 +22,6 @@ import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Share
-import androidx.compose.material.icons.rounded.Star
-import androidx.compose.material.icons.rounded.Subscriptions
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,7 +39,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.net.toUri
 import digital.tonima.kairos.core.R
 import digital.tonima.kairos.core.R.drawable.ic_k_monochrome
 import digital.tonima.kairos.core.ui.theme.Dimensions
@@ -50,9 +47,7 @@ import logcat.logcat
 
 @Composable
 fun DrawerContent(
-    isProUser: Boolean,
     isAiUser: Boolean,
-    onUpgradeToProClick: () -> Unit,
     onOurOtherAppsClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onChatHistoryClick: () -> Unit,
@@ -117,46 +112,11 @@ fun DrawerContent(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
-                        if (isProUser) {
-                            val label =
-                                if (isAiUser) {
-                                    stringResource(
-                                        R.string.pro_ia_label,
-                                    )
-                                } else {
-                                    stringResource(R.string.pro_label)
-                                }
-                            Text(
-                                text = label,
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.SemiBold,
-                            )
-                        }
                     }
                 }
             }
 
             Spacer(Modifier.height(Dimensions.PaddingDefault))
-
-            if (!isProUser) {
-                NavigationDrawerItem(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Rounded.Star,
-                            contentDescription = stringResource(R.string.remove_ads),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    },
-                    label = { Text(stringResource(R.string.remove_ads), fontWeight = FontWeight.Medium) },
-                    selected = false,
-                    onClick = {
-                        onUpgradeToProClick()
-                        onCloseDrawer()
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                )
-            }
 
             if (isAiUser) {
                 NavigationDrawerItem(
@@ -171,28 +131,6 @@ fun DrawerContent(
                     selected = false,
                     onClick = {
                         onChatHistoryClick()
-                        onCloseDrawer()
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                )
-
-                NavigationDrawerItem(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Rounded.Subscriptions,
-                            contentDescription = stringResource(R.string.manage_subscription),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    },
-                    label = { Text(stringResource(R.string.manage_subscription), fontWeight = FontWeight.Medium) },
-                    selected = false,
-                    onClick = {
-                        val browserIntent =
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                "https://play.google.com/store/account/subscriptions".toUri(),
-                            )
-                        context.startActivity(browserIntent)
                         onCloseDrawer()
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
@@ -318,9 +256,7 @@ fun DrawerContent(
 @Composable
 fun DrawerContentPreview() {
     DrawerContent(
-        isProUser = false,
         isAiUser = true,
-        onUpgradeToProClick = {},
         onOurOtherAppsClick = {},
         onSettingsClick = {},
         onChatHistoryClick = {},

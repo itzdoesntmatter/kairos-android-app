@@ -33,7 +33,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.logcat)
     implementation(platform(libs.google.firebase.bom))
-    implementation(project(":core:billing:bridge"))
     implementation(project(":core:navigation"))
     implementation(project(":core:ui"))
     implementation(project(":feature:ai:bridge"))

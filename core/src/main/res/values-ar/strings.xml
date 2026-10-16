@@ -29,14 +29,12 @@
         Kairos في إعدادات جهازك.</string>
     <string name="dismiss">تجاهل</string>
     <string name="autostart_fallback_toast">تعذر فتح الشاشة المحددة. يرجى البحث عن "البدء التلقائي" أو "مدير البطارية" في الإعدادات.</string>
-    <string name="remove_ads">إزالة الإعلانات</string>
     <string name="drawer_ai_assistant">محادثات الذكاء الاصطناعي</string>
     <string name="share_app">مشاركة التطبيق</string>
     <string name="share_text">تحقق من Kairos، تطبيق مذهل لإدارة الأحداث والمنبهات: https://play.google.com/store/apps/details?id=digital.tonima.kairos</string>
     <string name="menu">قائمة</string>
     <string name="ringer_mode_vibrate_warning">الهاتف في وضع الاهتزاز. لن تصدر المنبهات صوتًا.</string>
     <string name="ringer_mode_silent_warning">الهاتف في الوضع الصامت. لن تصدر المنبهات صوتًا.</string>
-    <string name="thank_you_for_support">أنت تستخدم النسخة الاحترافية. شكراً لدعم مشروعنا!</string>
     <string name="our_other_apps">تعرف على تطبيقاتنا الأخرى</string>
     <string name="back_to_today">ارجع إلى اليوم</string>
     <string name="events_for_today">أحداث اليوم</string>
@@ -106,16 +104,7 @@
     <string name="cd_event_recurring">حدث متكرر</string>
     <string name="daily_briefing_title">ملخص المساعد</string>
     <string name="daily_briefing_placeholder">هل تود ملخصًا ذكيًا ليومك؟</string>
-    <string name="daily_briefing_pro_only">الملخص اليومي حصري لمستخدمي النسخة الاحترافية. جرب خطتنا الشهرية الجديدة!</string>
-    <string name="daily_briefing_trial_invite">اكتشف كيف يمكن للذكاء الاصطناعي تنظيم يومك. جرب الخطة الشهرية الآن!</string>
-    <string name="subscribe_now">اشترك الآن</string>
     <string name="generate_briefing">إنشاء الملخص</string>
-    <string name="ad_label">إعلان</string>
-    <string name="ad_privacy_options">تفضيلات الإعلانات</string>
-    <string name="briefing_rewarded_description">شاهد إعلانًا قصيرًا لإنشاء ملخص اليوم مجانًا.</string>
-    <string name="briefing_rewarded_watch">شاهد الإعلان وأنشئ الملخص</string>
-    <string name="briefing_rewarded_loading">جارٍ تحميل الإعلان…</string>
-    <string name="briefing_rewarded_unavailable">لا يتوفر إعلان حاليًا. يُرجى المحاولة لاحقًا.</string>
     <string name="cd_refresh_briefing">تحديث الملخص</string>
     <string name="ai_briefing_instruction">يجب أن يكون الملخص باللغة العربية.</string>
     <string name="ai_system_instruction_template">أنت مساعد شخصي ذكي مدمج مع تقويم.\nلديك إمكانية الوصول إلى أحداث المستخدم والأدوات (tools/functions) التي يمكنها تنفيذ إجراءات في التطبيق.\nاستخدم سياق التقويم للإجابة على الأسئلة، وعندما يطلب المستخدم تنفيذ إجراء (إنشاء حدث، بحث، تفعيل/إلغاء تفعيل المنبهات)، استدعِ الأداة المناسبة بدلاً من الرد بنص.\nأجب فقط عن الأسئلة المتعلقة بالجدول أو المنبهات أو الاجتماعات أو الأحداث أو الطقس/التوقعات. إذا سأل المستخدم عن أي شيء آخر غير متعلق، قل بلطف إنك تستطيع المساعدة فقط في التقويم والطقس ولا تجب عن الموضوع.\nأجب بشكل مباشر ومفيد وودود.\n\nالتاريخ والوقت الحاليان: %1$s (التنسيق yyyy-MM-dd HH:mm، المنطقة الزمنية %2$s)\nما يعادلها بالمللي ثانية منذ حقبة يونكس (UTC) لهذه اللحظة: %3$s\nعند حساب start_time/end_time لأداة create_event (أو أي أداة أخرى تطلب المللي ثانية منذ الحقبة)، احسب القيمة بنفسك بناءً على التاريخ والوقت الحاليين والمنطقة الزمنية أعلاه — لا تسأل المستخدم أبدًا عن السنة أو الشهر أو المنطقة الزمنية للتواريخ النسبية مثل \"غدًا\" أو \"الليلة\" أو \"الاثنين القادم\".\n\nسياق التقويم:\n%4$s\n\n%5$s</string>
@@ -125,8 +114,6 @@
     <string name="ai_context_wake_up">\nاستيقظ المستخدم في %1$s. إذا كان ذلك أبكر من المعتاد، اذكر ذلك بلطف.</string>
     <string name="ai_context_weather">\nالطقس في %1$s: %2$d°م، %3$s.</string>
     <string name="ai_context_no_events_today">لا توجد أحداث مجدولة لهذا اليوم.</string>
-    <string name="pro_label">Pro ✨</string>
-    <string name="pro_ia_label">Pro + ذكاء ✨</string>
     <string name="ai_voice_interaction_title">كايروس صوت الذكاء الاصطناعي</string>
     <string name="ai_answering">جاري معالجة سؤالك…</string>
     <string name="cd_speak">استمع إلى الإجابة</string>
@@ -150,8 +137,6 @@
     <string name="ai_suggestion_create_event">حدد موعدًا لطبيب الأسنان غدًا الساعة 10 صباحًا</string>
     <string name="ai_suggestion_reminder">ذكرني بشراء الحليب اليوم</string>
     <string name="ai_suggestion_agenda">كيف هو جدول أعمالي اليوم؟</string>
-    <string name="manage_subscription">إدارة الاشتراك</string>
-    <string name="billing_store_unavailable">تعذّر الاتصال بالمتجر. تحقق من اتصالك وحاول مرة أخرى.</string>
     <string name="widget_daily_briefing_name">ملخص اليوم (IA)</string>
     <string name="widget_daily_briefing_description">يعرض ملخصًا ذكيًا ليومك تم إنشاؤه بواسطة الذكاء الاصطناعي.</string>
     <string name="widget_no_briefing">لا يوجد ملخص متاح. افتح التطبيق لإنشائه!</string>
@@ -190,11 +175,6 @@
     <string name="alarm_now_label">المنبه الآن</string>
     <string name="minutes_short">%1$d دقيقة</string>
     <string name="hours_short">%1$d ساعة</string>
-    <string name="pro_feature_restricted">ميزة حصرية لـ Pro + الذكاء الاصطناعي</string>
-    <string name="geo_alarm_pro_only">المنبهات الجغرافية حصرية لمشتركي Pro + الذكاء الاصطناعي.</string>
-    <string name="geo_alarm_upgrade_trial_title">جرب المنبه الذكي!</string>
-    <string name="geo_alarm_upgrade_trial_desc">تجنب التأخير! قم بتفعيل المنبهات القائمة على حركة المرور في الوقت الفعلي مع خطة Pro + الذكاء الاصطناعي.</string>
-    <string name="try_pro_plan">جرب خطة Pro</string>
 
 
     <string name="ai_agent_snackbar_executed">نفّذ الذكاء الاصطناعي: %1$s</string>
@@ -223,8 +203,6 @@
 
     <string name="ai_suggested_late_notification">اقترح الذكاء الاصطناعي: %1$s</string>
     <string name="ai_prepping_meeting">يعمل الذكاء الاصطناعي على تحضير ملخص الاجتماع…</string>
-    <string name="pro_ia_upgrade_title">أطلق العنان لقوة الذكاء الاصطناعي</string>
-    <string name="pro_ia_upgrade_desc">منبهات ديناميكية، وملخصات للاجتماعات، ومساعد صوتي تفاعلي. اجعل يومك ذكيًا بحق.</string>
     <string name="battery_low_warning">البطارية منخفضة (%1$d%%). اشحن هاتفك لكي لا يفوتك اجتماع %2$s.</string>
     <string name="silent_mode_warning">وضع الصامت نشط. قد لا يصدر صوت منبه %1$s الخاص بك.</string>
     <string name="ask_ai_label">تحدث مع الذكاء الاصطناعي</string>

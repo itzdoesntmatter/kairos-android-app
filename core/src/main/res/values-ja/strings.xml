@@ -26,14 +26,12 @@
     <string name="autostart_suggestion_disclaimer">スマートフォンを再起動した後もアラームが確実に機能するように、デバイスの設定でKairosの「自動起動」を有効にすることをお勧めします。</string>
     <string name="dismiss">閉じる</string>
     <string name="autostart_fallback_toast">特定の画面を開けませんでした。設定で「自動起動」または「バッテリーマネージャー」を検索してください。</string>
-    <string name="remove_ads">広告を削除</string>
     <string name="drawer_ai_assistant">AIとの会話</string>
     <string name="share_app">アプリを共有</string>
     <string name="share_text">Kairosをチェックしてみてください。イベントやアラームを管理するための素晴らしいアプリです: https://play.google.com/store/apps/details?id=digital.tonima.kairos</string>
     <string name="menu">メニュー</string>
     <string name="ringer_mode_vibrate_warning">スマートフォンはバイブレーションモードです。アラームは鳴りません。</string>
     <string name="ringer_mode_silent_warning">スマートフォンはサイレントモードです。アラームは鳴りません。</string>
-    <string name="thank_you_for_support">PRO版をご利用いただきありがとうございます。プロジェクトをサポートしていただき、ありがとうございます！</string>
     <string name="our_other_apps">他のアプリも見る</string>
     <string name="back_to_today">今日に戻りましょう</string>
     <string name="events_for_today">今日のイベント</string>
@@ -103,16 +101,7 @@
     <string name="cd_event_recurring">繰り返しイベント</string>
     <string name="daily_briefing_title">アシスタント要約</string>
     <string name="daily_briefing_placeholder">一日の要約を見ますか？</string>
-    <string name="daily_briefing_pro_only">デイリー要約はProユーザー専用です。新しい月間プランをお試しください！</string>
-    <string name="daily_briefing_trial_invite">AIが一日をどう整理するか体験しましょう。今すぐ月間プランを試してください！</string>
-    <string name="subscribe_now">今すぐ購読</string>
     <string name="generate_briefing">要約を生成</string>
-    <string name="ad_label">広告</string>
-    <string name="ad_privacy_options">広告の設定</string>
-    <string name="briefing_rewarded_description">短い広告を見ると、今日の要約を無料で生成できます。</string>
-    <string name="briefing_rewarded_watch">広告を見て要約を生成</string>
-    <string name="briefing_rewarded_loading">広告を読み込み中…</string>
-    <string name="briefing_rewarded_unavailable">現在利用できる広告がありません。後でもう一度お試しください。</string>
     <string name="cd_refresh_briefing">要約を更新</string>
     <string name="ai_briefing_instruction">要約は日本語である必要があります。</string>
     <string name="ai_system_instruction_template">あなたはカレンダーと連携した賢いパーソナルアシスタントです。\nユーザーの予定や、アプリ内でアクションを実行できるツール（tools/functions）にアクセスできます。\nカレンダーのコンテキストを使って質問に答え、ユーザーがアクションの実行（予定の作成、検索、アラームのオン/オフ）を求めた場合は、テキストで返答する代わりに適切なツールを呼び出してください。\n予定、アラーム、会議、イベント、天気/予報に関する質問にのみ答えてください。ユーザーがそれ以外の無関係な質問をした場合は、カレンダーと天気についてのみお手伝いできると丁寧に伝え、その話題には答えないでください。\n直接的で、役立ち、フレンドリーに答えてください。\n\n現在の日時: %1$s（形式 yyyy-MM-dd HH:mm、タイムゾーン %2$s）\nこの瞬間のepochミリ秒（UTC）換算: %3$s\ncreate_eventツール（またはepochミリ秒を必要とする他のツール）のstart_time/end_timeを計算する際は、上記の現在の日時とタイムゾーンから自分で値を導き出してください。「明日」「今夜」「来週の月曜日」などの相対的な日付について、ユーザーに年・月・タイムゾーンを尋ねないでください。\n\nカレンダーのコンテキスト:\n%4$s\n\n%5$s</string>
@@ -122,8 +111,6 @@
     <string name="ai_context_wake_up">\nユーザーは%1$sに起きました。いつもより早い場合は、そっとそのことに触れてください。</string>
     <string name="ai_context_weather">\n%1$sの天気: %2$d°C、%3$s。</string>
     <string name="ai_context_no_events_today">今日の予定はありません。</string>
-    <string name="pro_label">Pro ✨</string>
-    <string name="pro_ia_label">Pro + AI ✨</string>
     <string name="ai_voice_interaction_title">カイロス音声AI</string>
     <string name="ai_answering">質問を処理しています…</string>
     <string name="cd_speak">回答を聴く</string>
@@ -147,8 +134,6 @@
     <string name="ai_suggestion_create_event">明日の午前10時に歯医者の予約を入れる</string>
     <string name="ai_suggestion_reminder">今日、牛乳を買うのを忘れないようにする</string>
     <string name="ai_suggestion_agenda">今日の予定はどうなっていますか？</string>
-    <string name="manage_subscription">サブスクリプションの管理</string>
-    <string name="billing_store_unavailable">ストアに接続できませんでした。接続を確認してもう一度お試しください。</string>
     <string name="widget_daily_briefing_name">今日の要約 (AI)</string>
     <string name="widget_daily_briefing_description">AIによって生成された今日のスマートな要約を表示します。</string>
     <string name="widget_no_briefing">要約がありません。アプリを開いて生成してください！</string>
@@ -182,11 +167,6 @@
     <string name="alarm_now_label">今すぐアラーム</string>
     <string name="minutes_short">%1$d 分</string>
     <string name="hours_short">%1$d 時間</string>
-    <string name="pro_feature_restricted">Pro + AI 限定機能</string>
-    <string name="geo_alarm_pro_only">ジオアラームは Pro + AI サブスクリプション専用です。</string>
-    <string name="geo_alarm_upgrade_trial_title">スマートアラームを試してみましょう！</string>
-    <string name="geo_alarm_upgrade_trial_desc">遅刻を回避しましょう！Pro + AI プランでリアルタイムの交通状況に基づいたアラームを有効にしてください。</string>
-    <string name="try_pro_plan">Proプランを試す</string>
 
 
     <string name="ai_agent_snackbar_executed">AIが実行しました: %1$s</string>
@@ -215,8 +195,6 @@
 
     <string name="ai_suggested_late_notification">AIの提案: %1$s</string>
     <string name="ai_prepping_meeting">AIが会議の要約を作成中…</string>
-    <string name="pro_ia_upgrade_title">AIの力を解き放つ</string>
-    <string name="pro_ia_upgrade_desc">ダイナミックなアラーム、会議の要約、対話型音声アシスタント。一日を真にスマートに。</string>
     <string name="battery_low_warning">バッテリー残量が少なくなっています (%1$d%%)。%2$sの会議に遅れないよう、スマートフォンを充電してください。</string>
     <string name="silent_mode_warning">マナーモードがオンになっています。%1$sのアラームが鳴らない可能性があります。</string>
     <string name="ask_ai_label">AIと話す</string>

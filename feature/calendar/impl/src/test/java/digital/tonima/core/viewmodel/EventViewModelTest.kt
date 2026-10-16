@@ -419,18 +419,6 @@ class EventViewModelTest {
         }
 
     @Test
-    fun `upgrade requests open the matching purchase flow`() =
-        runTest {
-            viewModel.handleIntent(EventIntent.UpgradeToProRequest)
-            advanceUntilIdle()
-            assertEquals(EventSideEffect.RequestPurchase, viewModel.uiState.value.effect)
-
-            viewModel.handleIntent(EventIntent.UpgradeToProIARequest)
-            advanceUntilIdle()
-            assertEquals(EventSideEffect.RequestSubscription, viewModel.uiState.value.effect)
-        }
-
-    @Test
     fun `alarm and vibrate toggles are forwarded with the event`() =
         runTest {
             val event = EventUiModel(id = 7L, title = "Aula", startTime = 1_000L, endTime = 2_000L)

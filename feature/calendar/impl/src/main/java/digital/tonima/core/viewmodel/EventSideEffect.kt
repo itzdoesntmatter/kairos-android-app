@@ -9,9 +9,5 @@ sealed class EventSideEffect {
 
     data object RequestAppReview : EventSideEffect()
 
-    data object RequestSubscription : EventSideEffect()
-
-    data object RequestPurchase : EventSideEffect()
-
     data class AIToolError(val message: UiText) : EventSideEffect()
 }

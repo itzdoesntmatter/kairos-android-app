@@ -50,8 +50,6 @@ class CalendarDelegatingUseCasesTest {
         log(EventIntent.JoinMeeting("https://meet.google.com/x"))
         log(EventIntent.ToggleEventAlarm(uiEvent, enabled = false, allOccurrences = true))
         log(EventIntent.ToggleCalendarFilter(7L, enabled = true))
-        log(EventIntent.UpgradeToProRequest)
-        log(EventIntent.UpgradeToProIARequest)
         log(EventIntent.RateNow)
         log(EventIntent.RateLater)
         log(EventIntent.RateNever)

@@ -184,7 +184,7 @@ class EventListTest {
                         onReturnToToday = {},
                         onSearchQueryChanged = { searches += it },
                     ),
-                aiActions = AiActions(onSubscriptionRequest = { upgradeRequests++ }),
+                aiActions = AiActions(),
             )
         }
     }

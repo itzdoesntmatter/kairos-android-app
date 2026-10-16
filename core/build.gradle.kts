@@ -71,7 +71,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
 
-    api(project(":core:billing:bridge"))
     api(project(":core:model"))
     api(project(":core:navigation"))
 
@@ -91,7 +90,6 @@ dependencies {
     implementation(libs.play.review.ktx)
     implementation(libs.play.services.wearable)
     implementation(platform(libs.google.firebase.bom))
-    implementation(project(":core:billing:impl"))
 
     ksp(libs.hilt.binder.compiler)
     ksp(libs.hilt.compiler)

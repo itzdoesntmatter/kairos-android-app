@@ -26,14 +26,12 @@
     <string name="autostart_suggestion_disclaimer">为确保闹钟在重启手机后可靠工作，我们建议您在设备设置中为 Kairos 启用“自动启动”。</string>
     <string name="dismiss">忽略</string>
     <string name="autostart_fallback_toast">无法打开特定屏幕。请在设置中搜索“自动启动”或“电池管家”。</string>
-    <string name="remove_ads">移除广告</string>
     <string name="drawer_ai_assistant">AI 对话</string>
     <string name="share_app">分享应用</string>
     <string name="share_text">推荐 Kairos，一款非常棒的活动和闹钟管理应用：https://play.google.com/store/apps/details?id=digital.tonima.kairos</string>
     <string name="menu">菜单</string>
     <string name="ringer_mode_vibrate_warning">手机处于振动模式。闹钟不会发出声音。</string>
     <string name="ringer_mode_silent_warning">手机处于静音模式。闹钟不会发出声音。</string>
-    <string name="thank_you_for_support">正在使用专业版。感谢您支持我们的项目！</string>
     <string name="our_other_apps">了解我们的其他应用</string>
     <string name="back_to_today">回到今天</string>
     <string name="events_for_today">今日活动</string>
@@ -103,16 +101,7 @@
     <string name="cd_event_recurring">周期性事件</string>
     <string name="daily_briefing_title">助手摘要</string>
     <string name="daily_briefing_placeholder">您想看看今天的智能摘要吗？</string>
-    <string name="daily_briefing_pro_only">每日摘要是专业用户的专属功能。试试我们新的月度计划吧！</string>
-    <string name="daily_briefing_trial_invite">了解人工智能如何协助安排您的一天。立即尝试月度计划！</string>
-    <string name="subscribe_now">立即订阅</string>
     <string name="generate_briefing">生成摘要</string>
-    <string name="ad_label">广告</string>
-    <string name="ad_privacy_options">广告偏好设置</string>
-    <string name="briefing_rewarded_description">观看一则短广告，即可免费生成今日摘要。</string>
-    <string name="briefing_rewarded_watch">观看广告并生成摘要</string>
-    <string name="briefing_rewarded_loading">正在加载广告…</string>
-    <string name="briefing_rewarded_unavailable">当前没有可用的广告，请稍后再试。</string>
     <string name="cd_refresh_briefing">刷新摘要</string>
     <string name="ai_briefing_instruction">摘要必须使用中文。</string>
     <string name="ai_system_instruction_template">你是一个集成日历的智能个人助手。\n你可以访问用户的日程，以及可以在应用中执行操作的工具（tools/functions）。\n使用日历上下文回答问题，当用户要求执行某项操作（创建事件、搜索、开启/关闭闹钟）时，调用相应的工具，而不是用文字回复。\n仅回答与日程、闹钟、会议、事件或天气/预报相关的问题。如果用户询问其他不相关的内容，请礼貌地说明你只能帮助处理日历和天气相关问题，并且不要回答该话题。\n请直接、有帮助且友好地回答。\n\n当前日期和时间：%1$s（格式 yyyy-MM-dd HH:mm，时区 %2$s）\n此刻对应的 epoch 毫秒数（UTC）：%3$s\n在为 create_event 工具（或任何需要 epoch 毫秒数的其他工具）计算 start_time/end_time 时，请根据上面的当前日期/时间和时区自行推算——切勿就"明天""今晚"或"下周一"等相对日期向用户询问年份、月份或时区。\n\n日历上下文：\n%4$s\n\n%5$s</string>
@@ -122,8 +111,6 @@
     <string name="ai_context_wake_up">\n用户在%1$s醒来。如果比平时早，请委婉地提一下。</string>
     <string name="ai_context_weather">\n%1$s的天气：%2$d°C，%3$s。</string>
     <string name="ai_context_no_events_today">今天没有安排的事件。</string>
-    <string name="pro_label">Pro ✨</string>
-    <string name="pro_ia_label">Pro + AI ✨</string>
     <string name="ai_voice_interaction_title">Kairos 语音 AI</string>
     <string name="ai_answering">正在处理您的问题…</string>
     <string name="cd_speak">听取回答</string>
@@ -147,8 +134,6 @@
     <string name="ai_suggestion_create_event">预约明天上午 10 点看牙医</string>
     <string name="ai_suggestion_reminder">提醒我今天买牛奶</string>
     <string name="ai_suggestion_agenda">我今天的日程安排是什么？</string>
-    <string name="manage_subscription">管理订阅</string>
-    <string name="billing_store_unavailable">无法连接到应用商店，请检查网络连接后重试。</string>
     <string name="widget_daily_briefing_name">每日摘要 (AI)</string>
     <string name="widget_daily_briefing_description">显示由 AI 生成的每日智能摘要。</string>
     <string name="widget_no_briefing">暂无摘要。请打开应用生成！</string>
@@ -182,11 +167,6 @@
     <string name="alarm_now_label">立即响铃</string>
     <string name="minutes_short">%1$d 分钟</string>
     <string name="hours_short">%1$d 小时</string>
-    <string name="pro_feature_restricted">专业版 + AI 专属功能</string>
-    <string name="geo_alarm_pro_only">地理位置闹钟是专业版 + AI 订阅者的专属功能。</string>
-    <string name="geo_alarm_upgrade_trial_title">试用智能闹钟！</string>
-    <string name="geo_alarm_upgrade_trial_desc">避免迟到！通过专业版 + AI 计划启用基于实时路况的闹钟。</string>
-    <string name="try_pro_plan">试用专业版计划</string>
 
 
     <string name="ai_agent_snackbar_executed">AI 已执行：%1$s</string>
@@ -215,8 +195,6 @@
 
     <string name="ai_suggested_late_notification">AI 建议：%1$s</string>
     <string name="ai_prepping_meeting">AI 正在准备会议摘要…</string>
-    <string name="pro_ia_upgrade_title">释放 AI 的力量</string>
-    <string name="pro_ia_upgrade_desc">动态闹钟、会议摘要和交互式语音助手。让您的每一天都真正智能。</string>
     <string name="battery_low_warning">电池电量低 (%1$d%%)。请为手机充电，以免错过 %2$s 会议。</string>
     <string name="silent_mode_warning">静音模式已开启。您的 %1$s 闹钟可能不会响。</string>
     <string name="ask_ai_label">与 AI 对话</string>

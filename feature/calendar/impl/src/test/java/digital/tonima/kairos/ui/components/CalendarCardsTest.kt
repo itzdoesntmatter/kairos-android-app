@@ -186,20 +186,6 @@ class CalendarCardsTest {
 
     // endregion
 
-    // region ProUpgradeCard
-
-    @Test
-    fun `upgrade card requests the subscription`() {
-        compose.setContent { ProUpgradeCard(onUpgradeClick = { calls += "upgrade" }) }
-
-        compose.onNodeWithText(string(R.string.pro_ia_upgrade_title)).assertExists()
-        compose.onNodeWithText(string(R.string.try_pro_plan)).performClick()
-
-        assertEquals(listOf("upgrade"), calls)
-    }
-
-    // endregion
-
     // region RingerModeWarningCard and AlarmsToggleRow
 
     @Test

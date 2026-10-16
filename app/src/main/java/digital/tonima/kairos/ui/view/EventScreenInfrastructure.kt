@@ -22,8 +22,6 @@ import digital.tonima.core.viewmodel.EventSideEffect.AIToolError
 import digital.tonima.core.viewmodel.EventSideEffect.CopyToClipboard
 import digital.tonima.core.viewmodel.EventSideEffect.OpenMeetingUrl
 import digital.tonima.core.viewmodel.EventSideEffect.RequestAppReview
-import digital.tonima.core.viewmodel.EventSideEffect.RequestPurchase
-import digital.tonima.core.viewmodel.EventSideEffect.RequestSubscription
 import digital.tonima.core.viewmodel.EventSideEffect.ShowSnackbar
 import digital.tonima.core.viewmodel.EventViewModel
 import digital.tonima.core.viewmodel.SettingsIntent
@@ -37,8 +35,6 @@ fun EventScreenInfrastructure(
     aiViewModel: AiViewModel,
     settingsViewModel: SettingsViewModel,
     snackbarHostState: SnackbarHostState,
-    onSubscriptionRequest: () -> Unit,
-    onPurchaseRequest: () -> Unit,
     onSetAiConfirmationData: (RequireUserConfirmation) -> Unit,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -60,8 +56,6 @@ fun EventScreenInfrastructure(
         settingsViewModel = settingsViewModel,
         snackbarHostState = snackbarHostState,
         onSetAiConfirmationData = onSetAiConfirmationData,
-        onSubscriptionRequest = onSubscriptionRequest,
-        onPurchaseRequest = onPurchaseRequest,
     )
 }
 
@@ -72,8 +66,6 @@ private fun HandleSideEffects(
     settingsViewModel: SettingsViewModel,
     snackbarHostState: SnackbarHostState,
     onSetAiConfirmationData: (RequireUserConfirmation) -> Unit,
-    onSubscriptionRequest: () -> Unit,
-    onPurchaseRequest: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -121,8 +113,6 @@ private fun HandleSideEffects(
                             openPlayStoreFallback(context)
                         }
                     }
-                    RequestSubscription -> onSubscriptionRequest()
-                    RequestPurchase -> onPurchaseRequest()
                 }
                 eventViewModel.handleIntent(EventIntent.ConsumeEffect)
             }

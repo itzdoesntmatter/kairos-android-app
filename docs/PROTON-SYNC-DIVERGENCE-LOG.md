@@ -23,8 +23,9 @@ decompiled reference app shows, as recorded in the specs.
 
 - Reference: every Proton API call sends `x-pm-appversion: Other` — a generic placeholder
   token — and a stock OkHttp `User-Agent` (`okhttp/4.12.0`); a desktop Chrome UA appears
-  only on the web checkout page (auth-flow.md §1; calendar-api.md §1; RE evidence:
-  the shared header interceptor and the event-loop client both hard-code `Other`).
+  elsewhere in the app (a vendored contact-import fetcher, not Proton API traffic)
+  (auth-flow.md §1; calendar-api.md §1; RE evidence: the shared header interceptor and the
+  event-loop client both hard-code `Other`, and the OkHttp clients send `okhttp/4.12.0`).
 - Ours: `x-pm-appversion: Kairos_<versionCode>` and
   `User-Agent: Kairos/<versionName> (Android <SDK_INT>; <Build.MODEL>)`
   (`ProtonApiClientFactory.ProtonClientIdentity`; hard rule I6 in architecture.md §0/§6).

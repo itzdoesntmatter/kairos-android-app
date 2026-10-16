@@ -12,7 +12,10 @@ Kairós is a modern application that transforms your calendar appointments into 
 
 ## 🚀 Download
 
-<a href='https://play.google.com/store/apps/details?id=digital.tonima.kairos' target="_blank" rel="noopener noreferrer"><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width='200'/></a>
+Kairós is distributed directly from GitHub — download the latest phone and Wear OS APKs from the
+[Releases](https://github.com/itzdoesntmatter/kairos-android-app/releases) page.
+
+<sub>Prefer to build it yourself? See [Getting Started](#-getting-started).</sub>
 
 ---
 

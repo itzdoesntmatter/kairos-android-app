@@ -90,18 +90,18 @@ class IcalEventParser(
 
         return ProtonEventData(
             protonEventId = detail.id,
-            title = event.getSummary().map { it.value }.getOrNull().orEmpty().ifBlank { UNTITLED_TITLE },
+            title = event.getSummary()?.value.orEmpty().ifBlank { UNTITLED_TITLE },
             startMillis = start ?: (detail.startTime?.times(1000L) ?: 0L),
             endMillis = end ?: (detail.endTime?.times(1000L) ?: start ?: 0L),
             timezone = startTz ?: (if (allDay) UTC else defaultZoneId.id),
-            description = event.getDescription().map { it.value }.getOrNull(),
-            location = event.getLocation().map { it.value }.getOrNull(),
+            description = event.getDescription()?.value,
+            location = event.getLocation()?.value,
             isAllDay = allDay,
             recurrenceRule = rrule,
             recurrenceDates = event.getProperties<RDate<LocalDateTime>>(Property.RDATE).firstOrNull()?.value,
             exceptionRule = event.getProperties<ExRule<LocalDateTime>>(Property.EXRULE).firstOrNull()?.value,
             icalUid = event.getProperty<Uid>(Property.UID).map { it.value }.getOrNull() ?: detail.uid,
-            status = mapStatus(event.getStatus().getOrNull()),
+            status = mapStatus(event.getStatus()),
             isFree = mapTransparency(event.getTransparency().getOrNull()),
             selfAttendeeStatus = selfAttendeeStatus(detail, accountEmail),
             attendees = mapAttendees(event),
@@ -167,7 +167,7 @@ class IcalEventParser(
             val tzid = dtEnd.getParameter<net.fortuna.ical4j.model.Parameter>(Parameter.TZID).map { it.value }.getOrNull()
             return temporal?.let { convertTemporal(it, tzid).first }
         }
-        val duration = event.getDuration().map { it.duration }.getOrNull()
+        val duration = event.getDuration()?.duration
         if (duration != null && start != null) {
             val millis = durationToMillis(duration, start)
             if (millis != null) return start + millis

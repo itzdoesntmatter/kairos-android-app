@@ -2,6 +2,7 @@ package digital.tonima.core.viewmodel
 
 import androidx.compose.runtime.Immutable
 import digital.tonima.kairos.core.model.DeviceCalendar
+import digital.tonima.kairos.core.model.ProtonCalendarStatus
 
 @Immutable
 data class ManageCalendarsUiState(
@@ -12,4 +13,5 @@ data class ManageCalendarsUiState(
     val editName: String = "",
     val editColor: Int = 0xFF2196F3.toInt(),
     val effect: ManageCalendarsSideEffect? = null,
+    val protonStatus: ProtonCalendarStatus? = null,
 )

@@ -350,4 +350,9 @@
     <string name="event_suggestion_action_create">بنائیں</string>
     <string name="event_suggestion_created">ایونٹ بن گیا</string>
     <string name="event_suggestion_failed">ایونٹ نہیں بن سکا</string>
+    <string name="proton_calendar_title">Proton کیلنڈر منسلک کریں</string>
+    <string name="proton_calendar_body">Proton Calendar ایونٹس اپنی ایپ کے اندر رکھتا ہے، اس لیے Kairós ابھی انہیں نہیں دیکھ سکتا۔ انہیں اپنے ڈیوائس کیلنڈر میں کاپی کرنے کے لیے ایک سنک برج (ProtonSync یا Sync Provider for Proton) انسٹال کریں۔</string>
+    <string name="proton_calendar_get_bridge">سنک برج حاصل کریں</string>
+    <string name="proton_calendar_open_bridge">سنک برج کھولیں</string>
+    <string name="proton_calendar_connected">Proton کیلنڈر منسلک ہے</string>
 </resources>

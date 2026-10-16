@@ -21,6 +21,9 @@
 
     <queries>
         <package android:name="com.google.android.calendar" />
+        <package android:name="me.proton.android.calendar" />
+        <package android:name="com.protosync.app" />
+        <package android:name="me.proton.sync" />
     </queries>
 
     <application android:name=".KairosApplication" android:allowBackup="true"

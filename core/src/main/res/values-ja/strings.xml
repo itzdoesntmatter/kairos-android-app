@@ -353,4 +353,9 @@
     <string name="event_suggestion_action_create">作成</string>
     <string name="event_suggestion_created">予定を作成しました</string>
     <string name="event_suggestion_failed">予定を作成できませんでした</string>
+    <string name="proton_calendar_title">Protonカレンダーを接続</string>
+    <string name="proton_calendar_body">Proton Calendar はイベントを自社アプリ内に保持するため、Kairós からはまだ表示できません。同期ブリッジ（ProtonSync または Sync Provider for Proton）をインストールして、端末のカレンダーにコピーしてください。</string>
+    <string name="proton_calendar_get_bridge">同期ブリッジを入手</string>
+    <string name="proton_calendar_open_bridge">同期ブリッジを開く</string>
+    <string name="proton_calendar_connected">Protonカレンダー接続済み</string>
 </resources>

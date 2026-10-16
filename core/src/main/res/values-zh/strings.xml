@@ -353,4 +353,9 @@
     <string name="event_suggestion_action_create">创建</string>
     <string name="event_suggestion_created">事件已创建</string>
     <string name="event_suggestion_failed">无法创建事件</string>
+    <string name="proton_calendar_title">连接 Proton 日历</string>
+    <string name="proton_calendar_body">Proton Calendar 将活动保留在其自己的应用中，因此 Kairós 暂时无法看到它们。安装一个同步桥接（ProtonSync 或 Sync Provider for Proton），将它们复制到您的设备日历中。</string>
+    <string name="proton_calendar_get_bridge">获取同步桥接</string>
+    <string name="proton_calendar_open_bridge">打开同步桥接</string>
+    <string name="proton_calendar_connected">Proton 日历已连接</string>
 </resources>

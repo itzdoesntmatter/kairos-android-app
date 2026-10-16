@@ -32,6 +32,29 @@ Kairós is a modern application that transforms your calendar appointments into 
 
 ---
 
+## 🔐 Proton Calendar
+
+Kairós reads events from Android's system calendar provider, so it works with **any** calendar
+that is synced to the device — Google, Outlook, Exchange, and others.
+
+**Proton Calendar** is the exception: it offers no public API and no CalDAV, and its Android app
+keeps events end-to-end encrypted inside its own app, so events never reach the system provider
+that Kairós (and every other calendar app) reads from.
+
+To use Proton Calendar with Kairós, install a third-party sync bridge that mirrors your Proton
+events into the device calendar. Kairós then picks them up automatically, exactly like any other
+calendar:
+
+- [ProtonSync](https://github.com/carlostkd/ProtonSync) — open-source, two-way sync
+- [Sync Provider for Proton](https://apps.olausson.de/sync_provider_for_proton/) — two-way sync,
+  multi-account, recurring-event support
+
+Once a bridge has synced your Proton calendar, its events appear in Kairós alongside everything
+else. The "Manage calendars" screen detects when Proton Calendar is installed but no Proton
+events are visible yet, and guides you through installing a bridge.
+
+---
+
 ## 🎬 AI Assistant in Action
 
 <p align="center">

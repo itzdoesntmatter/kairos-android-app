@@ -350,4 +350,9 @@
     <string name="event_suggestion_action_create">তৈরি করুন</string>
     <string name="event_suggestion_created">ইভেন্ট তৈরি হয়েছে</string>
     <string name="event_suggestion_failed">ইভেন্ট তৈরি করা যায়নি</string>
+    <string name="proton_calendar_title">Proton ক্যালেন্ডার সংযুক্ত করুন</string>
+    <string name="proton_calendar_body">Proton Calendar ইভেন্টগুলো নিজের অ্যাপের ভেতরে রাখে, তাই Kairós এখনও সেগুলো দেখতে পায় না। সেগুলো আপনার ডিভাইস ক্যালেন্ডারে কপি করতে একটি সিঙ্ক ব্রিজ (ProtonSync বা Sync Provider for Proton) ইনস্টল করুন।</string>
+    <string name="proton_calendar_get_bridge">সিঙ্ক ব্রিজ নিন</string>
+    <string name="proton_calendar_open_bridge">সিঙ্ক ব্রিজ খুলুন</string>
+    <string name="proton_calendar_connected">Proton ক্যালেন্ডার সংযুক্ত</string>
 </resources>

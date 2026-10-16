@@ -360,4 +360,9 @@
     <string name="event_suggestion_action_create">Создать</string>
     <string name="event_suggestion_created">Событие создано</string>
     <string name="event_suggestion_failed">Не удалось создать событие</string>
+    <string name="proton_calendar_title">Подключить Proton Calendar</string>
+    <string name="proton_calendar_body">Proton Calendar хранит события внутри своего приложения, поэтому Kairós пока не может их видеть. Установите мост синхронизации (ProtonSync или Sync Provider for Proton), чтобы скопировать их в календарь устройства.</string>
+    <string name="proton_calendar_get_bridge">Получить мост синхронизации</string>
+    <string name="proton_calendar_open_bridge">Открыть мост синхронизации</string>
+    <string name="proton_calendar_connected">Proton Calendar подключен</string>
 </resources>

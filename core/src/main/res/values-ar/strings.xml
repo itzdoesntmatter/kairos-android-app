@@ -29,7 +29,6 @@
         Kairos في إعدادات جهازك.</string>
     <string name="dismiss">تجاهل</string>
     <string name="autostart_fallback_toast">تعذر فتح الشاشة المحددة. يرجى البحث عن "البدء التلقائي" أو "مدير البطارية" في الإعدادات.</string>
-    <string name="drawer_ai_assistant">محادثات الذكاء الاصطناعي</string>
     <string name="share_app">مشاركة التطبيق</string>
     <string name="share_text">تحقق من Kairos، تطبيق مذهل لإدارة الأحداث والمنبهات: https://play.google.com/store/apps/details?id=digital.tonima.kairos</string>
     <string name="menu">قائمة</string>
@@ -103,22 +102,8 @@
     <string name="cd_collapse_settings">طي الإعدادات</string>
     <string name="cd_event_recurring">حدث متكرر</string>
     <string name="daily_briefing_title">ملخص المساعد</string>
-    <string name="daily_briefing_placeholder">هل تود ملخصًا ذكيًا ليومك؟</string>
-    <string name="generate_briefing">إنشاء الملخص</string>
-    <string name="cd_refresh_briefing">تحديث الملخص</string>
-    <string name="ai_briefing_instruction">يجب أن يكون الملخص باللغة العربية.</string>
-    <string name="ai_system_instruction_template">أنت مساعد شخصي ذكي مدمج مع تقويم.\nلديك إمكانية الوصول إلى أحداث المستخدم والأدوات (tools/functions) التي يمكنها تنفيذ إجراءات في التطبيق.\nاستخدم سياق التقويم للإجابة على الأسئلة، وعندما يطلب المستخدم تنفيذ إجراء (إنشاء حدث، بحث، تفعيل/إلغاء تفعيل المنبهات)، استدعِ الأداة المناسبة بدلاً من الرد بنص.\nأجب فقط عن الأسئلة المتعلقة بالجدول أو المنبهات أو الاجتماعات أو الأحداث أو الطقس/التوقعات. إذا سأل المستخدم عن أي شيء آخر غير متعلق، قل بلطف إنك تستطيع المساعدة فقط في التقويم والطقس ولا تجب عن الموضوع.\nأجب بشكل مباشر ومفيد وودود.\n\nالتاريخ والوقت الحاليان: %1$s (التنسيق yyyy-MM-dd HH:mm، المنطقة الزمنية %2$s)\nما يعادلها بالمللي ثانية منذ حقبة يونكس (UTC) لهذه اللحظة: %3$s\nعند حساب start_time/end_time لأداة create_event (أو أي أداة أخرى تطلب المللي ثانية منذ الحقبة)، احسب القيمة بنفسك بناءً على التاريخ والوقت الحاليين والمنطقة الزمنية أعلاه — لا تسأل المستخدم أبدًا عن السنة أو الشهر أو المنطقة الزمنية للتواريخ النسبية مثل \"غدًا\" أو \"الليلة\" أو \"الاثنين القادم\".\n\nسياق التقويم:\n%4$s\n\n%5$s</string>
-    <string name="ai_daily_briefing_prompt_template">أنت مساعد شخصي ذكي.\nلخّص أحداث اليوم من التقويم أدناه وقدّم نصائح استباقية.\nضع في اعتبارك الطقس الحالي لتقديم نصائح (مثلاً: إذا كانت الأمطار متوقعة، اقترح إحضار مظلة أو الخروج مبكرًا).\nكن موجزًا (3-4 جمل كحد أقصى).\nحدد التعارضات أو الجداول الزمنية الضيقة.\nاقترح كتم الهاتف إذا كانت هناك اجتماعات متتالية كثيرة.\nاستخدم نبرة ودية واستباقية.%1$s%2$s\n%3$s\n\nأحداث اليوم:\n%4$s</string>
-    <string name="ai_context_date_prefix">التاريخ:</string>
-    <string name="ai_context_alarm_disabled">(المنبه معطل)</string>
-    <string name="ai_context_wake_up">\nاستيقظ المستخدم في %1$s. إذا كان ذلك أبكر من المعتاد، اذكر ذلك بلطف.</string>
-    <string name="ai_context_weather">\nالطقس في %1$s: %2$d°م، %3$s.</string>
-    <string name="ai_context_no_events_today">لا توجد أحداث مجدولة لهذا اليوم.</string>
-    <string name="ai_voice_interaction_title">كايروس صوت الذكاء الاصطناعي</string>
-    <string name="ai_answering">جاري معالجة سؤالك…</string>
     <string name="cd_speak">استمع إلى الإجابة</string>
     <string name="cd_stop_speaking">توقف عن التحدث</string>
-    <string name="cd_voice_capture">بدء الأمر الصوتي</string>
     <string name="cd_close">إغلاق استجابة الذكاء الاصطناعي</string>
     <string name="create_event">إنشاء حدث</string>
     <string name="event_title">عنوان الحدث</string>
@@ -132,14 +117,6 @@
     <string name="location">الموقع</string>
     <string name="create">إنشاء</string>
     <string name="cancel">إلغاء</string>
-    <string name="ai_suggestions_title">كيف يمكنني مساعدتك؟</string>
-    <string name="ai_suggestion_sleep">ما هو الوقت الذي يجب أن أنام فيه اليوم؟</string>
-    <string name="ai_suggestion_create_event">حدد موعدًا لطبيب الأسنان غدًا الساعة 10 صباحًا</string>
-    <string name="ai_suggestion_reminder">ذكرني بشراء الحليب اليوم</string>
-    <string name="ai_suggestion_agenda">كيف هو جدول أعمالي اليوم؟</string>
-    <string name="widget_daily_briefing_name">ملخص اليوم (IA)</string>
-    <string name="widget_daily_briefing_description">يعرض ملخصًا ذكيًا ليومك تم إنشاؤه بواسطة الذكاء الاصطناعي.</string>
-    <string name="widget_no_briefing">لا يوجد ملخص متاح. افتح التطبيق لإنشائه!</string>
     <string name="next_events_title">الأحداث القادمة</string>
     <string name="no_more_events_today">لا يوجد مزيد من الأحداث اليوم</string>
     <string name="widget_upcoming_event_name">الحدث التالي</string>
@@ -177,20 +154,6 @@
     <string name="hours_short">%1$d ساعة</string>
 
 
-    <string name="ai_agent_snackbar_executed">نفّذ الذكاء الاصطناعي: %1$s</string>
-    <string name="ai_agent_tool_not_found">الأداة \'%1$s\' غير موجودة.</string>
-    <string name="ai_agent_invalid_args">وسائط غير صالحة للأداة \'%1$s\'.</string>
-    <string name="ai_error_network">تعذّر الاتصال بالذكاء الاصطناعي. تحقق من اتصالك بالإنترنت وحاول مرة أخرى.</string>
-    <string name="ai_error_rate_limited">عدد كبير جدًا من الطلبات خلال وقت قصير. انتظر قليلاً وحاول مرة أخرى.</string>
-    <string name="ai_error_safety_blocked">لا يمكنني الإجابة عن هذا الطلب.</string>
-    <string name="ai_error_unknown">تعذّر الحصول على رد من الذكاء الاصطناعي الآن.</string>
-    <string name="ai_agent_confirmation_title">مطلوب تأكيد</string>
-    <string name="ai_agent_create_event_confirmation">يريد الذكاء الاصطناعي إنشاء الحدث \"%1$s\". هل تريد التأكيد؟</string>
-    <string name="ai_agent_create_event_with_location_confirmation">يريد الذكاء الاصطناعي إنشاء الحدث \"%1$s\" في %2$s. هل تريد التأكيد؟</string>
-    <string name="ai_agent_generic_confirmation">يريد الذكاء الاصطناعي تنفيذ الإجراء \'%1$s\'. هل تريد التأكيد؟</string>
-    <string name="ai_agent_reschedule_confirmation">يريد الذكاء الاصطناعي إعادة جدولة الحدث \"%1$s\" إلى %2$s. هل تريد التأكيد؟</string>
-    <string name="ai_agent_categorize_confirmation">يريد الذكاء الاصطناعي تصنيف الحدث \"%1$s\" كـ %2$s. هل تريد التأكيد؟</string>
-    <string name="ai_agent_focus_block_confirmation">يريد الذكاء الاصطناعي إنشاء كتلة تركيز من %1$s إلى %2$s. هل تريد التأكيد؟</string>
     <string name="category_work">عمل</string>
     <string name="category_health">صحة</string>
     <string name="category_leisure">ترفيه</string>
@@ -201,17 +164,9 @@
     <string name="device_health_alert_title">تنبيه الجهاز</string>
 
 
-    <string name="ai_suggested_late_notification">اقترح الذكاء الاصطناعي: %1$s</string>
-    <string name="ai_prepping_meeting">يعمل الذكاء الاصطناعي على تحضير ملخص الاجتماع…</string>
     <string name="battery_low_warning">البطارية منخفضة (%1$d%%). اشحن هاتفك لكي لا يفوتك اجتماع %2$s.</string>
     <string name="silent_mode_warning">وضع الصامت نشط. قد لا يصدر صوت منبه %1$s الخاص بك.</string>
-    <string name="ask_ai_label">تحدث مع الذكاء الاصطناعي</string>
-    <string name="ai_tab_label">المساعد</string>
     <string name="cd_send_message">إرسال</string>
-    <string name="chat_input_placeholder">اكتب رسالتك…</string>
-    <string name="new_conversation_title">محادثة جديدة</string>
-    <string name="no_conversations_yet">لا توجد محادثات بعد</string>
-    <string name="cd_delete_conversation">حذف المحادثة</string>
 
 
     <string name="auto_join_title">الانضمام التلقائي للاجتماعات</string>
@@ -234,9 +189,6 @@
     <string name="everyday">كل يوم</string>
     <string name="alarm">منبه</string>
     <string name="alarms">منبهات</string>
-    <string name="ai_briefing">ملخص الذكاء الاصطناعي</string>
-    <string name="briefing">ملخص</string>
-    <string name="voice">صوت</string>
     <string name="day_sunday_short">ح</string>
     <string name="day_monday_short">ن</string>
     <string name="day_tuesday_short">ث</string>
@@ -244,7 +196,6 @@
     <string name="day_thursday_short">خ</string>
     <string name="day_friday_short">ج</string>
     <string name="day_saturday_short">س</string>
-    <string name="prompt_daily_briefing">قم بتوفير ملخص يومي بناءً على تنبيهاتي.</string>
 
     <string name="integrations">عمليات الدمج</string>
     <string name="google_login_title">ربط Google Meet</string>
@@ -269,7 +220,6 @@
     <string name="insights_punctuality">درجة الالتزام بالمواعيد</string>
     <string name="insights_punctuality_great">عمل رائع! نادراً ما تؤجل.</string>
     <string name="insights_punctuality_bad">لقد كنت تؤجل قليلاً مؤخراً.</string>
-    <string name="insights_ai_usage">تم إنشاء ملخصات الذكاء الاصطناعي</string>
     <string name="insights_time_in_meetings">الوقت في الاجتماعات</string>
     <string name="insights_period_day">يوم</string>
     <string name="insights_period_week">أسبوع</string>
@@ -314,9 +264,6 @@
     <string name="import_calendar_error_no_events">لم يتم العثور على أي أحداث في ملف ICS</string>
     <string name="import_calendar_error_create_calendar">تعذّر إنشاء التقويم المحلي. تحقّق من أذونات التقويم.</string>
     <string name="import_calendar_error_generic">تعذّر استيراد التقويم. تحقّق من الرابط أو الملف وحاول مرة أخرى.</string>
-    <string name="ai_agent_event_rescheduled">تمت إعادة جدولة الحدث في التقويم.</string>
-    <string name="ai_agent_reschedule_recurring_unsupported">لا يمكن للمساعد بعد إعادة جدولة الأحداث المتكررة. غيّر هذا الموعد من تطبيق التقويم.</string>
-    <string name="ai_agent_reschedule_error">تعذّرت إعادة جدولة الحدث في التقويم.</string>
     <string name="notif_features_title">الوصول إلى الإشعارات</string>
     <string name="notif_features_intro">ميزات اختيارية تستخدم الوصول إلى الإشعارات. تتم المعالجة بالكامل على جهازك، ولا يُحفظ محتوى الإشعارات ولا يُرسل أبدًا.</string>
     <string name="notif_dedup_label">إخفاء تذكير التقويم المكرر</string>

@@ -26,7 +26,6 @@
     <string name="autostart_suggestion_disclaimer">برای اینکه هشدارها پس از راه‌اندازی دوبارهٔ گوشی هم به‌درستی کار کنند، پیشنهاد می‌کنیم «اجرای خودکار» (Autostart) را برای Kairos در تنظیمات دستگاه فعال کنید.</string>
     <string name="dismiss">بستن</string>
     <string name="autostart_fallback_toast">باز کردن صفحهٔ مورد نظر ممکن نشد. لطفاً در تنظیمات «Autostart» یا «مدیریت باتری» را جستجو کنید.</string>
-    <string name="drawer_ai_assistant">گفتگوهای هوش مصنوعی</string>
     <string name="share_app">اشتراک‌گذاری برنامه</string>
     <string name="share_text">Kairos را ببینید؛ یک برنامهٔ عالی برای مدیریت رویدادها و هشدارها: https://play.google.com/store/apps/details?id=digital.tonima.kairos</string>
     <string name="menu">منو</string>
@@ -100,22 +99,8 @@
     <string name="cd_collapse_settings">جمع کردن تنظیمات</string>
     <string name="cd_event_recurring">رویداد تکرارشونده</string>
     <string name="daily_briefing_title">خلاصهٔ دستیار</string>
-    <string name="daily_briefing_placeholder">خلاصه‌ای هوشمند از روزتان می‌خواهید؟</string>
-    <string name="generate_briefing">تهیهٔ خلاصه</string>
-    <string name="cd_refresh_briefing">تازه‌سازی خلاصه</string>
-    <string name="ai_briefing_instruction">خلاصه باید به زبان فارسی باشد.</string>
-    <string name="ai_system_instruction_template">تو یک دستیار شخصی هوشمند هستی که با تقویم یکپارچه شده است.\nبه رویدادهای کاربر و به ابزارها/توابعی که می‌توانند در برنامه کاری انجام دهند دسترسی داری.\nاز زمینهٔ تقویم برای پاسخ به سؤال‌ها استفاده کن و وقتی کاربر انجام کاری را خواست (ساختن رویداد، جستجو، روشن/خاموش کردن هشدارها)، به‌جای پاسخ متنی، ابزار مناسب را فراخوانی کن.\nفقط به سؤال‌های مربوط به برنامهٔ روزانه، هشدارها، جلسه‌ها، رویدادها یا آب‌وهوا/پیش‌بینی پاسخ بده. اگر کاربر دربارهٔ موضوع نامرتبط دیگری پرسید، با مهربانی بگو که فقط در زمینهٔ تقویم و آب‌وهوا می‌توانی کمک کنی و به آن موضوع پاسخ نده.\nمستقیم، مفید و دوستانه پاسخ بده.\n\nتاریخ و زمان کنونی: %1$s (قالب yyyy-MM-dd HH:mm، منطقهٔ زمانی %2$s)\nمیلی‌ثانیهٔ epoch معادل (UTC) برای این لحظه: %3$s\nهنگام محاسبهٔ start_time/end_time برای ابزار create_event (یا هر ابزار دیگری که میلی‌ثانیهٔ epoch می‌خواهد)، مقدار را خودت از تاریخ/زمان کنونی و منطقهٔ زمانی بالا به دست بیاور — هرگز سال، ماه یا منطقهٔ زمانی تاریخ‌های نسبی مانند \"فردا\"، \"امشب\" یا \"دوشنبهٔ آینده\" را از کاربر نپرس.\n\nزمینهٔ تقویم:\n%4$s\n\n%5$s</string>
-    <string name="ai_daily_briefing_prompt_template">تو یک دستیار شخصی هوشمند هستی.\nرویدادهای امروز تقویم را که در ادامه آمده خلاصه کن و توصیه‌های پیش‌دستانه بده.\nآب‌وهوای کنونی را در نظر بگیر و نکته بده (مثلاً اگر باران می‌بارد، پیشنهاد کن چتر بردارد یا زودتر راه بیفتد).\nکوتاه باش (حداکثر ۳ تا ۴ جمله).\nتداخل‌ها یا برنامه‌های فشرده را مشخص کن.\nاگر جلسه‌های پشت‌سرهم زیاد است، بی‌صدا کردن گوشی را پیشنهاد کن.\nلحنی دوستانه و پیش‌دستانه داشته باش.%1$s%2$s\n%3$s\n\nرویدادهای امروز:\n%4$s</string>
-    <string name="ai_context_date_prefix">تاریخ:</string>
-    <string name="ai_context_alarm_disabled">(هشدار غیرفعال)</string>
-    <string name="ai_context_wake_up">\nکاربر ساعت %1$s بیدار شد. اگر زودتر از همیشه است، با ملایمت به آن اشاره کن.</string>
-    <string name="ai_context_weather">\nآب‌وهوا در %1$s: %2$d°C، %3$s.</string>
-    <string name="ai_context_no_events_today">برای امروز رویدادی برنامه‌ریزی نشده است.</string>
-    <string name="ai_voice_interaction_title">دستیار صوتی Kairos</string>
-    <string name="ai_answering">در حال پردازش سؤال شما…</string>
     <string name="cd_speak">شنیدن پاسخ</string>
     <string name="cd_stop_speaking">توقف گفتار</string>
-    <string name="cd_voice_capture">شروع فرمان صوتی</string>
     <string name="cd_close">بستن پاسخ هوش مصنوعی</string>
     <string name="create_event">ایجاد رویداد</string>
     <string name="event_title">عنوان رویداد</string>
@@ -129,14 +114,6 @@
     <string name="location">مکان</string>
     <string name="create">ایجاد</string>
     <string name="cancel">لغو</string>
-    <string name="ai_suggestions_title">چطور می‌توانم کمکتان کنم؟</string>
-    <string name="ai_suggestion_sleep">امروز چه ساعتی بخوابم؟</string>
-    <string name="ai_suggestion_create_event">فردا ساعت ۱۰ صبح وقت دندانپزشکی بگذار</string>
-    <string name="ai_suggestion_reminder">امروز یادم بینداز شیر بخرم</string>
-    <string name="ai_suggestion_agenda">برنامهٔ امروزم چطور است؟</string>
-    <string name="widget_daily_briefing_name">خلاصهٔ روزانه (هوش مصنوعی)</string>
-    <string name="widget_daily_briefing_description">خلاصه‌ای هوشمند از روزتان را که هوش مصنوعی تهیه کرده نشان می‌دهد.</string>
-    <string name="widget_no_briefing">خلاصه‌ای موجود نیست. برای تهیهٔ آن برنامه را باز کنید!</string>
     <string name="next_events_title">رویدادهای پیش رو</string>
     <string name="no_more_events_today">امروز رویداد دیگری نیست</string>
     <string name="widget_upcoming_event_name">رویداد بعدی</string>
@@ -169,20 +146,6 @@
     <string name="minutes_short">%1$d دقیقه</string>
     <string name="hours_short">%1$d ساعت</string>
 
-    <string name="ai_agent_snackbar_executed">هوش مصنوعی انجام داد: %1$s</string>
-    <string name="ai_agent_tool_not_found">ابزار «%1$s» پیدا نشد.</string>
-    <string name="ai_agent_invalid_args">آرگومان‌های نامعتبر برای «%1$s».</string>
-    <string name="ai_error_network">اتصال به هوش مصنوعی ممکن نشد. اتصال اینترنت را بررسی و دوباره امتحان کنید.</string>
-    <string name="ai_error_rate_limited">درخواست‌ها در زمان کوتاه بیش از حد است. کمی صبر کنید و دوباره امتحان کنید.</string>
-    <string name="ai_error_safety_blocked">نمی‌توانم به این درخواست پاسخ دهم.</string>
-    <string name="ai_error_unknown">در حال حاضر پاسخی از هوش مصنوعی دریافت نشد.</string>
-    <string name="ai_agent_confirmation_title">تأیید لازم است</string>
-    <string name="ai_agent_create_event_confirmation">هوش مصنوعی می‌خواهد رویداد \"%1$s\" را ایجاد کند. تأیید می‌کنید؟</string>
-    <string name="ai_agent_create_event_with_location_confirmation">هوش مصنوعی می‌خواهد رویداد \"%1$s\" را در %2$s ایجاد کند. تأیید می‌کنید؟</string>
-    <string name="ai_agent_generic_confirmation">هوش مصنوعی می‌خواهد کار «%1$s» را انجام دهد. تأیید می‌کنید؟</string>
-    <string name="ai_agent_reschedule_confirmation">هوش مصنوعی می‌خواهد رویداد \"%1$s\" را به %2$s منتقل کند. تأیید می‌کنید؟</string>
-    <string name="ai_agent_categorize_confirmation">هوش مصنوعی می‌خواهد رویداد \"%1$s\" را در دستهٔ %2$s قرار دهد. تأیید می‌کنید؟</string>
-    <string name="ai_agent_focus_block_confirmation">هوش مصنوعی می‌خواهد یک بازهٔ تمرکز از %1$s تا %2$s ایجاد کند. تأیید می‌کنید؟</string>
     <string name="category_work">کار</string>
     <string name="category_health">سلامت</string>
     <string name="category_leisure">تفریح</string>
@@ -192,15 +155,7 @@
     <string name="ai_agent_event_creation_error">خطا در ایجاد رویداد در تقویم.</string>
     <string name="device_health_alert_title">هشدار دستگاه</string>
 
-    <string name="ai_suggested_late_notification">پیشنهاد هوش مصنوعی: %1$s</string>
-    <string name="ai_prepping_meeting">هوش مصنوعی در حال آماده کردن خلاصهٔ جلسه است…</string>
-    <string name="ask_ai_label">گفتگو با هوش مصنوعی</string>
-    <string name="ai_tab_label">هوش مصنوعی</string>
     <string name="cd_send_message">ارسال</string>
-    <string name="chat_input_placeholder">پیام خود را بنویسید…</string>
-    <string name="new_conversation_title">گفتگوی جدید</string>
-    <string name="no_conversations_yet">هنوز گفتگویی نیست</string>
-    <string name="cd_delete_conversation">حذف گفتگو</string>
     <string name="battery_low_warning">باتری کم است (%1$d%%). گوشی را شارژ کنید تا جلسهٔ %2$s را از دست ندهید.</string>
     <string name="silent_mode_warning">حالت بی‌صدا فعال است. ممکن است هشدار %1$s شما به صدا درنیاید.</string>
 
@@ -224,9 +179,6 @@
     <string name="everyday">هر روز</string>
     <string name="alarm">هشدار</string>
     <string name="alarms">هشدارها</string>
-    <string name="ai_briefing">خلاصهٔ هوش مصنوعی</string>
-    <string name="briefing">خلاصه</string>
-    <string name="voice">صدا</string>
     <string name="day_sunday_short">ی</string>
     <string name="day_monday_short">د</string>
     <string name="day_tuesday_short">س</string>
@@ -234,7 +186,6 @@
     <string name="day_thursday_short">پ</string>
     <string name="day_friday_short">ج</string>
     <string name="day_saturday_short">ش</string>
-    <string name="prompt_daily_briefing">بر اساس هشدارهایم یک خلاصهٔ روزانه بده.</string>
 
     <string name="integrations">یکپارچه‌سازی‌ها</string>
     <string name="google_login_title">اتصال Google Meet</string>
@@ -258,7 +209,6 @@
     <string name="insights_punctuality">امتیاز وقت‌شناسی</string>
     <string name="insights_punctuality_great">عالی! به‌ندرت چرت می‌زنید.</string>
     <string name="insights_punctuality_bad">اخیراً کمی زیاد چرت زده‌اید.</string>
-    <string name="insights_ai_usage">خلاصه‌های تهیه‌شده با هوش مصنوعی</string>
     <string name="insights_time_in_meetings">زمان در جلسه‌ها</string>
     <string name="insights_period_day">روز</string>
     <string name="insights_period_week">هفته</string>
@@ -303,9 +253,6 @@
     <string name="import_calendar_error_no_events">هیچ رویدادی در فایل ICS پیدا نشد</string>
     <string name="import_calendar_error_create_calendar">ایجاد تقویم محلی ممکن نشد. مجوزهای تقویم را بررسی کنید.</string>
     <string name="import_calendar_error_generic">وارد کردن تقویم ممکن نشد. نشانی یا فایل را بررسی و دوباره امتحان کنید.</string>
-    <string name="ai_agent_event_rescheduled">زمان رویداد در تقویم شما تغییر کرد.</string>
-    <string name="ai_agent_reschedule_recurring_unsupported">دستیار هنوز نمی‌تواند زمان رویدادهای تکرارشونده را تغییر دهد. آن مورد را در برنامهٔ تقویم خود تغییر دهید.</string>
-    <string name="ai_agent_reschedule_error">تغییر زمان رویداد در تقویم ممکن نشد.</string>
     <string name="notif_features_title">دسترسی به اعلان‌ها</string>
     <string name="notif_features_intro">ویژگی‌های اختیاری که از دسترسی به اعلان‌ها استفاده می‌کنند. همه‌چیز روی دستگاه شما پردازش می‌شود؛ محتوای اعلان‌ها هرگز ذخیره یا به جایی ارسال نمی‌شود.</string>
     <string name="notif_dedup_label">پنهان کردن یادآور تکراری تقویم</string>

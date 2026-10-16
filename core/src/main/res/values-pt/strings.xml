@@ -31,7 +31,6 @@
     <string name="dismiss">Dispensar</string>
     <string name="autostart_fallback_toast">Não foi possível abrir a tela específica. Por favor, procure por "Início Automático" ou
         "Gerenciador de Bateria" nas configurações.</string>
-    <string name="drawer_ai_assistant">Conversas com a IA</string>
     <string name="share_app">Compartilhar aplicativo</string>
     <string name="share_text">Confira o Kairos, um aplicativo incrível para gerenciar seus eventos e alarmes: https://play.google.com/store/apps/details?id=digital.tonima.kairos</string>
     <string name="menu">Menu</string>
@@ -105,14 +104,8 @@
     <string name="cd_collapse_settings">Recolher configurações</string>
     <string name="cd_event_recurring">Evento recorrente</string>
     <string name="daily_briefing_title">Resumo do Assistente</string>
-    <string name="daily_briefing_placeholder">Deseja um resumo inteligente do seu dia?</string>
-    <string name="generate_briefing">Gerar Resumo</string>
-    <string name="cd_refresh_briefing">Atualizar resumo</string>
-    <string name="ai_voice_interaction_title">Kairos Voice AI</string>
-    <string name="ai_answering">Processando sua pergunta…</string>
     <string name="cd_speak">Ouvir resposta</string>
     <string name="cd_stop_speaking">Parar de falar</string>
-    <string name="cd_voice_capture">Iniciar comando de voz</string>
     <string name="cd_close">Fechar resposta da IA</string>
     <string name="create_event">Criar Evento</string>
     <string name="event_title">Título do Evento</string>
@@ -126,22 +119,6 @@
     <string name="location">Localização</string>
     <string name="create">Criar</string>
     <string name="cancel">Cancelar</string>
-    <string name="ai_suggestions_title">Como posso te ajudar?</string>
-    <string name="ai_suggestion_sleep">Que horas devo dormir hoje?</string>
-    <string name="ai_suggestion_create_event">Marcar dentista amanhã às 10h</string>
-    <string name="ai_suggestion_reminder">Lembrar de comprar leite hoje</string>
-    <string name="ai_suggestion_agenda">Como está minha agenda de hoje?</string>
-    <string name="ai_briefing_instruction">O resumo deve ser em Português.</string>
-    <string name="ai_system_instruction_template">Você é um assistente pessoal inteligente integrado a um calendário.\nVocê tem acesso aos eventos do usuário e a ferramentas (tools/functions) que podem executar ações no app.\nUse o contexto do calendário para responder perguntas e, quando o usuário pedir para executar uma ação (criar evento, buscar, ligar/desligar alarmes), invoque a ferramenta apropriada em vez de responder com texto.\nResponda APENAS perguntas relacionadas à agenda, alarmes, reuniões, eventos, ou sobre o clima/previsão do tempo. Se o usuário perguntar qualquer outra coisa não relacionada, diga gentilmente que você só pode ajudar com calendário e clima e não responda ao assunto.\nResponda de forma direta, útil e amigável.\n\nData e Hora atual: %1$s (formato yyyy-MM-dd HH:mm, fuso horário %2$s)\nEquivalente em epoch millis (UTC) deste instante: %3$s\nAo calcular start_time/end_time para a ferramenta create_event (ou qualquer outra que peça epoch millis), derive o valor você mesmo a partir da Data e Hora atual e do fuso horário acima — nunca pergunte ao usuário o ano, mês ou fuso horário de datas relativas como \"amanhã\", \"hoje à noite\" ou \"próxima segunda\".\n\nContexto do Calendário:\n%4$s\n\n%5$s</string>
-    <string name="ai_daily_briefing_prompt_template">Você é um assistente pessoal inteligente.\nResuma os eventos de hoje do calendário abaixo e dê conselhos proativos.\nConsidere o clima atual para dar dicas (ex: se vai chover, sugira levar guarda-chuva ou sair mais cedo).\nSeja breve (máximo 3-4 frases).\nIdentifique conflitos ou horários apertados.\nSugira silenciar o celular se houver muitas reuniões seguidas.\nUse um tom amigável e proativo.%1$s%2$s\n%3$s\n\nEventos de hoje:\n%4$s</string>
-    <string name="ai_context_date_prefix">Data:</string>
-    <string name="ai_context_alarm_disabled">(Alarme Desativado)</string>
-    <string name="ai_context_wake_up">\nO usuário acordou às %1$s. Se for mais cedo que o habitual, mencione isso suavemente.</string>
-    <string name="ai_context_weather">\nClima em %1$s: %2$d°C, %3$s.</string>
-    <string name="ai_context_no_events_today">Nenhum evento agendado para hoje.</string>
-    <string name="widget_daily_briefing_name">Resumo do Dia (IA)</string>
-    <string name="widget_daily_briefing_description">Exibe o resumo inteligente do seu dia gerado pela IA.</string>
-    <string name="widget_no_briefing">Nenhum resumo disponível. Abra o app para gerar!</string>
     <string name="next_events_title">Próximos Eventos</string>
     <string name="no_more_events_today">Sem mais eventos hoje</string>
     <string name="widget_upcoming_event_name">Próximo evento</string>
@@ -176,20 +153,6 @@
     <string name="hours_short">%1$d h</string>
 
 
-    <string name="ai_agent_snackbar_executed">IA executou: %1$s</string>
-    <string name="ai_agent_tool_not_found">Ferramenta \'%1$s\' não encontrada.</string>
-    <string name="ai_agent_invalid_args">Argumentos inválidos para \'%1$s\'.</string>
-    <string name="ai_error_network">Não foi possível conectar à IA. Verifique sua internet e tente novamente.</string>
-    <string name="ai_error_rate_limited">Muitas solicitações em pouco tempo. Aguarde um instante e tente novamente.</string>
-    <string name="ai_error_safety_blocked">Não posso responder a essa solicitação.</string>
-    <string name="ai_error_unknown">Não foi possível obter uma resposta da IA agora.</string>
-    <string name="ai_agent_confirmation_title">Confirmação necessária</string>
-    <string name="ai_agent_create_event_confirmation">A IA quer criar o evento \"%1$s\". Deseja confirmar?</string>
-    <string name="ai_agent_create_event_with_location_confirmation">A IA quer criar o evento \"%1$s\" em %2$s. Deseja confirmar?</string>
-    <string name="ai_agent_generic_confirmation">A IA quer executar a ação \'%1$s\'. Deseja confirmar?</string>
-    <string name="ai_agent_reschedule_confirmation">A IA quer reagendar o evento \"%1$s\" para %2$s. Deseja confirmar?</string>
-    <string name="ai_agent_categorize_confirmation">A IA quer categorizar o evento \"%1$s\" como %2$s. Deseja confirmar?</string>
-    <string name="ai_agent_focus_block_confirmation">A IA quer criar um bloco de foco das %1$s às %2$s. Deseja confirmar?</string>
     <string name="category_work">Trabalho</string>
     <string name="category_health">Saúde</string>
     <string name="category_leisure">Lazer</string>
@@ -200,15 +163,7 @@
     <string name="device_health_alert_title">Alerta do Dispositivo</string>
 
 
-    <string name="ai_suggested_late_notification">A IA sugeriu: %1$s</string>
-    <string name="ai_prepping_meeting">IA está preparando o resumo da reunião…</string>
-    <string name="ask_ai_label">Conversar com IA</string>
-    <string name="ai_tab_label">IA</string>
     <string name="cd_send_message">Enviar</string>
-    <string name="chat_input_placeholder">Digite sua mensagem…</string>
-    <string name="new_conversation_title">Nova Conversa</string>
-    <string name="no_conversations_yet">Nenhuma conversa ainda</string>
-    <string name="cd_delete_conversation">Apagar conversa</string>
     <string name="battery_low_warning">Bateria fraca (%1$d%%). Carregue seu celular para não perder o compromisso das %2$s.</string>
     <string name="silent_mode_warning">Modo silencioso ativo. Seu alarme das %1$s pode não tocar som.</string>
 
@@ -233,9 +188,6 @@
     <string name="everyday">Todos os dias</string>
     <string name="alarm">Alarme</string>
     <string name="alarms">Alarmes</string>
-    <string name="ai_briefing">Resumo IA</string>
-    <string name="briefing">Resumo</string>
-    <string name="voice">Voz</string>
     <string name="day_sunday_short">D</string>
     <string name="day_monday_short">S</string>
     <string name="day_tuesday_short">T</string>
@@ -243,7 +195,6 @@
     <string name="day_thursday_short">Q</string>
     <string name="day_friday_short">S</string>
     <string name="day_saturday_short">S</string>
-    <string name="prompt_daily_briefing">Forneça um resumo diário com base nos meus alarmes.</string>
 
 
     <string name="integrations">Integrações</string>
@@ -269,7 +220,6 @@
     <string name="insights_punctuality">Pontualidade</string>
     <string name="insights_punctuality_great">Ótimo trabalho! Você raramente adia.</string>
     <string name="insights_punctuality_bad">Você tem adiado seus alarmes ultimamente.</string>
-    <string name="insights_ai_usage">Resumos de IA Gerados</string>
     <string name="insights_time_in_meetings">Tempo em Reuniões</string>
     <string name="insights_period_day">Dia</string>
     <string name="insights_period_week">Semana</string>
@@ -314,9 +264,6 @@
     <string name="import_calendar_error_no_events">Nenhum evento encontrado no arquivo ICS</string>
     <string name="import_calendar_error_create_calendar">Falha ao criar o calendário local. Verifique as permissões de Calendário.</string>
     <string name="import_calendar_error_generic">Não foi possível importar o calendário. Verifique a URL ou o arquivo e tente novamente.</string>
-    <string name="ai_agent_event_rescheduled">Evento reagendado no calendário.</string>
-    <string name="ai_agent_reschedule_recurring_unsupported">Ainda não é possível reagendar eventos recorrentes pelo assistente. Altere a ocorrência pelo app de calendário.</string>
-    <string name="ai_agent_reschedule_error">Não foi possível reagendar o evento no calendário.</string>
     <string name="notif_features_title">Acesso a notificações</string>
     <string name="notif_features_intro">Recursos opcionais que usam o acesso a notificações. Tudo é processado no aparelho; o conteúdo das notificações nunca é salvo nem enviado.</string>
     <string name="notif_dedup_label">Ocultar lembrete duplicado da agenda</string>

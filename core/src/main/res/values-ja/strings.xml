@@ -26,7 +26,6 @@
     <string name="autostart_suggestion_disclaimer">スマートフォンを再起動した後もアラームが確実に機能するように、デバイスの設定でKairosの「自動起動」を有効にすることをお勧めします。</string>
     <string name="dismiss">閉じる</string>
     <string name="autostart_fallback_toast">特定の画面を開けませんでした。設定で「自動起動」または「バッテリーマネージャー」を検索してください。</string>
-    <string name="drawer_ai_assistant">AIとの会話</string>
     <string name="share_app">アプリを共有</string>
     <string name="share_text">Kairosをチェックしてみてください。イベントやアラームを管理するための素晴らしいアプリです: https://play.google.com/store/apps/details?id=digital.tonima.kairos</string>
     <string name="menu">メニュー</string>
@@ -100,22 +99,8 @@
     <string name="cd_collapse_settings">設定を折りたたむ</string>
     <string name="cd_event_recurring">繰り返しイベント</string>
     <string name="daily_briefing_title">アシスタント要約</string>
-    <string name="daily_briefing_placeholder">一日の要約を見ますか？</string>
-    <string name="generate_briefing">要約を生成</string>
-    <string name="cd_refresh_briefing">要約を更新</string>
-    <string name="ai_briefing_instruction">要約は日本語である必要があります。</string>
-    <string name="ai_system_instruction_template">あなたはカレンダーと連携した賢いパーソナルアシスタントです。\nユーザーの予定や、アプリ内でアクションを実行できるツール（tools/functions）にアクセスできます。\nカレンダーのコンテキストを使って質問に答え、ユーザーがアクションの実行（予定の作成、検索、アラームのオン/オフ）を求めた場合は、テキストで返答する代わりに適切なツールを呼び出してください。\n予定、アラーム、会議、イベント、天気/予報に関する質問にのみ答えてください。ユーザーがそれ以外の無関係な質問をした場合は、カレンダーと天気についてのみお手伝いできると丁寧に伝え、その話題には答えないでください。\n直接的で、役立ち、フレンドリーに答えてください。\n\n現在の日時: %1$s（形式 yyyy-MM-dd HH:mm、タイムゾーン %2$s）\nこの瞬間のepochミリ秒（UTC）換算: %3$s\ncreate_eventツール（またはepochミリ秒を必要とする他のツール）のstart_time/end_timeを計算する際は、上記の現在の日時とタイムゾーンから自分で値を導き出してください。「明日」「今夜」「来週の月曜日」などの相対的な日付について、ユーザーに年・月・タイムゾーンを尋ねないでください。\n\nカレンダーのコンテキスト:\n%4$s\n\n%5$s</string>
-    <string name="ai_daily_briefing_prompt_template">あなたは賢いパーソナルアシスタントです。\n以下の今日のカレンダーの予定を要約し、積極的なアドバイスを行ってください。\n現在の天気を考慮してアドバイスしてください(例: 雨が降りそうなら傘を持って行くか早めに出発することを提案する)。\n簡潔に(最大3〜4文)。\n予定の重複や詰まったスケジュールを特定してください。\n連続した会議が多い場合は電話をサイレントにすることを提案してください。\nフレンドリーで積極的なトーンを使ってください。%1$s%2$s\n%3$s\n\n今日の予定:\n%4$s</string>
-    <string name="ai_context_date_prefix">日付:</string>
-    <string name="ai_context_alarm_disabled">（アラーム無効）</string>
-    <string name="ai_context_wake_up">\nユーザーは%1$sに起きました。いつもより早い場合は、そっとそのことに触れてください。</string>
-    <string name="ai_context_weather">\n%1$sの天気: %2$d°C、%3$s。</string>
-    <string name="ai_context_no_events_today">今日の予定はありません。</string>
-    <string name="ai_voice_interaction_title">カイロス音声AI</string>
-    <string name="ai_answering">質問を処理しています…</string>
     <string name="cd_speak">回答を聴く</string>
     <string name="cd_stop_speaking">読み上げを停止</string>
-    <string name="cd_voice_capture">音声コマンドを開始</string>
     <string name="cd_close">AIの応答を閉じる</string>
     <string name="create_event">イベントを作成</string>
     <string name="event_title">イベントタイトル</string>
@@ -129,14 +114,6 @@
     <string name="location">場所</string>
     <string name="create">作成</string>
     <string name="cancel">キャンセル</string>
-    <string name="ai_suggestions_title">何かお手伝いできることはありますか？</string>
-    <string name="ai_suggestion_sleep">今日は何時に寝るべきですか？</string>
-    <string name="ai_suggestion_create_event">明日の午前10時に歯医者の予約を入れる</string>
-    <string name="ai_suggestion_reminder">今日、牛乳を買うのを忘れないようにする</string>
-    <string name="ai_suggestion_agenda">今日の予定はどうなっていますか？</string>
-    <string name="widget_daily_briefing_name">今日の要約 (AI)</string>
-    <string name="widget_daily_briefing_description">AIによって生成された今日のスマートな要約を表示します。</string>
-    <string name="widget_no_briefing">要約がありません。アプリを開いて生成してください！</string>
     <string name="next_events_title">今後のイベント</string>
     <string name="no_more_events_today">本日の予定はもうありません</string>
     <string name="widget_upcoming_event_name">次のイベント</string>
@@ -169,20 +146,6 @@
     <string name="hours_short">%1$d 時間</string>
 
 
-    <string name="ai_agent_snackbar_executed">AIが実行しました: %1$s</string>
-    <string name="ai_agent_tool_not_found">ツール \'%1$s\' が見つかりません。</string>
-    <string name="ai_agent_invalid_args">\'%1$s\' の引数が無効です。</string>
-    <string name="ai_error_network">AIに接続できませんでした。インターネット接続を確認して、もう一度お試しください。</string>
-    <string name="ai_error_rate_limited">短時間にリクエストが多すぎます。少し待ってからもう一度お試しください。</string>
-    <string name="ai_error_safety_blocked">そのリクエストにはお答えできません。</string>
-    <string name="ai_error_unknown">現在AIから応答を得られませんでした。</string>
-    <string name="ai_agent_confirmation_title">確認が必要です</string>
-    <string name="ai_agent_create_event_confirmation">AIがイベント「%1$s」を作成しようとしています。確認しますか？</string>
-    <string name="ai_agent_create_event_with_location_confirmation">AIがイベント「%1$s」を%2$sで作成しようとしています。確認しますか？</string>
-    <string name="ai_agent_generic_confirmation">AIがアクション \'%1$s\' を実行しようとしています。確認しますか？</string>
-    <string name="ai_agent_reschedule_confirmation">AIがイベント「%1$s」を%2$sに再スケジュールしようとしています。確認しますか？</string>
-    <string name="ai_agent_categorize_confirmation">AIがイベント「%1$s」を%2$sに分類しようとしています。確認しますか？</string>
-    <string name="ai_agent_focus_block_confirmation">AIが%1$sから%2$sまでの集中ブロックを作成しようとしています。確認しますか？</string>
     <string name="category_work">仕事</string>
     <string name="category_health">健康</string>
     <string name="category_leisure">レジャー</string>
@@ -193,17 +156,9 @@
     <string name="device_health_alert_title">デバイスアラート</string>
 
 
-    <string name="ai_suggested_late_notification">AIの提案: %1$s</string>
-    <string name="ai_prepping_meeting">AIが会議の要約を作成中…</string>
     <string name="battery_low_warning">バッテリー残量が少なくなっています (%1$d%%)。%2$sの会議に遅れないよう、スマートフォンを充電してください。</string>
     <string name="silent_mode_warning">マナーモードがオンになっています。%1$sのアラームが鳴らない可能性があります。</string>
-    <string name="ask_ai_label">AIと話す</string>
-    <string name="ai_tab_label">AI</string>
     <string name="cd_send_message">送信</string>
-    <string name="chat_input_placeholder">メッセージを入力…</string>
-    <string name="new_conversation_title">新しい会話</string>
-    <string name="no_conversations_yet">会話はまだありません</string>
-    <string name="cd_delete_conversation">会話を削除</string>
 
 
     <string name="auto_join_title">ミーティングに自動参加</string>
@@ -226,9 +181,6 @@
     <string name="everyday">毎日</string>
     <string name="alarm">アラーム</string>
     <string name="alarms">アラーム</string>
-    <string name="ai_briefing">AIブリーフィング</string>
-    <string name="briefing">ブリーフィング</string>
-    <string name="voice">音声</string>
     <string name="day_sunday_short">日</string>
     <string name="day_monday_short">月</string>
     <string name="day_tuesday_short">火</string>
@@ -236,7 +188,6 @@
     <string name="day_thursday_short">木</string>
     <string name="day_friday_short">金</string>
     <string name="day_saturday_short">土</string>
-    <string name="prompt_daily_briefing">アラームに基づいた毎日のブリーフィングを提供してください。</string>
 
     <string name="integrations">連携</string>
     <string name="google_login_title">Google Meetと連携</string>
@@ -261,7 +212,6 @@
     <string name="insights_punctuality">穿き心地の評価</string>
     <string name="insights_punctuality_great">素晴らしい！スヌーズをほとんど使っていませんね。</string>
     <string name="insights_punctuality_bad">最近スヌーズが増えています。</string>
-    <string name="insights_ai_usage">生成されたAIブリーフィング</string>
     <string name="insights_time_in_meetings">会議の時間</string>
     <string name="insights_period_day">日</string>
     <string name="insights_period_week">週</string>
@@ -306,9 +256,6 @@
     <string name="import_calendar_error_no_events">ICS ファイルに予定が見つかりませんでした</string>
     <string name="import_calendar_error_create_calendar">ローカルカレンダーを作成できませんでした。カレンダーの権限を確認してください。</string>
     <string name="import_calendar_error_generic">カレンダーをインポートできませんでした。URL またはファイルを確認して、もう一度お試しください。</string>
-    <string name="ai_agent_event_rescheduled">カレンダーの予定を変更しました。</string>
-    <string name="ai_agent_reschedule_recurring_unsupported">繰り返しの予定はまだアシスタントで変更できません。カレンダーアプリで変更してください。</string>
-    <string name="ai_agent_reschedule_error">カレンダーの予定を変更できませんでした。</string>
     <string name="notif_features_title">通知へのアクセス</string>
     <string name="notif_features_intro">通知アクセスを使うオプション機能です。すべて端末内で処理され、通知の内容が保存されたり送信されたりすることはありません。</string>
     <string name="notif_dedup_label">重複したカレンダーのリマインダーを非表示</string>

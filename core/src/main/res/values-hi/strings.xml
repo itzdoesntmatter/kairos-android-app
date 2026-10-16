@@ -29,7 +29,6 @@
         आपके डिवाइस की सेटिंग्स में Kairos के लिए "ऑटोस्टार्ट" सक्षम करने की सलाह देते हैं।</string>
     <string name="dismiss">खारिज करें</string>
     <string name="autostart_fallback_toast">विशिष्ट स्क्रीन नहीं खुल सकी। कृपया सेटिंग्स में "ऑटोस्टार्ट" या "बैटरी मैनेजर" खोजें।</string>
-    <string name="drawer_ai_assistant">एआई बातचीत</string>
     <string name="share_app">ऐप साझा करें</string>
     <string name="share_text">Kairos को देखें, जो आपके इवेंट और अलार्म को प्रबंधित करने के लिए एक अद्भुत ऐप है: https://play.google.com/store/apps/details?id=digital.tonima.kairos</string>
     <string name="menu">मेनू</string>
@@ -103,22 +102,8 @@
     <string name="cd_collapse_settings">सेटिंग समेटें</string>
     <string name="cd_event_recurring">आवर्ती घटना</string>
     <string name="daily_briefing_title">सहायक सारांश</string>
-    <string name="daily_briefing_placeholder">क्या आप अपने दिन का एक स्मार्ट सारांश चाहेंगे?</string>
-    <string name="generate_briefing">सारांश तैयार करें</string>
-    <string name="cd_refresh_briefing">सारांश अपडेट करें</string>
-    <string name="ai_briefing_instruction">सारांश हिंदी में होना चाहिए।</string>
-    <string name="ai_system_instruction_template">आप एक कैलेंडर से जुड़े एक बुद्धिमान व्यक्तिगत सहायक हैं।\nआपके पास उपयोगकर्ता की घटनाओं और उन टूल्स/फ़ंक्शंस तक पहुंच है जो ऐप में कार्रवाइयां कर सकते हैं।\nप्रश्नों का उत्तर देने के लिए कैलेंडर संदर्भ का उपयोग करें, और जब उपयोगकर्ता कोई कार्रवाई करने के लिए कहे (इवेंट बनाना, खोजना, अलार्म चालू/बंद करना), तो टेक्स्ट से जवाब देने के बजाय उपयुक्त टूल को कॉल करें।\nकेवल कार्यक्रम, अलार्म, मीटिंग, इवेंट या मौसम/पूर्वानुमान से संबंधित प्रश्नों का उत्तर दें। यदि उपयोगकर्ता किसी असंबंधित चीज़ के बारे में पूछे, तो विनम्रता से कहें कि आप केवल कैलेंडर और मौसम में मदद कर सकते हैं और उस विषय का जवाब न दें।\nसीधे, सहायक और मैत्रीपूर्ण ढंग से उत्तर दें।\n\nवर्तमान दिनांक और समय: %1$s (प्रारूप yyyy-MM-dd HH:mm, समय क्षेत्र %2$s)\nइस क्षण के लिए epoch millis (UTC) में समतुल्य: %3$s\ncreate_event टूल (या epoch millis मांगने वाले किसी भी अन्य टूल) के लिए start_time/end_time की गणना करते समय, ऊपर दिए गए वर्तमान दिनांक/समय और समय क्षेत्र से स्वयं मान निकालें — \"कल\", \"आज रात\" या \"अगले सोमवार\" जैसी सापेक्ष तिथियों के लिए कभी भी उपयोगकर्ता से वर्ष, महीना या समय क्षेत्र न पूछें।\n\nकैलेंडर संदर्भ:\n%4$s\n\n%5$s</string>
-    <string name="ai_daily_briefing_prompt_template">आप एक बुद्धिमान व्यक्तिगत सहायक हैं।\nनीचे दिए गए कैलेंडर से आज की घटनाओं का सारांश दें और सक्रिय सलाह दें।\nसलाह देने के लिए वर्तमान मौसम पर विचार करें (जैसे: अगर बारिश होने वाली है, तो छाता ले जाने या जल्दी निकलने का सुझाव दें)।\nसंक्षिप्त रहें (अधिकतम 3-4 वाक्य)।\nटकराव या तंग समय-सारिणी की पहचान करें।\nयदि लगातार कई मीटिंग हों तो फ़ोन को साइलेंट करने का सुझाव दें।\nमैत्रीपूर्ण, सक्रिय लहजे का उपयोग करें।%1$s%2$s\n%3$s\n\nआज की घटनाएँ:\n%4$s</string>
-    <string name="ai_context_date_prefix">दिनांक:</string>
-    <string name="ai_context_alarm_disabled">(अलार्म अक्षम)</string>
-    <string name="ai_context_wake_up">\nउपयोगकर्ता %1$s बजे जागा। यदि यह सामान्य से पहले है, तो इसे धीरे से बताएं।</string>
-    <string name="ai_context_weather">\n%1$s में मौसम: %2$d°C, %3$s।</string>
-    <string name="ai_context_no_events_today">आज के लिए कोई घटना निर्धारित नहीं है।</string>
-    <string name="ai_voice_interaction_title">कैरोस वॉयस एआई</string>
-    <string name="ai_answering">आपके प्रश्न पर कार्रवाई की जा रही है…</string>
     <string name="cd_speak">उत्तर सुनें</string>
     <string name="cd_stop_speaking">बोलना बंद करें</string>
-    <string name="cd_voice_capture">वॉयस कमांड शुरू करें</string>
     <string name="cd_close">एआई प्रतिक्रिया बंद करें</string>
     <string name="create_event">ईवेंट बनाएँ</string>
     <string name="event_title">ईवेंट शीर्षक</string>
@@ -132,14 +117,6 @@
     <string name="location">स्थान</string>
     <string name="create">बनाएँ</string>
     <string name="cancel">रद्द करें</string>
-    <string name="ai_suggestions_title">मैं आपकी क्या मदद कर सकता हूँ?</string>
-    <string name="ai_suggestion_sleep">मुझे आज किस समय सोना चाहिए?</string>
-    <string name="ai_suggestion_create_event">कल सुबह 10 बजे डेंटिस्ट का अपॉइंटमेंट शेड्यूल करें</string>
-    <string name="ai_suggestion_reminder">आज दूध खरीदने के लिए याद दिलाएं</string>
-    <string name="ai_suggestion_agenda">आज मेरा एजेंडा कैसा है?</string>
-    <string name="widget_daily_briefing_name">दैनिक सारांश (IA)</string>
-    <string name="widget_daily_briefing_description">AI द्वारा जेनरेट किया गया आपके दिन का स्मार्ट सारांश दिखाता है।</string>
-    <string name="widget_no_briefing">कोई सारांश उपलब्ध नहीं है। जेनरेट करने के लिए ऐप खोलें!</string>
     <string name="next_events_title">आने वाले कार्यक्रम</string>
     <string name="no_more_events_today">आज और कोई कार्यक्रम नहीं है</string>
     <string name="widget_upcoming_event_name">अगला कार्यक्रम</string>
@@ -173,20 +150,6 @@
     <string name="hours_short">%1$d घंटे</string>
 
 
-    <string name="ai_agent_snackbar_executed">AI ने निष्पादित किया: %1$s</string>
-    <string name="ai_agent_tool_not_found">टूल \'%1$s\' नहीं मिला।</string>
-    <string name="ai_agent_invalid_args">\'%1$s\' के लिए अमान्य तर्क।</string>
-    <string name="ai_error_network">AI से कनेक्ट नहीं हो सका। अपना इंटरनेट कनेक्शन जांचें और फिर से प्रयास करें।</string>
-    <string name="ai_error_rate_limited">कम समय में बहुत सारे अनुरोध। कृपया कुछ देर रुकें और फिर से प्रयास करें।</string>
-    <string name="ai_error_safety_blocked">मैं इस अनुरोध का उत्तर नहीं दे सकता।</string>
-    <string name="ai_error_unknown">अभी AI से जवाब नहीं मिल सका।</string>
-    <string name="ai_agent_confirmation_title">पुष्टि आवश्यक</string>
-    <string name="ai_agent_create_event_confirmation">AI इवेंट \"%1$s\" बनाना चाहता है। पुष्टि करें?</string>
-    <string name="ai_agent_create_event_with_location_confirmation">AI इवेंट \"%1$s\" %2$s पर बनाना चाहता है। पुष्टि करें?</string>
-    <string name="ai_agent_generic_confirmation">AI क्रिया \'%1$s\' निष्पादit करना चाहता है। पुष्टि करें?</string>
-    <string name="ai_agent_reschedule_confirmation">AI ईवेंट \"%1$s\" को %2$s पर रीशेड्यूल करना चाहता है। पुष्टि करें?</string>
-    <string name="ai_agent_categorize_confirmation">AI ईवेंट \"%1$s\" को %2$s के रूप में वर्गीकृत करना चाहता है। पुष्टि करें?</string>
-    <string name="ai_agent_focus_block_confirmation">AI %1$s से %2$s तक एक फोकस ब्लॉक बनाना चाहता है। पुष्टि करें?</string>
     <string name="category_work">काम</string>
     <string name="category_health">स्वास्थ्य</string>
     <string name="category_leisure">फुर्सत</string>
@@ -197,17 +160,9 @@
     <string name="device_health_alert_title">डिवाइस अलर्ट</string>
 
 
-    <string name="ai_suggested_late_notification">AI का सुझाव: %1$s</string>
-    <string name="ai_prepping_meeting">AI मीटिंग का सारांश तैयार कर रहा है…</string>
     <string name="battery_low_warning">बैटरी कम है (%1$d%%)। अपना फ़ोन चार्ज करें ताकि आप अपनी %2$s मीटिंग मिस न करें।</string>
     <string name="silent_mode_warning">साइलेंट मोड सक्रिय है। आपका %1$s अलार्म शायद न बजे।</string>
-    <string name="ask_ai_label">AI से बात करें</string>
-    <string name="ai_tab_label">एआई</string>
     <string name="cd_send_message">भेजें</string>
-    <string name="chat_input_placeholder">अपना संदेश लिखें…</string>
-    <string name="new_conversation_title">नई बातचीत</string>
-    <string name="no_conversations_yet">अभी तक कोई बातचीत नहीं</string>
-    <string name="cd_delete_conversation">बातचीत मिटाएं</string>
 
 
     <string name="auto_join_title">मीटिंग में स्वतः शामिल हों</string>
@@ -230,9 +185,6 @@
     <string name="everyday">हर दिन</string>
     <string name="alarm">अलार्म</string>
     <string name="alarms">अलार्म</string>
-    <string name="ai_briefing">एआई ब्रीफिंग</string>
-    <string name="briefing">ब्रीफिंग</string>
-    <string name="voice">आवाज़</string>
     <string name="day_sunday_short">र</string>
     <string name="day_monday_short">सो</string>
     <string name="day_tuesday_short">मं</string>
@@ -240,7 +192,6 @@
     <string name="day_thursday_short">गु</string>
     <string name="day_friday_short">शु</string>
     <string name="day_saturday_short">श</string>
-    <string name="prompt_daily_briefing">मेरे अलार्म के आधार पर दैनिक ब्रीफング प्रदान करें।</string>
 
     <string name="integrations">एकीकरण</string>
     <string name="google_login_title">Google Meet कनेक्ट करें</string>
@@ -265,7 +216,6 @@
     <string name="insights_punctuality">समयपालन स्कोर</string>
     <string name="insights_punctuality_great">बहुत बढ़िया! आप शायद ही कभी स्नूज़ करते हैं।</string>
     <string name="insights_punctuality_bad">आप हाल ही में काफी स्नूज़ कर रहे हैं।</string>
-    <string name="insights_ai_usage">उत्पन्न एआई ब्रीफिंग</string>
     <string name="insights_time_in_meetings">बैठकों में समय</string>
     <string name="insights_period_day">दिन</string>
     <string name="insights_period_week">सप्ताह</string>
@@ -310,9 +260,6 @@
     <string name="import_calendar_error_no_events">ICS फ़ाइल में कोई इवेंट नहीं मिला</string>
     <string name="import_calendar_error_create_calendar">लोकल कैलेंडर नहीं बनाया जा सका। कैलेंडर की अनुमतियाँ जाँचें।</string>
     <string name="import_calendar_error_generic">कैलेंडर इम्पोर्ट नहीं हो सका। URL या फ़ाइल जाँचें और फिर से कोशिश करें।</string>
-    <string name="ai_agent_event_rescheduled">इवेंट को कैलेंडर में फिर से शेड्यूल किया गया।</string>
-    <string name="ai_agent_reschedule_recurring_unsupported">असिस्टेंट अभी दोहराए जाने वाले इवेंट को फिर से शेड्यूल नहीं कर सकता। कैलेंडर ऐप में यह इवेंट बदलें।</string>
-    <string name="ai_agent_reschedule_error">कैलेंडर में इवेंट को फिर से शेड्यूल नहीं किया जा सका।</string>
     <string name="notif_features_title">नोटिफ़िकेशन एक्सेस</string>
     <string name="notif_features_intro">वैकल्पिक सुविधाएँ जो नोटिफ़िकेशन एक्सेस का उपयोग करती हैं। सब कुछ आपके डिवाइस पर ही प्रोसेस होता है; नोटिफ़िकेशन की सामग्री कभी सहेजी या भेजी नहीं जाती।</string>
     <string name="notif_dedup_label">कैलेंडर का दोहराया गया रिमाइंडर छिपाएँ</string>

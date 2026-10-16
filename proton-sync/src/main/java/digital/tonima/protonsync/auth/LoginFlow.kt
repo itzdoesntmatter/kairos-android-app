@@ -21,7 +21,6 @@ import kotlinx.serialization.json.jsonPrimitive
 import logcat.LogPriority
 import logcat.logcat
 import retrofit2.HttpException
-import java.net.URI
 
 /**
  * The in-app login state machine (auth-flow.md §2, architecture §4): SRP-6a credentials →
@@ -103,6 +102,10 @@ class LoginFlow(
     fun cancel() {
         pending?.wipe()
         pending = null
+        // Discard any human-verification token this attempt adopted: it is single-use and
+        // belongs to the abandoned attempt, so it must not ride on a later POST /auth/v4
+        // (security-audit LO-3).
+        sessionManager.consumeHvToken()
     }
 
     suspend fun submitCredentials(
@@ -414,25 +417,15 @@ class LoginFlow(
         if (token.isNullOrBlank() || url.isNullOrBlank()) {
             return failOutcome("human verification challenge missing token or URL")
         }
-        if (!isAllowedHvHost(url)) {
+        if (!HvUrlPolicy.isAllowed(url)) {
             // Refuse to open a non-allowlisted host — never hand the user to a stranger
-            // (auth-flow.md §2.7).
+            // (auth-flow.md §2.7, security-audit §2.2.22).
             return failOutcome("refusing human verification on an untrusted host")
         }
         // In-memory only, replayed by the header interceptor on the next POST /auth/v4 and
         // consumed there (never a static, security-audit LO-3).
         sessionManager.setHvToken(token)
         return LoginOutcome.RequiresHumanVerification(url)
-    }
-
-    private fun isAllowedHvHost(url: String): Boolean {
-        val host =
-            try {
-                URI(url).host
-            } catch (e: Exception) {
-                return false
-            } ?: return false
-        return host in HV_ALLOWED_HOSTS
     }
 
     private fun failOutcome(message: String): LoginOutcome {
@@ -455,8 +448,5 @@ class LoginFlow(
 
     companion object {
         private const val TAG = "ProtonLoginFlow"
-
-        /** The human-verification host allowlist (auth-flow.md §2.7). */
-        private val HV_ALLOWED_HOSTS = setOf("proton.me", "protonmail.com", "hcaptcha.com")
     }
 }

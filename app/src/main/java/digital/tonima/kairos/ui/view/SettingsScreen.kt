@@ -75,6 +75,14 @@ fun SettingsScreen(
     uiState: EventScreenUiState,
     settingsUiState: SettingsUiState,
     settingsActions: SettingsActions,
+    /**
+     * The in-app Proton sync bridge section (architecture §1 item 4). A slot with the real
+     * [ProtonCalendarSettingsSection] as its default, following the same injection convention
+     * as `EventScreen`'s ViewModel parameters: the section owns a Hilt ViewModel, and this is
+     * the seam that lets the screen's own layout be composed in a unit test without a Hilt
+     * component (production always uses the default).
+     */
+    protonSyncSection: @Composable () -> Unit = { ProtonCalendarSettingsSection() },
 ) {
     BackHandler {
         settingsActions.onCloseSettings()
@@ -177,7 +185,7 @@ fun SettingsScreen(
 
             // In-app Proton Calendar sync bridge (architecture §1 item 4): self-contained
             // section, owns its own ViewModel; no change to SettingsViewModel.
-            ProtonCalendarSettingsSection()
+            protonSyncSection()
 
             var offsetExpanded by remember { mutableStateOf(false) }
             AlarmOffsetDropdown(

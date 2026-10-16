@@ -22,6 +22,7 @@ hilt-binder = "1.1.4"
 hilt-navigations-compose = "1.4.0"
 ksp = "2.3.12"
 appcompat = "1.8.0"
+browser = "1.7.0"
 wear-compose = "1.7.0"
 wearToolingPreview = "1.0.0"
 logcat = "0.4"
@@ -104,6 +105,7 @@ hilt-binder-compiler = { group = "com.paulrybitskyi", name = "hilt-binder-compil
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigations-compose" }
 hilt-worker = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-worker" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 logcat = { group = "com.squareup.logcat", name = "logcat", version.ref = "logcat" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }
 androidx-glance-material3 = { group = "androidx.glance", name = "glance-material3", version.ref = "glance" }

@@ -54,6 +54,15 @@ data class ProtonEventData(
     val originalInstanceMillis: Long? = null,
     /** All-day flag of the recurrence-id date (originalAllDay), only with [originalSyncId]. */
     val originalAllDay: Boolean = false,
+    /**
+     * True when no sane date range could be established: the decrypted iCal was unparseable
+     * with insane dates AND the server's `StartTime`/`EndTime` metadata was unusable too
+     * (missing, out of the 1970-2100 window, or end-before-start). Only the metadata-only
+     * fallback paths set this (security-audit §3.5c, finding N-4). The engine skips such an
+     * event instead of writing a fabricated 1970 row; [startMillis]/[endMillis] are 0 in that
+     * case and must not be written.
+     */
+    val isUndated: Boolean = false,
 ) {
     init {
         require(protonEventId.isNotBlank()) { "protonEventId must not be blank" }

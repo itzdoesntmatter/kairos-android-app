@@ -13,6 +13,7 @@
     <string name="proton_sync_hv_title">Verification required</string>
     <string name="proton_sync_hv_text">Proton requires an additional check. A browser tab opens; solve the challenge there and return here.</string>
     <string name="proton_sync_hv_open">Open verification page</string>
+    <string name="proton_sync_hv_opening">Checking the verification page…</string>
     <string name="proton_sync_hv_done">I have completed the verification</string>
     <string name="proton_sync_cancel">Cancel</string>
     <string name="proton_sync_connected">Connected · %1$s</string>

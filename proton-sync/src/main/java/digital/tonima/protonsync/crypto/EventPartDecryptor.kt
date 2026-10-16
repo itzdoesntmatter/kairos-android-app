@@ -32,17 +32,67 @@ import java.util.Base64
  * placeholder carrying only the server-sent time metadata (§3.4.d). Plaintext parts (types
  * 0/2 without signature) carry NO authenticity and are schema-validated downstream as
  * untrusted input (§3.4.c).
+ *
+ * SIZE CAPS — reject-and-count (security-audit §3.5b, finding N-1): the whole event is measured
+ * before any crypto runs (per-part caps, key packets and the event's aggregate budget), and the
+ * assembled text is held to the same budget ([PayloadLimits] carries the numbers and their
+ * rationale). An oversized event degrades to the placeholder and is counted — a hostile server
+ * cannot turn a multi-megabyte part into an app-wide OOM, and it cannot get a partial payload
+ * written as if it were the event either.
  */
 class EventPartDecryptor(
     private val crypto: ProtonCrypto,
     private val keyring: ProtonCryptoKeyring,
 ) {
 
-    /** Decrypts all four part lists of [detail] into assembled iCal text (or null → placeholder). */
+    /**
+     * Decrypts all four part lists of [detail] into assembled iCal text (or null → placeholder).
+     *
+     * Size caps are enforced at this boundary — before PGP and before the property parser
+     * (security-audit §3.5b): per-event budget, per-part caps and the assembled-text budget
+     * all live here so no oversized bytes can reach the crypto or the parser in the first
+     * place. Rejections are counted in [DecryptionOutcome.payloadRejections].
+     */
     suspend fun decrypt(detail: CalendarEventDetail): DecryptionOutcome {
         var decryptFailures = 0
         var verifyFailures = 0
+        var payloadRejections = 0
+        var assembledChars = 0
+        var assembledOverflow = false
         val kept = mutableListOf<String>()
+
+        // Accumulates what will be assembled, enforcing the 256 KB assembled budget on the
+        // way in: a payload that would blow the budget is dropped whole (never a truncated
+        // event written as if it were complete).
+        fun keep(text: String) {
+            if (assembledOverflow) return
+            if (assembledChars + text.length > PayloadLimits.MAX_ASSEMBLED_CHARS) {
+                assembledOverflow = true
+                payloadRejections++
+                logcat(TAG, LogPriority.WARN) {
+                    "assembled payload for ${detail.id} would exceed " +
+                        "${PayloadLimits.MAX_ASSEMBLED_CHARS} chars — dropping the event (§3.5b)"
+                }
+                return
+            }
+            kept += text
+            assembledChars += text.length
+        }
+
+        val rejection = oversize(detail)
+        if (rejection != null) {
+            // Reject-and-count before any decode/decrypt (security-audit §3.5b / N-1). The
+            // whole event is dropped, not just the offending part: assembling a partial
+            // payload would write an event that silently is not the one the server sent.
+            logcat(TAG, LogPriority.WARN) { "event ${detail.id}: $rejection — rejected before decryption" }
+            return DecryptionOutcome(
+                icalText = null,
+                isPlaceholder = true,
+                decryptFailures = 0,
+                verifyFailures = 0,
+                payloadRejections = 1,
+            )
+        }
 
         val lists =
             listOf(
@@ -57,21 +107,21 @@ class EventPartDecryptor(
         for (list in lists) {
             for (part in list.parts) {
                 when (part.type) {
-                    TYPE_PLAINTEXT -> part.data?.let { kept += it }
+                    TYPE_PLAINTEXT -> part.data?.let { keep(it) }
                     TYPE_BINARY_OR_TEXT -> {
                         if (part.data.isNullOrBlank()) continue
                         when {
                             // BEGIN:-prefixed (iCal text) is plaintext even in a type-1 part
                             // (crypto-envelope.md §3); only PGP-armored blobs decrypt.
-                            part.data.startsWith("BEGIN:") -> kept += part.data
+                            part.data.startsWith("BEGIN:") -> keep(part.data)
                             isArmored(part.data) -> {
                                 decryptArmored(list, part)?.let {
-                                    kept += it
+                                    keep(it)
                                 } ?: decryptFailures++
                             }
                             else -> {
                                 decryptBinaryWithKeyPacket(list, part)?.let {
-                                    kept += it
+                                    keep(it)
                                 } ?: decryptFailures++
                             }
                         }
@@ -79,9 +129,9 @@ class EventPartDecryptor(
                     TYPE_SIGNED_PLAINTEXT -> {
                         if (part.data.isNullOrBlank()) continue
                         when (verifyOrDrop(part)) {
-                            Verification.Verified -> kept += part.data
+                            Verification.Verified -> keep(part.data)
                             Verification.Failed -> verifyFailures++
-                            Verification.NoSignature -> kept += part.data
+                            Verification.NoSignature -> keep(part.data)
                         }
                     }
                     TYPE_SIGNED_BINARY -> {
@@ -94,7 +144,7 @@ class EventPartDecryptor(
                                 decryptFailures++
                             } else {
                                 when (verifyOver(part, decrypted)) {
-                                    Verification.Verified, Verification.NoSignature -> kept += decrypted
+                                    Verification.Verified, Verification.NoSignature -> keep(decrypted)
                                     Verification.Failed -> verifyFailures++
                                 }
                             }
@@ -104,7 +154,7 @@ class EventPartDecryptor(
                                 decryptFailures++
                             } else {
                                 when (verifyOver(part, decrypted)) {
-                                    Verification.Verified, Verification.NoSignature -> kept += decrypted
+                                    Verification.Verified, Verification.NoSignature -> keep(decrypted)
                                     Verification.Failed -> verifyFailures++
                                 }
                             }
@@ -117,22 +167,64 @@ class EventPartDecryptor(
             }
         }
 
-        val assembled = assembleIcal(kept)
-        return if (assembled == null) {
-            DecryptionOutcome(
-                icalText = null,
-                isPlaceholder = true,
-                decryptFailures = decryptFailures,
-                verifyFailures = verifyFailures,
+        val assembled = if (assembledOverflow) null else assembleIcal(kept)
+        return DecryptionOutcome(
+            icalText = assembled,
+            isPlaceholder = assembled == null,
+            decryptFailures = decryptFailures,
+            verifyFailures = verifyFailures,
+            payloadRejections = payloadRejections,
+        )
+    }
+
+    /**
+     * The §3.5b size pre-scan: returns a human-readable reason when [detail] carries anything
+     * over budget, null when the whole event may be decrypted. Runs on the decoded DTO — no
+     * crypto, no base64, no parsing — so it costs a few integer additions and bounds every
+     * step after it.
+     *
+     * Budgets ([PayloadLimits] carries the numbers and their provenance):
+     * - one armored payload ≤ 1 MB, one non-armored part ≤ 256 KB (with a 64 KB signature cap),
+     * - key packets ≤ 64 KB each,
+     * - the event's aggregate part payload ≤ 1 MB.
+     */
+    private fun oversize(detail: CalendarEventDetail): String? {
+        var total = 0L
+        val lists =
+            listOf(
+                "shared" to detail.sharedEvents,
+                "calendar" to detail.calendarEvents,
+                "personal" to detail.personalEvents,
+                "attendees" to detail.attendeesEvents,
             )
-        } else {
-            DecryptionOutcome(
-                icalText = assembled,
-                isPlaceholder = false,
-                decryptFailures = decryptFailures,
-                verifyFailures = verifyFailures,
-            )
+        for ((name, parts) in lists) {
+            for (part in parts) {
+                if (PayloadLimits.isOversizedPart(part.data)) {
+                    return "oversized $name type-${part.type} part (${part.data?.length ?: 0} chars)"
+                }
+                if (PayloadLimits.isOversizedSignature(part.signature)) {
+                    return "oversized $name type-${part.type} signature (${part.signature?.length ?: 0} chars)"
+                }
+                total += part.data?.length ?: 0
+                total += part.signature?.length ?: 0
+            }
         }
+        val keyPackets =
+            listOf(
+                "calendar" to detail.calendarKeyPacket,
+                "address" to detail.addressKeyPacket,
+                "shared" to detail.sharedKeyPacket,
+            )
+        for ((name, packet) in keyPackets) {
+            if (PayloadLimits.isOversizedKeyPacket(packet)) {
+                return "oversized $name key packet (${packet?.length ?: 0} chars)"
+            }
+            total += packet?.length ?: 0
+        }
+        if (total > PayloadLimits.MAX_EVENT_CHARS) {
+            return "part payload of $total chars over the ${PayloadLimits.MAX_EVENT_CHARS}-char event budget"
+        }
+        return null
     }
 
     /** Binary decrypt of the list's key packet ‖ data packet, trying every ring key. */
@@ -293,4 +385,11 @@ data class DecryptionOutcome(
     val isPlaceholder: Boolean,
     val decryptFailures: Int,
     val verifyFailures: Int,
+    /**
+     * Parts (or whole events) rejected by the size caps of security-audit §3.5b — counted
+     * separately from decrypt/verify failures so the engine can log why content went missing
+     * (N-1). The engine folds these into the persisted `decryptFailures` counter, which is
+     * already surfaced in the settings card.
+     */
+    val payloadRejections: Int = 0,
 )

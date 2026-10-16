@@ -143,7 +143,18 @@ object CalendarChangeObserver {
             logcat(LogPriority.ERROR) { "CalendarChangeObserver: failed to enqueue sync: ${t.localizedMessage}" }
         }
 
-        maybeEnqueueProtonSync(uris)
+        // The Proton hook runs on the main looper, after the guarded enqueue block above: a
+        // provider quirk (an OEM's CalendarProvider SQLite/table-name variance is exactly what
+        // the DIRTY subquery invites) must not take the app process down with it
+        // (security-audit N-10). A failed probe simply means no onchange sync this cycle —
+        // the periodic run still covers the change.
+        try {
+            maybeEnqueueProtonSync(uris)
+        } catch (t: Exception) {
+            logcat(LogPriority.ERROR) {
+                "CalendarChangeObserver: proton onchange hook failed: ${t.localizedMessage}"
+            }
+        }
     }
 
     /**

@@ -1,6 +1,8 @@
 package digital.tonima.kairos.ui.view
 
 import android.app.Application
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsNode
 import androidx.compose.ui.test.SemanticsMatcher
@@ -228,10 +230,38 @@ class SettingsScreenTest {
         assertEquals(listOf("close" to null), calls)
     }
 
+    // region Proton sync bridge
+
+    @Test
+    fun `the Proton sync section is hosted by the settings screen`() {
+        // The screen composes whatever section it is handed, in the production slot between
+        // the all-day alarm block and the alarm-offset dropdown; the default for that slot is
+        // the real ProtonCalendarSettingsSection (architecture §1 item 4). This guards the
+        // hosting contract — a regression that drops the call would leave the bridge invisible
+        // in production.
+        val marker = "Proton sync bridge section"
+        render(
+            SettingsUiState(allDayAlarmsEnabled = true, alarmOffsetMinutes = 0L),
+            protonSyncSection = { Text(marker) },
+        )
+
+        compose.onNodeWithText(marker).performScrollTo()
+    }
+
+    @Test
+    fun `the Proton sync section stays optional for callers that host it elsewhere`() {
+        render(SettingsUiState(), protonSyncSection = {})
+
+        compose.onAllNodesWithText("Proton sync bridge section").assertCountEquals(0)
+    }
+
+    // endregion
+
     private fun render(
         settings: SettingsUiState,
         calendars: List<DeviceCalendar> = emptyList(),
         enabledCalendarIds: Set<Long> = emptySet(),
+        protonSyncSection: @Composable () -> Unit = {},
     ) {
         compose.setContent {
             SettingsScreen(
@@ -242,6 +272,11 @@ class SettingsScreenTest {
                     ),
                 settingsUiState = settings,
                 settingsActions = actions,
+                // The Proton sync bridge section owns a Hilt ViewModel (wave 2b), which a
+                // plain Robolectric composition cannot provide. This suite covers the settings
+                // screen's own behaviour and hosts an empty section; the section slot itself is
+                // asserted by `the Proton sync section is hosted by the settings screen`.
+                protonSyncSection = protonSyncSection,
             )
         }
     }

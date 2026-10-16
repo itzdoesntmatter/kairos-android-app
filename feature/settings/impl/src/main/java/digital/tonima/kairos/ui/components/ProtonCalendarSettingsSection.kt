@@ -3,7 +3,10 @@ package digital.tonima.kairos.ui.components
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
+import android.net.Uri
 import android.view.WindowManager
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +46,7 @@ import digital.tonima.core.viewmodel.LoginUiState
 import digital.tonima.core.viewmodel.ProtonSyncSettingsViewModel
 import digital.tonima.kairos.core.ui.theme.Dimensions
 import digital.tonima.kairos.feature.settings.impl.R
+import digital.tonima.protonsync.auth.HvUrlPolicy
 import digital.tonima.protonsync.session.SessionState
 import digital.tonima.protonsync.status.ProtonSyncUiState
 import digital.tonima.protonsync.status.SyncState
@@ -223,57 +228,64 @@ private fun ProtonLoginForm(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold,
         )
-        OutlinedTextField(
-            value = login.email,
-            onValueChange = viewModel::onEmailChanged,
-            label = { Text(stringResource(R.string.proton_sync_email_label)) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(stringResource(R.string.proton_sync_password_label)) },
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .semantics { password() },
-        )
-        if (login.requiresTwoFactor) {
+        if (login.hvUrl != null) {
+            // Human verification in progress (security-audit §2.2.22 / C2): credentials are
+            // already with Proton, so the form is replaced by the challenge panel — no
+            // password field is rendered while the browser holds the verification context.
+            HvChallengePanel(viewModel = viewModel, login = login)
+        } else {
             OutlinedTextField(
-                value = login.twoFactorCode,
-                onValueChange = viewModel::onTwoFactorCodeChanged,
-                label = { Text(stringResource(R.string.proton_sync_two_factor_label)) },
+                value = login.email,
+                onValueChange = viewModel::onEmailChanged,
+                label = { Text(stringResource(R.string.proton_sync_email_label)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
             )
-        }
-        if (login.requiresMailboxPassword) {
             OutlinedTextField(
-                value = login.mailboxPassword,
-                onValueChange = viewModel::onMailboxPasswordChanged,
-                label = { Text(stringResource(R.string.proton_sync_mailbox_password_label)) },
+                value = password,
+                onValueChange = { password = it },
+                label = { Text(stringResource(R.string.proton_sync_password_label)) },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .semantics { password() },
             )
-        }
-        // Consent gate (security-audit HI-2 / ME-5): before the FIRST connect the user must
-        // acknowledge that Proton events become device-readable.
-        if (!login.consentGranted) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                    checked = login.consentChecked,
-                    onCheckedChange = viewModel::onConsentChanged,
+            if (login.requiresTwoFactor) {
+                OutlinedTextField(
+                    value = login.twoFactorCode,
+                    onValueChange = viewModel::onTwoFactorCodeChanged,
+                    label = { Text(stringResource(R.string.proton_sync_two_factor_label)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
                 )
-                Text(
-                    text = stringResource(R.string.proton_sync_consent_text),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.weight(1f),
+            }
+            if (login.requiresMailboxPassword) {
+                OutlinedTextField(
+                    value = login.mailboxPassword,
+                    onValueChange = viewModel::onMailboxPasswordChanged,
+                    label = { Text(stringResource(R.string.proton_sync_mailbox_password_label)) },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    modifier = Modifier.fillMaxWidth(),
                 )
+            }
+            // Consent gate (security-audit HI-2 / ME-5): before the FIRST connect the user must
+            // acknowledge that Proton events become device-readable.
+            if (!login.consentGranted) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = login.consentChecked,
+                        onCheckedChange = viewModel::onConsentChanged,
+                    )
+                    Text(
+                        text = stringResource(R.string.proton_sync_consent_text),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
             }
         }
         login.error?.let { error ->
@@ -283,25 +295,119 @@ private fun ProtonLoginForm(
                 color = MaterialTheme.colorScheme.error,
             )
         }
-        val consentOk = login.consentGranted || login.consentChecked
-        val credentialsOk = login.email.isNotBlank() && password.isNotBlank()
-        Button(
-            onClick = {
-                when {
-                    login.requiresTwoFactor -> viewModel.submitTwoFactor()
-                    login.requiresMailboxPassword -> viewModel.submitMailboxPassword()
-                    else -> viewModel.submitLogin(password)
-                }
-            },
-            enabled = !login.inFlight &&
-                (login.requiresTwoFactor || login.requiresMailboxPassword || (consentOk && credentialsOk)),
-        ) {
-            Text(stringResource(R.string.proton_sync_continue))
+        if (login.hvUrl == null) {
+            val consentOk = login.consentGranted || login.consentChecked
+            val credentialsOk = login.email.isNotBlank() && password.isNotBlank()
+            Button(
+                onClick = {
+                    when {
+                        login.requiresTwoFactor -> viewModel.submitTwoFactor()
+                        login.requiresMailboxPassword -> viewModel.submitMailboxPassword()
+                        else -> viewModel.submitLogin(password)
+                    }
+                },
+                enabled = !login.inFlight &&
+                    (login.requiresTwoFactor || login.requiresMailboxPassword || (consentOk && credentialsOk)),
+            ) {
+                Text(stringResource(R.string.proton_sync_continue))
+            }
         }
         TextButton(onClick = viewModel::dismissLogin) {
             Text(stringResource(R.string.proton_sync_cancel))
         }
     }
+}
+
+/**
+ * The human-verification challenge panel (security-audit §2.2.22 / C2, N-3).
+ *
+ * Two user actions, both explicitly wired to the login flow:
+ * 1. "Open verification page" — [ProtonSyncSettingsViewModel.resolveHvUrl] resolves the
+ *    challenge URL's redirect chain and re-checks every hop against the allowlist; the
+ *    validated URL arrives in [LoginUiState.hvResolvedUrl] and is opened here as a Custom Tab
+ *    (never an in-process WebView — architecture §9.8).
+ * 2. "I have completed the verification" — [ProtonSyncSettingsViewModel.resumeAfterHv] replays
+ *    the auth call; the HV token was adopted in memory when the challenge was parsed and is
+ *    consumed by that replay (never typed, never persisted).
+ */
+@Composable
+private fun HvChallengePanel(
+    viewModel: ProtonSyncSettingsViewModel,
+    login: LoginUiState,
+) {
+    val context = LocalContext.current
+
+    // The tab is opened exactly once per resolved URL: the ViewModel clears the field as soon
+    // as the launcher consumed it, so recomposition can never re-open the browser.
+    LaunchedEffect(login.hvResolvedUrl) {
+        val url = login.hvResolvedUrl ?: return@LaunchedEffect
+        val intent = hvCustomTabIntent(context, url)
+        if (intent == null) {
+            viewModel.onHvLaunchBlocked()
+        } else {
+            context.startActivity(intent)
+            viewModel.onHvUrlOpened()
+        }
+    }
+
+    Text(
+        text = stringResource(R.string.proton_sync_hv_title),
+        style = MaterialTheme.typography.bodyMedium,
+        fontWeight = FontWeight.Medium,
+    )
+    Text(
+        text = stringResource(R.string.proton_sync_hv_text),
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+    Button(
+        onClick = viewModel::resolveHvUrl,
+        enabled = !login.hvResolving && !login.inFlight,
+    ) {
+        Text(
+            stringResource(
+                if (login.hvResolving) {
+                    R.string.proton_sync_hv_opening
+                } else {
+                    R.string.proton_sync_hv_open
+                },
+            ),
+        )
+    }
+    OutlinedButton(
+        onClick = viewModel::resumeAfterHv,
+        enabled = !login.inFlight,
+    ) {
+        Text(stringResource(R.string.proton_sync_hv_done))
+    }
+}
+
+/**
+ * Builds the Custom Tab intent for a human-verification URL, or null when the URL fails the
+ * final allowlist re-check (security-audit §2.2.22: "verify the CustomTab's actual resolved
+ * URL against that allowlist").
+ *
+ * The ViewModel already resolved and validated the redirect chain; this re-checks the exact
+ * string that is about to be handed to the browser, at the point of use, so no caller can
+ * bypass the policy by assembling the intent itself. Custom Tabs only — never a WebView
+ * (the HV/credential context stays out of our process, architecture §9.8).
+ */
+internal fun hvCustomTabIntent(
+    context: Context,
+    url: String,
+): Intent? {
+    if (!HvUrlPolicy.isAllowed(url)) return null
+    val intent =
+        CustomTabsIntent.Builder()
+            .setShowTitle(true)
+            .build()
+            .intent
+            .apply { data = Uri.parse(url) }
+    if (context.findActivity() == null) {
+        // A non-Activity context (Robolectric/app context) needs its own task.
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    return intent
 }
 
 private tailrec fun Context.findActivity(): Activity? =

@@ -6,8 +6,10 @@ import digital.tonima.protonsync.account.ProtonSyncAccount
 import digital.tonima.protonsync.api.ProtonApiClient
 import digital.tonima.protonsync.api.ProtonApiClientFactory
 import digital.tonima.protonsync.api.ProtonClientIdentity
+import digital.tonima.protonsync.auth.HvUrlResolver
 import digital.tonima.protonsync.auth.LoginFlow
 import digital.tonima.protonsync.auth.LogoutUseCase
+import digital.tonima.protonsync.auth.OkHttpHvRedirectProbe
 import digital.tonima.protonsync.auth.SrpClient
 import digital.tonima.protonsync.auth.TokenRefresher
 import digital.tonima.protonsync.calendar.NativeCalendarWriter
@@ -38,6 +40,7 @@ object ProtonSyncModule {
     @Volatile private var apiClient: ProtonApiClient? = null
     @Volatile private var database: SyncDatabase? = null
     @Volatile private var engine: SyncEngine? = null
+    @Volatile private var hvResolver: HvUrlResolver? = null
     @Volatile private var initializedSession = false
     private val lock = Any()
 
@@ -144,6 +147,19 @@ object ProtonSyncModule {
             statusProvider = statusProvider(context),
         )
 
+    /**
+     * The human-verification redirect resolver (security-audit §2.2.22): a plain OkHttp probe,
+     * deliberately NOT the Proton API client — the Proton headers and SPKI pins of that client
+     * must never travel to an hCaptcha host.
+     */
+    fun hvUrlResolver(context: Context): HvUrlResolver {
+        hvResolver?.let { return it }
+        synchronized(lock) {
+            hvResolver?.let { return it }
+            return HvUrlResolver(OkHttpHvRedirectProbe()).also { hvResolver = it }
+        }
+    }
+
     fun buildLogoutUseCase(context: Context): LogoutUseCase =
         LogoutUseCase(
             context = context,
@@ -166,6 +182,7 @@ object ProtonSyncModule {
             apiClient = null
             database = null
             engine = null
+            hvResolver = null
             initializedSession = false
         }
     }

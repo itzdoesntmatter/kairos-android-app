@@ -110,6 +110,10 @@ class ProtonApiClientFactory(
                     ),
                 )
                 .addInterceptor(RateLimitInterceptor())
+                // Response-body cap (security-audit §3.5b / N-1). Added after the rate-limit
+                // policy, i.e. closer to the network, so it caps each individual attempt rather
+                // than a re-read of an already-buffered response.
+                .addInterceptor(ResponseSizeLimitInterceptor())
                 .apply {
                     if (authenticator != null) authenticator(authenticator)
                 }

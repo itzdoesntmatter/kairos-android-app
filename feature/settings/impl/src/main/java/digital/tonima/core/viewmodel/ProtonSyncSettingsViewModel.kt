@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import digital.tonima.protonsync.auth.HvUrlPolicy
+import digital.tonima.protonsync.auth.HvUrlResolver
 import digital.tonima.protonsync.auth.LoginFlow
 import digital.tonima.protonsync.status.ProtonSyncStatusProvider
 import digital.tonima.protonsync.status.ProtonSyncUiState
@@ -35,6 +37,13 @@ data class LoginUiState(
     val requiresTwoFactor: Boolean = false,
     val requiresMailboxPassword: Boolean = false,
     val hvUrl: String? = null,
+    /** The redirect chain of [hvUrl] is being resolved/validated (security-audit §2.2.22). */
+    val hvResolving: Boolean = false,
+    /**
+     * The validated URL a Custom Tab may open: set once the resolver has re-checked every
+     * redirect hop against the allowlist, cleared as soon as the launcher consumed it.
+     */
+    val hvResolvedUrl: String? = null,
     val consentChecked: Boolean = false,
     val consentGranted: Boolean = false,
     val inFlight: Boolean = false,
@@ -83,6 +92,8 @@ class ProtonSyncSettingsViewModel
                 requiresTwoFactor = false,
                 requiresMailboxPassword = false,
                 hvUrl = null,
+                hvResolving = false,
+                hvResolvedUrl = null,
                 twoFactorCode = "",
                 mailboxPassword = "",
             )
@@ -140,14 +151,63 @@ class ProtonSyncSettingsViewModel
         }
     }
 
-    /** After the Custom Tab (external browser) verification completed and the token was set. */
-    fun resumeAfterHv(token: String) {
+    /**
+     * Human verification, step 1 (security-audit §2.2.22 / release-gate C2): resolve the
+     * challenge URL's redirect chain and re-check every hop against the allowlist before
+     * anything can reach a Custom Tab. The validated URL lands in [LoginUiState.hvResolvedUrl]
+     * for the launcher; a refusal lands in the error line and nothing opens.
+     *
+     * If the chain cannot be resolved at all (network trouble), the original URL is still
+     * allowlist-checked and may open — a flaky network must not dead-end an HV-gated login.
+     */
+    fun resolveHvUrl() {
+        val state = mutableLoginState.value
+        val url = state.hvUrl ?: return
+        if (state.hvResolving) return
+        mutableLoginState.update { it.copy(hvResolving = true, hvResolvedUrl = null, error = null) }
+        viewModelScope.launch {
+            val resolution = ProtonSyncModule.hvUrlResolver(application).resolve(url)
+            mutableLoginState.update { current ->
+                when (resolution) {
+                    is HvUrlResolver.Resolution.Resolved ->
+                        current.copy(hvResolving = false, hvResolvedUrl = resolution.url, error = null)
+                    is HvUrlResolver.Resolution.Refused ->
+                        current.copy(hvResolving = false, hvResolvedUrl = null, error = resolution.reason)
+                    is HvUrlResolver.Resolution.Unresolved ->
+                        current.copy(
+                            hvResolving = false,
+                            hvResolvedUrl = url.takeIf { HvUrlPolicy.isAllowed(it) },
+                            error = null,
+                        )
+                }
+            }
+        }
+    }
+
+    /** The launcher took [LoginUiState.hvResolvedUrl] — consumed so recomposition cannot re-open it. */
+    fun onHvUrlOpened() = mutableLoginState.update { it.copy(hvResolving = false, hvResolvedUrl = null) }
+
+    /** The launcher's own allowlist re-check refused the URL at the point of use (§2.2.22). */
+    fun onHvLaunchBlocked() =
+        mutableLoginState.update {
+            it.copy(
+                hvResolving = false,
+                hvResolvedUrl = null,
+                error = "Refusing to open human verification on an untrusted host.",
+            )
+        }
+
+    /**
+     * Human verification, step 2: the user solved the challenge in the browser and came back.
+     * The HV token was adopted in memory when the challenge was parsed ([LoginFlow] set it on
+     * the single-use SessionManager slot — it is never typed by the user and never persisted);
+     * this replays the auth call, which sends it once and consumes it.
+     */
+    fun resumeAfterHv() {
         if (mutableLoginState.value.inFlight) return
         mutableLoginState.update { it.copy(inFlight = true, error = null) }
         viewModelScope.launch {
-            ProtonSyncModule.sessionManager(application).setHvToken(token)
-            val outcome = loginFlow.resumeWithHvToken()
-            handleOutcome(outcome)
+            handleOutcome(loginFlow.resumeWithHvToken())
         }
     }
 
@@ -185,6 +245,8 @@ class ProtonSyncSettingsViewModel
                         twoFactorCode = "",
                         mailboxPassword = "",
                         hvUrl = null,
+                        hvResolving = false,
+                        hvResolvedUrl = null,
                     )
                 is LoginFlow.LoginOutcome.RequiresTwoFactor ->
                     current.copy(inFlight = false, requiresTwoFactor = true, error = null)

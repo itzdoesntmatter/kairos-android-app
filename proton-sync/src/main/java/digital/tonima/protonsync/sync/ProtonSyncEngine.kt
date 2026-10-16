@@ -38,7 +38,9 @@ import java.time.ZoneId
  *    b. native calendar row reconcile (delete when the calendar vanished server-side);
  *    c. windowed three-Type event fetch with 90-day chunks, 400-halving, page walk, merge;
  *    d. decrypt + parse + ReconcileDiff + idempotent writer upsert;
- *    e. all-time /events/ids deletion authority → tombstones (defer on failure);
+ *    e. all-time /events/ids deletion authority → tombstones, read through a bounded and
+ *       progress-checked walk (max 100 pages); an incomplete walk defers the pass and is
+ *       surfaced instead of looping (security-audit N-2/C3);
  *    f. calendar-default reminders for events lacking them.
  *
  * Incremental vs full (sync-algorithm §3): no global resync flag exists; the window is the
@@ -137,8 +139,9 @@ class ProtonSyncEngine(
             }
         }
 
-        // finishRun decides success vs success-with-note from the per-calendar errors.
-        return finishRun(startedAt, accumulator, SyncResult.success(), calendarErrors)
+        // finishRun decides success vs success-with-note from the per-calendar errors and the
+        // walk warnings (security-audit N-2/C3).
+        return finishRun(startedAt, accumulator, SyncResult.success(), calendarErrors + accumulator.calendarWarnings)
     }
 
     private suspend fun syncCalendar(
@@ -163,27 +166,43 @@ class ProtonSyncEngine(
             val (data, decryptFailures, verifyFailures) = decryptToData(detail)
             accumulator.decryptFailures += decryptFailures
             accumulator.verifyFailures += verifyFailures
+            if (data.isUndated) {
+                // security-audit §3.5c / N-4: no sane date range survived (neither from the
+                // payload nor from the server metadata) — skipping beats writing a fabricated
+                // 1970 row. Counted with the decrypt failures so the loss is visible.
+                accumulator.decryptFailures++
+                logcat(TAG, LogPriority.WARN) {
+                    "event ${detail.id}: no sane date range — skipping the event (§3.5c)"
+                }
+                continue
+            }
             applyEvent(calendar.id, nativeCalendarId, detail, data, localById[eventId], accumulator)
         }
 
         applyDefaultReminders(nativeCalendarId, settings)
 
-        // Deletion authority: the all-time ids pass. Any failure defers the WHOLE pass to
-        // the next run (reference behaviour, sync-algorithm §7).
-        val serverIds =
-            try {
-                fetchAllEventIds(calendar.id)
-            } catch (e: Exception) {
-                logcat(TAG, LogPriority.WARN) {
-                    "ids fetch failed for ${calendar.id} — deferring the deletion pass: $e"
-                }
-                null
-            }
-        if (serverIds != null) {
-            processDeletions(calendar.id, nativeCalendarId, serverIds, accumulator)
+        // Deletion authority: the all-time ids pass. Any failure — or a walk that stopped early
+        // (security-audit N-2 / release-gate C3) — defers the WHOLE pass to the next run: a
+        // partial or repeated id set must never be treated as authoritative, or live events
+        // would be tombstoned.
+        val walk = walkEventIds(calendar.id)
+        if (walk is EventIdWalk.Complete) {
+            processDeletions(calendar.id, nativeCalendarId, walk.ids, accumulator)
+        } else {
+            val reason = (walk as EventIdWalk.Incomplete).reason
+            logcat(TAG, LogPriority.WARN) { "ids walk for ${calendar.id} stopped early: $reason" }
+            // Surfaced twice on purpose: in the run result the card renders, and in the
+            // calendar's persisted state row.
+            accumulator.calendarWarnings += CalendarSyncError(calendar.id, reason)
         }
 
         db.calendarSyncStateDao().markSuccess(accountName, calendar.id, System.currentTimeMillis())
+
+        // Recorded after markSuccess (which clears lastError) so the degraded deletion pass
+        // stays visible in the calendar's state until a later run walks the ids to the end.
+        if (walk is EventIdWalk.Incomplete) {
+            db.calendarSyncStateDao().recordError(accountName, calendar.id, walk.reason)
+        }
     }
 
     // region per-calendar steps
@@ -349,15 +368,51 @@ class ProtonSyncEngine(
         logcat(TAG, LogPriority.WARN) { "page cap ($MAX_PAGES) hit for $calendarId type $type" }
     }
 
-    private suspend fun fetchAllEventIds(calendarId: String): Set<String> {
+    /**
+     * The all-time id walk — the deletion authority (sync-algorithm §7). Bounded and
+     * progress-checked (security-audit N-2, release-gate C3): a server that keeps answering
+     * with a full page whose tail never moves (or that cycles ids) used to spin this loop
+     * forever, draining battery and network until WorkManager killed the run and leaving the
+     * deletion pass permanently unfinished.
+     *
+     * Two independent stops: at most [MAX_IDS_PAGES] pages are requested (100 ids per page →
+     * 10 000 ids per calendar, far above any real calendar while still bounding a hostile
+     * one), and the walk ends as soon as it stops making progress — the cursor not advancing
+     * or a full page contributing no new ids. Both produce [EventIdWalk.Incomplete], which the
+     * caller treats exactly like a failed fetch: the deletion pass is deferred to the next run
+     * (never run against a partial set) and the reason is surfaced in the run state.
+     * Transport failures are folded into the same result so the caller's deferral logic is the
+     * single place that decides what an incomplete id set means.
+     */
+    private suspend fun walkEventIds(calendarId: String): EventIdWalk {
         val ids = linkedSetOf<String>()
         var afterId: String? = null
-        while (true) {
-            val response = api.getEventIds(calendarId = calendarId, limit = IDS_PAGE_LIMIT, afterId = afterId)
+        var pages = 0
+        var previousSize = 0
+        while (pages < MAX_IDS_PAGES) {
+            val response =
+                try {
+                    api.getEventIds(calendarId = calendarId, limit = IDS_PAGE_LIMIT, afterId = afterId)
+                } catch (e: Exception) {
+                    if (e is kotlinx.coroutines.CancellationException) throw e
+                    return EventIdWalk.Incomplete("ids fetch failed at page ${pages + 1}: ${safeError(e)}")
+                }
             ids += response.ids
-            if (response.ids.size < IDS_PAGE_LIMIT) return ids
-            afterId = response.ids.lastOrNull() ?: return ids
+            if (response.ids.size < IDS_PAGE_LIMIT) return EventIdWalk.Complete(ids)
+            val next = response.ids.lastOrNull()
+            if (next == null || next == afterId || ids.size == previousSize) {
+                return EventIdWalk.Incomplete(
+                    "ids walk stopped making progress at page ${pages + 1} " +
+                        "(afterId=$next, ${ids.size} ids seen) — deletion pass deferred",
+                )
+            }
+            previousSize = ids.size
+            afterId = next
+            pages++
         }
+        return EventIdWalk.Incomplete(
+            "ids walk hit the $MAX_IDS_PAGES-page cap (${ids.size} ids seen) — deletion pass deferred",
+        )
     }
 
     private suspend fun decryptToData(
@@ -370,7 +425,11 @@ class ProtonSyncEngine(
             } else {
                 parser.parse(outcome.icalText, detail, accountName)
             }
-        return Triple(data, outcome.decryptFailures, outcome.verifyFailures)
+        // Size-cap rejections (security-audit §3.5b / N-1) are counted with the decrypt
+        // failures: both mean "content the server sent did not become a native event", and the
+        // persisted counter is the surface the settings card already shows. The distinct WARN
+        // log above names the actual reason.
+        return Triple(data, outcome.decryptFailures + outcome.payloadRejections, outcome.verifyFailures)
     }
 
     private suspend fun applyEvent(
@@ -540,7 +599,9 @@ class ProtonSyncEngine(
             when {
                 result.status == SyncResult.Status.FAILURE -> result
                 calendarErrors.isNotEmpty() -> SyncResult.successWithNote(
-                    "${calendarErrors.size} calendar(s) failed; the rest synced",
+                    // "reported a problem" rather than "failed": the list also carries the
+                    // walk warnings of C3, where the run itself completed.
+                    "${calendarErrors.size} calendar(s) reported a problem; the rest synced",
                 )
                 else -> SyncResult.success(
                     eventsSynced = counters.eventsSynced,
@@ -586,6 +647,25 @@ class ProtonSyncEngine(
         var decryptFailures = 0
         var verifyFailures = 0
         var apiErrors = 0
+
+        /**
+         * Per-calendar degradations that are not failures — a run that synced everything it
+         * fetched but could not complete the deletion pass (security-audit N-2/C3). Surfaced
+         * through the same channel as per-calendar failures so the settings card renders them.
+         */
+        val calendarWarnings = mutableListOf<CalendarSyncError>()
+    }
+
+    /**
+     * Outcome of the all-time id walk (security-audit N-2, release-gate C3). [Incomplete] is
+     * deliberately not a partial [Complete]: the deletion pass is only safe to run against a
+     * set the server actually finished enumerating.
+     */
+    private sealed interface EventIdWalk {
+        data class Complete(val ids: Set<String>) : EventIdWalk
+
+        /** [reason] is user-safe (no payload data) and is what the card renders. */
+        data class Incomplete(val reason: String) : EventIdWalk
     }
 
     private sealed interface CalendarSettingsHandle {
@@ -632,5 +712,13 @@ class ProtonSyncEngine(
         private const val PAGE_SIZE = 100
         private const val MAX_PAGES = 200
         private const val IDS_PAGE_LIMIT = 100
+
+        /**
+         * Page ceiling for the all-time id walk (security-audit N-2 / C3): 100 ids per page ×
+         * [MAX_IDS_PAGES] pages = 10 000 events per calendar. The reference's own ids walk has
+         * no bound; every real calendar is orders of magnitude under this, so the cap only ever
+         * fires for a hostile or broken server — where the run must stop instead of looping.
+         */
+        private const val MAX_IDS_PAGES = 100
     }
 }

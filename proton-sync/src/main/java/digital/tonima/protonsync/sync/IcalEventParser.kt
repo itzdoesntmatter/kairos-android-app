@@ -115,23 +115,13 @@ class IcalEventParser(
 
     /**
      * The all-parts-decryption-failed placeholder (crypto-envelope.md §3, security-audit
-     * §3.4.d): visually unambiguous, time metadata ONLY, never decrypted fragments.
+     * §3.4.d): visually unambiguous, time metadata ONLY, never decrypted fragments. Date
+     * sanity applies exactly as on the parse path (§3.5c / N-4).
      */
     fun placeholder(
         detail: CalendarEventDetail,
         accountEmail: String,
-    ): ProtonEventData =
-        ProtonEventData(
-            protonEventId = detail.id,
-            title = PLACEHOLDER_TITLE,
-            startMillis = (detail.startTime ?: 0L) * 1000L,
-            endMillis = (detail.endTime ?: detail.startTime ?: 0L) * 1000L,
-            timezone = if (detail.fullDay == 1) UTC else defaultZoneId.id,
-            isAllDay = detail.fullDay == 1,
-            icalUid = detail.uid,
-            selfAttendeeStatus = selfAttendeeStatus(detail, accountEmail),
-            originalSyncId = originalSyncId(detail),
-        )
+    ): ProtonEventData = fallbackData(detail, accountEmail, PLACEHOLDER_TITLE)
 
     // region parse helpers
 
@@ -382,18 +372,68 @@ class IcalEventParser(
     private fun metadataFallback(
         detail: CalendarEventDetail,
         accountEmail: String,
-    ): ProtonEventData =
-        ProtonEventData(
+    ): ProtonEventData = fallbackData(detail, accountEmail, UNTITLED_TITLE)
+
+    /**
+     * The one builder behind both metadata-only paths — [metadataFallback] (unparseable or
+     * insane iCal) and [placeholder] (nothing decrypted). Both carry the server's time
+     * metadata and nothing decrypted, and both run the §3.5c date-sanity check the parse path
+     * runs (security-audit finding N-4): an undatable event is flagged [ProtonEventData.isUndated]
+     * so the engine skips it instead of writing a fabricated row.
+     */
+    private fun fallbackData(
+        detail: CalendarEventDetail,
+        accountEmail: String,
+        title: String,
+    ): ProtonEventData {
+        val dates = fallbackDates(detail)
+        return ProtonEventData(
             protonEventId = detail.id,
-            title = UNTITLED_TITLE,
-            startMillis = (detail.startTime ?: 0L) * 1000L,
-            endMillis = (detail.endTime ?: detail.startTime ?: 0L) * 1000L,
+            title = title,
+            startMillis = dates?.startMillis ?: 0L,
+            endMillis = dates?.endMillis ?: 0L,
             timezone = if (detail.fullDay == 1) UTC else defaultZoneId.id,
             isAllDay = detail.fullDay == 1,
             icalUid = detail.uid,
             selfAttendeeStatus = selfAttendeeStatus(detail, accountEmail),
             originalSyncId = originalSyncId(detail),
+            isUndated = dates == null,
         )
+    }
+
+    /**
+     * security-audit §3.5c / N-4 applied to the server's raw time metadata: seconds are
+     * bounds-checked BEFORE the millis multiply (so an extreme value cannot overflow into a
+     * negative instant), the result must sit inside the 1970-2100 window, and the end must not
+     * precede the start.
+     *
+     * A usable `StartTime` is required — an event with no place on the timeline is left for the
+     * engine to skip rather than being pinned to an invented instant. A missing or unusable
+     * `EndTime` degrades to a zero-length event (the reference's fallback tolerance), never to
+     * an inverted range.
+     */
+    private fun fallbackDates(detail: CalendarEventDetail): FallbackDates? {
+        val start = saneMillis(detail.startTime) ?: return null
+        val end = saneMillis(detail.endTime)
+        val safeEnd = if (end != null && end > start) end else start
+        return FallbackDates(startMillis = start, endMillis = safeEnd)
+    }
+
+    /** Seconds → millis inside the §3.5c window, or null when the value is not sane. */
+    private fun saneMillis(seconds: Long?): Long? {
+        val value = seconds ?: return null
+        // 1970-01-01 .. 2100-01-01 in seconds; checking here means the ×1000 below cannot
+        // overflow a Long (Long.MAX_VALUE / 1000 is ~9.2 × 10^15 seconds, year ~292 million).
+        if (value < MIN_SECONDS || value > MAX_SECONDS) return null
+        val millis = value * 1000L
+        return if (millis in MIN_MILLIS..MAX_MILLIS) millis else null
+    }
+
+    /** A sanitized fallback range (§3.5c). */
+    private data class FallbackDates(
+        val startMillis: Long,
+        val endMillis: Long,
+    )
 
     // endregion
 
@@ -409,5 +449,9 @@ class IcalEventParser(
         /** security-audit §3.5c date sanity: events outside 1970-2100 are rejected. */
         private const val MIN_MILLIS = -1L
         private val MAX_MILLIS = LocalDate.of(2100, 1, 1).atStartOfDay(ZoneId.of(UTC)).toInstant().toEpochMilli()
+
+        /** The same window in seconds — checked before the ×1000 multiply (N-4). */
+        private const val MIN_SECONDS = -1L
+        private val MAX_SECONDS = MAX_MILLIS / 1000L
     }
 }

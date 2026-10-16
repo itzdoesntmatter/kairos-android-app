@@ -284,4 +284,9 @@
     <string name="event_suggestion_action_create">إنشاء</string>
     <string name="event_suggestion_created">تم إنشاء الحدث</string>
     <string name="event_suggestion_failed">تعذّر إنشاء الحدث</string>
+    <string name="proton_calendar_title">ربط تقويم Proton</string>
+    <string name="proton_calendar_body">يحتفظ تقويم Proton بالأحداث داخل تطبيقه الخاص، لذا لا يستطيع Kairós رؤيتها بعد. ثبّت جسر مزامنة (ProtonSync أو Sync Provider for Proton) لنسخها إلى تقويم جهازك.</string>
+    <string name="proton_calendar_get_bridge">الحصول على جسر المزامنة</string>
+    <string name="proton_calendar_open_bridge">فتح جسر المزامنة</string>
+    <string name="proton_calendar_connected">تم ربط تقويم Proton</string>
 </resources>

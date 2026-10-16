@@ -282,4 +282,9 @@
     <string name="event_suggestion_action_create">Erstellen</string>
     <string name="event_suggestion_created">Termin erstellt</string>
     <string name="event_suggestion_failed">Termin konnte nicht erstellt werden</string>
+    <string name="proton_calendar_title">Proton Calendar verbinden</string>
+    <string name="proton_calendar_body">Proton Calendar hält Ereignisse in seiner eigenen App, daher kann Kairós sie noch nicht sehen. Installiere eine Sync-Bridge (ProtonSync oder Sync Provider for Proton), um sie in den Gerätekalender zu übernehmen.</string>
+    <string name="proton_calendar_get_bridge">Sync-Bridge holen</string>
+    <string name="proton_calendar_open_bridge">Sync-Bridge öffnen</string>
+    <string name="proton_calendar_connected">Proton Calendar verbunden</string>
 </resources>

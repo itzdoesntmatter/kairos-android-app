@@ -284,4 +284,9 @@
     <string name="event_suggestion_action_create">Criar</string>
     <string name="event_suggestion_created">Evento criado</string>
     <string name="event_suggestion_failed">Não foi possível criar o evento</string>
+    <string name="proton_calendar_title">Ligar Proton Calendar</string>
+    <string name="proton_calendar_body">O Proton Calendar mantém os eventos dentro da própria aplicação, por isso o Kairós ainda não os consegue ver. Instala uma ponte de sincronização (ProtonSync ou Sync Provider for Proton) para os copiar para o calendário do dispositivo.</string>
+    <string name="proton_calendar_get_bridge">Obter ponte de sincronização</string>
+    <string name="proton_calendar_open_bridge">Abrir ponte de sincronização</string>
+    <string name="proton_calendar_connected">Proton Calendar ligado</string>
 </resources>

@@ -13,6 +13,7 @@ import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -81,6 +82,81 @@ class CalendarRepositoryImplTest {
             assertEquals(1, calendars.size)
             assertEquals("Work", calendars[0].displayName)
             assertEquals(1L, calendars[0].id)
+        }
+
+    @Test
+    fun `hasProtonCalendar is true when an account name is a Proton domain`() =
+        runTest {
+            val cursor =
+                MatrixCursor(
+                    arrayOf(
+                        CalendarContract.Calendars.ACCOUNT_NAME,
+                        CalendarContract.Calendars.ACCOUNT_TYPE,
+                    ),
+                )
+            cursor.addRow(arrayOf<Any?>("user@proton.me", "com.protosync.app.account"))
+
+            every {
+                mockContentResolver.query(
+                    CalendarContract.Calendars.CONTENT_URI,
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                )
+            } returns cursor
+
+            assertTrue(repository.hasProtonCalendar())
+        }
+
+    @Test
+    fun `hasProtonCalendar is false when no Proton account is present`() =
+        runTest {
+            val cursor =
+                MatrixCursor(
+                    arrayOf(
+                        CalendarContract.Calendars.ACCOUNT_NAME,
+                        CalendarContract.Calendars.ACCOUNT_TYPE,
+                    ),
+                )
+            cursor.addRow(arrayOf<Any?>("user@gmail.com", "com.google"))
+
+            every {
+                mockContentResolver.query(
+                    CalendarContract.Calendars.CONTENT_URI,
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                )
+            } returns cursor
+
+            assertFalse(repository.hasProtonCalendar())
+        }
+
+    @Test
+    fun `hasProtonCalendar matches an account type containing proton`() =
+        runTest {
+            val cursor =
+                MatrixCursor(
+                    arrayOf(
+                        CalendarContract.Calendars.ACCOUNT_NAME,
+                        CalendarContract.Calendars.ACCOUNT_TYPE,
+                    ),
+                )
+            cursor.addRow(arrayOf<Any?>("user@custom-domain.com", "me.proton.sync"))
+
+            every {
+                mockContentResolver.query(
+                    CalendarContract.Calendars.CONTENT_URI,
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                )
+            } returns cursor
+
+            assertTrue(repository.hasProtonCalendar())
         }
 
     @Test

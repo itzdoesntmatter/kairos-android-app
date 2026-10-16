@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import digital.tonima.core.data.usecases.DeleteCalendarUseCase
 import digital.tonima.core.data.usecases.GetAvailableCalendarsUseCase
 import digital.tonima.core.data.usecases.UpdateCalendarUseCase
+import digital.tonima.core.usecases.GetProtonCalendarStatusUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -21,6 +22,7 @@ class ManageCalendarsViewModel
         private val getAvailableCalendarsUseCase: GetAvailableCalendarsUseCase,
         private val updateCalendarUseCase: UpdateCalendarUseCase,
         private val deleteCalendarUseCase: DeleteCalendarUseCase,
+        private val getProtonCalendarStatusUseCase: GetProtonCalendarStatusUseCase,
     ) : ViewModel() {
         private val _uiState = MutableStateFlow(ManageCalendarsUiState())
         val uiState = _uiState.asStateFlow()
@@ -70,7 +72,10 @@ class ManageCalendarsViewModel
                     calendars.filter {
                         it.accountName == "Kairos Imports"
                     }
-                _uiState.update { it.copy(calendars = kairosCalendars, isLoading = false) }
+                val protonStatus = getProtonCalendarStatusUseCase()
+                _uiState.update {
+                    it.copy(calendars = kairosCalendars, protonStatus = protonStatus, isLoading = false)
+                }
             }
         }
 

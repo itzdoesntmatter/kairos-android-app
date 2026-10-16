@@ -1,5 +1,10 @@
 package digital.tonima.kairos.ui.view
 
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,9 +27,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.Icons.AutoMirrored.Filled
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,10 +51,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import digital.tonima.core.usecases.ProtonPackages
 import digital.tonima.core.viewmodel.ManageCalendarsIntent
 import digital.tonima.core.viewmodel.ManageCalendarsViewModel
+import digital.tonima.kairos.core.R
+import digital.tonima.kairos.core.model.ProtonCalendarStatus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,6 +68,7 @@ fun ManageCalendarsScreen(
     onNavigateBack: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     val presetColors =
         listOf(
@@ -148,63 +161,167 @@ fun ManageCalendarsScreen(
             )
         },
     ) { padding ->
-        if (state.isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+        ) {
+            state.protonStatus?.let { status ->
+                if (status.protonCalendarVisible || status.protonCalendarAppInstalled || status.syncBridgeInstalled) {
+                    ProtonStatusCard(
+                        status = status,
+                        context = context,
+                        modifier = Modifier.padding(horizontal = 16.dp).padding(top = 16.dp),
+                    )
+                }
             }
-        } else if (state.calendars.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Nenhum calendário importado encontrado.")
-            }
-        } else {
-            LazyColumn(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(state.calendars) { calendar ->
-                    Card(modifier = Modifier.fillMaxWidth()) {
-                        Row(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Box(
+
+            if (state.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else if (state.calendars.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("Nenhum calendário importado encontrado.")
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    items(state.calendars) { calendar ->
+                        Card(modifier = Modifier.fillMaxWidth()) {
+                            Row(
                                 modifier =
                                     Modifier
-                                        .size(24.dp)
-                                        .clip(CircleShape)
-                                        .background(Color(calendar.color)),
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text(text = calendar.displayName, modifier = Modifier.weight(1f))
-                            IconButton(
-                                onClick = {
-                                    viewModel.handleIntent(
-                                        ManageCalendarsIntent.OpenEditDialog(calendar),
-                                    )
-                                },
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Icon(Icons.Default.Edit, contentDescription = "Editar")
-                            }
-                            IconButton(
-                                onClick = {
-                                    viewModel.handleIntent(
-                                        ManageCalendarsIntent.DeleteCalendar(calendar.id),
-                                    )
-                                },
-                            ) {
-                                Icon(Icons.Default.Delete, contentDescription = "Deletar")
+                                Box(
+                                    modifier =
+                                        Modifier
+                                            .size(24.dp)
+                                            .clip(CircleShape)
+                                            .background(Color(calendar.color)),
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Text(text = calendar.displayName, modifier = Modifier.weight(1f))
+                                IconButton(
+                                    onClick = {
+                                        viewModel.handleIntent(
+                                            ManageCalendarsIntent.OpenEditDialog(calendar),
+                                        )
+                                    },
+                                ) {
+                                    Icon(Icons.Default.Edit, contentDescription = "Editar")
+                                }
+                                IconButton(
+                                    onClick = {
+                                        viewModel.handleIntent(
+                                            ManageCalendarsIntent.DeleteCalendar(calendar.id),
+                                        )
+                                    },
+                                ) {
+                                    Icon(Icons.Default.Delete, contentDescription = "Deletar")
+                                }
                             }
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ProtonStatusCard(
+    status: ProtonCalendarStatus,
+    context: Context,
+    modifier: Modifier = Modifier,
+) {
+    if (status.protonCalendarVisible) {
+        Card(modifier = modifier.fillMaxWidth()) {
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.CheckCircle,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.proton_calendar_connected),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }
+    } else {
+        Card(modifier = modifier.fillMaxWidth()) {
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.proton_calendar_title),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Text(
+                    text = stringResource(R.string.proton_calendar_body),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Button(
+                    onClick = {
+                        if (status.syncBridgeInstalled) {
+                            openSyncBridge(context)
+                        } else {
+                            openSyncBridgePage(context)
+                        }
+                    },
+                ) {
+                    Text(
+                        stringResource(
+                            if (status.syncBridgeInstalled) {
+                                R.string.proton_calendar_open_bridge
+                            } else {
+                                R.string.proton_calendar_get_bridge
+                            },
+                        ),
+                    )
+                }
+            }
+        }
+    }
+}
+
+private fun openSyncBridge(context: Context) {
+    val bridge =
+        ProtonPackages.SYNC_BRIDGES.firstOrNull { pkg ->
+            context.packageManager.getLaunchIntentForPackage(pkg) != null
+        }
+    val intent = bridge?.let { context.packageManager.getLaunchIntentForPackage(it) }
+    if (intent != null) {
+        context.startActivity(intent)
+    } else {
+        openSyncBridgePage(context)
+    }
+}
+
+private fun openSyncBridgePage(context: Context) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(ProtonPackages.SYNC_BRIDGE_URL))
+    try {
+        context.startActivity(intent)
+    } catch (_: ActivityNotFoundException) {
+        Toast.makeText(context, R.string.cannot_open_event, Toast.LENGTH_SHORT).show()
     }
 }

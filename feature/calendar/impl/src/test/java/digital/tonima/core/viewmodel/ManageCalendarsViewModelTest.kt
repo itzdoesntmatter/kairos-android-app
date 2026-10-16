@@ -3,7 +3,9 @@ package digital.tonima.core.viewmodel
 import digital.tonima.core.data.usecases.DeleteCalendarUseCase
 import digital.tonima.core.data.usecases.GetAvailableCalendarsUseCase
 import digital.tonima.core.data.usecases.UpdateCalendarUseCase
+import digital.tonima.core.usecases.GetProtonCalendarStatusUseCase
 import digital.tonima.kairos.core.model.DeviceCalendar
+import digital.tonima.kairos.core.model.ProtonCalendarStatus
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -25,6 +27,7 @@ class ManageCalendarsViewModelTest {
     private val getAvailableCalendars: GetAvailableCalendarsUseCase = mockk()
     private val updateCalendar: UpdateCalendarUseCase = mockk()
     private val deleteCalendar: DeleteCalendarUseCase = mockk()
+    private val getProtonCalendarStatus: GetProtonCalendarStatusUseCase = mockk()
 
     private val imported = DeviceCalendar(id = 10L, displayName = "Holidays", accountName = KAIROS_ACCOUNT, color = 1)
     private val google = DeviceCalendar(id = 1L, displayName = "me@gmail.com", accountName = "me@gmail.com")
@@ -34,6 +37,7 @@ class ManageCalendarsViewModelTest {
     fun setUp() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         coEvery { getAvailableCalendars() } returns listOf(google, imported, work)
+        coEvery { getProtonCalendarStatus() } returns ProtonCalendarStatus(false, false, false)
     }
 
     @After
@@ -141,7 +145,20 @@ class ManageCalendarsViewModelTest {
         coVerify(exactly = 1) { getAvailableCalendars() }
     }
 
-    private fun viewModel() = ManageCalendarsViewModel(getAvailableCalendars, updateCalendar, deleteCalendar)
+    @Test
+    fun `loads the Proton calendar status`() {
+        coEvery { getProtonCalendarStatus() } returns ProtonCalendarStatus(true, false, false)
+
+        assertEquals(ProtonCalendarStatus(true, false, false), viewModel().uiState.value.protonStatus)
+    }
+
+    private fun viewModel() =
+        ManageCalendarsViewModel(
+            getAvailableCalendars,
+            updateCalendar,
+            deleteCalendar,
+            getProtonCalendarStatus,
+        )
 
     private companion object {
         const val KAIROS_ACCOUNT = "Kairos Imports"

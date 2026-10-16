@@ -7,6 +7,13 @@ import digital.tonima.kairos.core.model.Event
 interface CalendarRepository {
     suspend fun getAvailableCalendars(): ImmutableList<DeviceCalendar>
 
+    /**
+     * Whether at least one calendar in the system provider is backed by a Proton account.
+     * Detection matches the calendar's account name/type against Proton's domains and known
+     * sync-bridge account types, so it also covers custom-domain Proton users.
+     */
+    suspend fun hasProtonCalendar(): Boolean
+
     suspend fun getEventsForMonth(
         yearMonth: Long,
         allowedCalendarIds: ImmutableList<Long> = ImmutableList.of(),

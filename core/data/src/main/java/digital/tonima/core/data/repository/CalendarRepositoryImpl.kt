@@ -157,6 +157,51 @@ class CalendarRepositoryImpl
                 return@withContext ImmutableList.copyOf(calendars)
             }
 
+        override suspend fun hasProtonCalendar(): Boolean =
+            withContext(Dispatchers.IO) {
+                if (!hasCalendarPermission()) {
+                    logcat { "Tentativa de verificar calendários Proton sem a permissão READ_CALENDAR." }
+                    return@withContext false
+                }
+
+                val projection =
+                    arrayOf(
+                        CalendarContract.Calendars.ACCOUNT_NAME,
+                        CalendarContract.Calendars.ACCOUNT_TYPE,
+                    )
+
+                val cursor =
+                    context.contentResolver.query(
+                        CalendarContract.Calendars.CONTENT_URI,
+                        projection,
+                        null,
+                        null,
+                        null,
+                    )
+
+                var found = false
+                cursor?.use {
+                    val nameIdx = it.getColumnIndex(CalendarContract.Calendars.ACCOUNT_NAME)
+                    val typeIdx = it.getColumnIndex(CalendarContract.Calendars.ACCOUNT_TYPE)
+                    while (it.moveToNext() && !found) {
+                        val accountName = it.getString(nameIdx) ?: ""
+                        val accountType = it.getString(typeIdx) ?: ""
+                        found = isProtonBacked(accountName, accountType)
+                    }
+                }
+                return@withContext found
+            }
+
+        private fun isProtonBacked(
+            accountName: String,
+            accountType: String,
+        ): Boolean {
+            val name = accountName.trim().lowercase()
+            val type = accountType.trim().lowercase()
+            if (PROTON_DOMAINS.any { name.endsWith("@$it") }) return true
+            return name.contains("proton") || type.contains("proton")
+        }
+
         override suspend fun getEventsForMonth(
             yearMonth: Long,
             allowedCalendarIds: ImmutableList<Long>,
@@ -570,6 +615,9 @@ class CalendarRepositoryImpl
         }
 
         private companion object {
+            /** Proton email domains; account names ending in one of these are Proton-backed. */
+            private val PROTON_DOMAINS = listOf("proton.me", "protonmail.com", "protonmail.ch", "pm.me")
+
             // Built from a list rather than a multi-line raw string: the previous trimMargin()
             // pattern embedded line breaks inside the alternation, so Google Meet, Teams and
             // Webex links never matched.

@@ -17,6 +17,7 @@ import com.google.common.collect.ImmutableList
 import digital.tonima.core.data.usecases.DeleteCalendarUseCase
 import digital.tonima.core.data.usecases.GetAvailableCalendarsUseCase
 import digital.tonima.core.data.usecases.UpdateCalendarUseCase
+import digital.tonima.core.usecases.GetProtonCalendarStatusUseCase
 import digital.tonima.core.usecases.ImportIcsUseCase
 import digital.tonima.core.viewmodel.EventScreenUiState
 import digital.tonima.core.viewmodel.ImportCalendarViewModel
@@ -24,6 +25,7 @@ import digital.tonima.core.viewmodel.ManageCalendarsViewModel
 import digital.tonima.kairos.core.R
 import digital.tonima.kairos.core.model.DeviceCalendar
 import digital.tonima.kairos.core.model.InsightsPeriod
+import digital.tonima.kairos.core.model.ProtonCalendarStatus
 import digital.tonima.kairos.ui.components.InsightsContent
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -86,6 +88,7 @@ class CalendarScreensTest {
     private val getCalendars: GetAvailableCalendarsUseCase = mockk()
     private val updateCalendar: UpdateCalendarUseCase = mockk()
     private val deleteCalendar: DeleteCalendarUseCase = mockk()
+    private val getProtonCalendarStatus: GetProtonCalendarStatusUseCase = mockk()
     private val imported = DeviceCalendar(id = 10L, displayName = "Feriados", accountName = "Kairos Imports", color = 1)
 
     @Test
@@ -126,7 +129,14 @@ class CalendarScreensTest {
     }
 
     private fun renderManageCalendars(onBack: () -> Unit = {}) {
-        val viewModel = ManageCalendarsViewModel(getCalendars, updateCalendar, deleteCalendar)
+        coEvery { getProtonCalendarStatus() } returns ProtonCalendarStatus(false, false, false)
+        val viewModel =
+            ManageCalendarsViewModel(
+                getCalendars,
+                updateCalendar,
+                deleteCalendar,
+                getProtonCalendarStatus,
+            )
         compose.setContent { ManageCalendarsScreen(viewModel = viewModel, onNavigateBack = onBack) }
     }
 

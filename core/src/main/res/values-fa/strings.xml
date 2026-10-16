@@ -273,4 +273,9 @@
     <string name="event_suggestion_action_create">ایجاد</string>
     <string name="event_suggestion_created">رویداد ایجاد شد</string>
     <string name="event_suggestion_failed">ایجاد رویداد ممکن نشد</string>
+    <string name="proton_calendar_title">اتصال تقویم Proton</string>
+    <string name="proton_calendar_body">تقویم Proton رویدادها را درون برنامه خود نگه می‌دارد، بنابراین Kairós هنوز نمی‌تواند آنها را ببیند. برای کپی کردن آنها در تقویم دستگاه، یک پل همگام‌سازی (ProtonSync یا Sync Provider for Proton) نصب کنید.</string>
+    <string name="proton_calendar_get_bridge">دریافت پل همگام‌سازی</string>
+    <string name="proton_calendar_open_bridge">باز کردن پل همگام‌سازی</string>
+    <string name="proton_calendar_connected">تقویم Proton متصل شد</string>
 </resources>

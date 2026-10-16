@@ -280,4 +280,9 @@
     <string name="event_suggestion_action_create">बनाएँ</string>
     <string name="event_suggestion_created">इवेंट बनाया गया</string>
     <string name="event_suggestion_failed">इवेंट नहीं बनाया जा सका</string>
+    <string name="proton_calendar_title">Proton कैलेंडर कनेक्ट करें</string>
+    <string name="proton_calendar_body">Proton Calendar ईवेंट को अपने ऐप के भीतर रखता है, इसलिए Kairós अभी उन्हें नहीं देख सकता। उन्हें अपने डिवाइस कैलेंडर में कॉपी करने के लिए एक सिंक ब्रिज (ProtonSync या Sync Provider for Proton) इंस्टॉल करें।</string>
+    <string name="proton_calendar_get_bridge">सिंक ब्रिज प्राप्त करें</string>
+    <string name="proton_calendar_open_bridge">सिंक ब्रिज खोलें</string>
+    <string name="proton_calendar_connected">Proton कैलेंडर कनेक्ट हो गया</string>
 </resources>

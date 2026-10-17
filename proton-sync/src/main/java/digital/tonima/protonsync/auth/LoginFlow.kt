@@ -429,9 +429,24 @@ class LoginFlow(
      * 1006 = unknown username, …) instead of a bare HTTP status.
      */
     private fun authErrorMessage(e: HttpException): String {
+        val rawBody =
+            try {
+                e.response()?.errorBody()?.string()
+            } catch (ex: Exception) {
+                null
+            }
+        // Diag breadcrumb: the raw wire evidence (body + headers). A 422 with an EMPTY body
+        // (some edges return no JSON) is itself the diagnostic — headers still show the
+        // server identity. No secrets: error bodies carry Proton's Code/Error only.
+        logcat(TAG, LogPriority.WARN) {
+            "auth failure wire: HTTP ${e.code()} headers=" +
+                (e.response()?.headers()?.toMultimap()?.entries?.joinToString { (k, v) -> "$k=${v.joinToString(",")}" }
+                    ?: "none") +
+                " body=${rawBody ?: "(empty)"}"
+        }
         val detail =
             try {
-                e.response()?.errorBody()?.string()?.let { body ->
+                rawBody?.let { body ->
                     val parsed = Json.parseToJsonElement(body).jsonObject
                     val code = parsed["Code"]?.jsonPrimitive?.content
                     val error = parsed["Error"]?.jsonPrimitive?.content

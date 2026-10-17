@@ -1,6 +1,7 @@
 package digital.tonima.protonsync.sync
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import digital.tonima.protonsync.account.ProtonSyncAccount
 import digital.tonima.protonsync.api.ProtonApiClient
@@ -197,6 +198,11 @@ object ProtonSyncModule {
         return ProtonClientIdentity(
             versionName = info?.versionName ?: "unknown",
             versionCode = (info?.versionCode ?: 0).toLong(),
+            // Diag builds are debuggable (FLAG_DEBUGGABLE); the library module itself is
+            // always compiled as release for the diag variant (matchingFallbacks), so this
+            // runtime flag — not BuildConfig — is the reliable diag detector.
+            debugRequestLogging =
+                (context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0,
         )
     }
 

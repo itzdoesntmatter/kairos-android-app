@@ -1,6 +1,5 @@
 package digital.tonima.protonsync.api
 
-import digital.tonima.protonsync.BuildConfig
 import digital.tonima.protonsync.session.SessionManager
 import logcat.LogPriority
 import logcat.logcat
@@ -25,15 +24,20 @@ class ProtonHeadersInterceptor(
     private val sessionManager: SessionManager,
     private val appVersionHeader: String,
     private val userAgent: String,
+    private val debugRequestLogging: Boolean = false,
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        if (BuildConfig.DEBUG) {
-            // Diag breadcrumb: the exact outgoing request (no bodies — proofs never logged).
+        if (debugRequestLogging) {
+            // Diag breadcrumb: the exact outgoing request (no bodies — proofs never logged;
+            // the Authorization header is withheld even in diag builds).
+            val safeHeaders =
+                request.headers
+                    .filterNot { it.first.equals("Authorization", ignoreCase = true) }
+                    .joinToString("; ") { "${it.first}=${it.second}" }
             logcat("ProtonLoginFlow", LogPriority.INFO) {
-                "request ${request.method} ${request.url} headers=" +
-                    request.headers.joinToString("; ") { "${it.first}=${it.second}" } +
+                "request ${request.method} ${request.url} headers=$safeHeaders" +
                     " bodyLen=" + (request.body?.contentLength() ?: 0)
             }
         }

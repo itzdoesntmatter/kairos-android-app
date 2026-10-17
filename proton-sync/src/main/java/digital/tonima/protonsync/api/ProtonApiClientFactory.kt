@@ -20,6 +20,11 @@ import java.util.concurrent.TimeUnit
 data class ProtonClientIdentity(
     val versionName: String,
     val versionCode: Long,
+    /** Diag-only: enables request-metadata breadcrumbs (method/URL/headers/body length) in
+     *  ProtonHeadersInterceptor. The app module's diag variant passes BuildConfig.DEBUG; the
+     *  library cannot read its own BuildConfig because diag falls back to the library's
+     *  release variant (BuildConfig.DEBUG is false there). Access tokens are never logged. */
+    val debugRequestLogging: Boolean = false,
 ) {
     /**
      * `x-pm-appversion` value. Proton's API server VALIDATES this header against known
@@ -115,6 +120,7 @@ class ProtonApiClientFactory(
                         sessionManager = sessionManager,
                         appVersionHeader = identity.appVersionHeader,
                         userAgent = identity.userAgent,
+                        debugRequestLogging = identity.debugRequestLogging,
                     ),
                 )
                 .addInterceptor(RateLimitInterceptor())

@@ -1,6 +1,9 @@
 package digital.tonima.protonsync.api
 
+import digital.tonima.protonsync.BuildConfig
 import digital.tonima.protonsync.session.SessionManager
+import logcat.LogPriority
+import logcat.logcat
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -26,6 +29,14 @@ class ProtonHeadersInterceptor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
+        if (BuildConfig.DEBUG) {
+            // Diag breadcrumb: the exact outgoing request (no bodies — proofs never logged).
+            logcat("ProtonLoginFlow", LogPriority.INFO) {
+                "request ${request.method} ${request.url} headers=" +
+                    request.headers.joinToString("; ") { "${it.first}=${it.second}" } +
+                    " bodyLen=" + (request.body?.contentLength() ?: 0)
+            }
+        }
         val builder = request.newBuilder()
             .header(HEADER_APP_VERSION, appVersionHeader)
             .header(HEADER_API_VERSION, API_VERSION)

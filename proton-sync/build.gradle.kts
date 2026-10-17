@@ -22,6 +22,11 @@ android {
             assets.srcDir("$projectDir/schemas")
         }
     }
+
+    buildFeatures {
+        // BuildConfig.DEBUG gates the diag-only request breadcrumbs in ProtonHeadersInterceptor.
+        buildConfig = true
+    }
 }
 
 ksp {

@@ -43,6 +43,20 @@ android {
 
             signingConfig = signingConfigs.getByName("release")
         }
+        // Diagnostic build for field debugging: release-SIGNED (installs over the release
+        // build without uninstalling) but debuggable + unminified, so logcat shows the full
+        // login/sync breadcrumbs (AndroidLogcatLogger installs only on debuggable apps).
+        // Same applicationId and versionCode as release — never shipped to end users.
+        create("diag") {
+            isDebuggable = true
+            isMinifyEnabled = false
+            isShrinkResources = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
+            signingConfig = signingConfigs.getByName("release")
+            // Library modules only publish debug/release variants — fall back to release.
+            matchingFallbacks += listOf("release")
+        }
     }
 
     compileOptions {

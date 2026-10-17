@@ -455,6 +455,16 @@ class LoginFlow(
             } catch (ex: Exception) {
                 null
             }
+        // Proton's abuse limiter: with a body it is Code 2028; some edges answer with an
+        // EMPTY 422 instead. Both mean the same thing — map them to an honest, actionable
+        // message instead of a bare HTTP status.
+        val limited =
+            detail?.contains("2028") == true || rawBody.isNullOrBlank()
+        if (limited) {
+            return "Proton is temporarily limiting access to this account (unusual-activity " +
+                "protection). Wait a while and retry — or appeal at proton.me/support/appeal-abuse. " +
+                "(HTTP 422" + (detail?.let { ", $it" } ?: "") + ")"
+        }
         return "authentication failed (HTTP ${e.code()}" +
             (detail?.let { ": $it" } ?: "") +
             ")"

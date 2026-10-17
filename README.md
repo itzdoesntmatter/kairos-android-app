@@ -37,26 +37,34 @@ Kairós is distributed directly from GitHub — download the latest phone and We
 
 ---
 
-## 🔐 Proton Calendar
+## 🔐 Proton Calendar (built-in sync)
 
 Kairós reads events from Android's system calendar provider, so it works with **any** calendar
 that is synced to the device — Google, Outlook, Exchange, and others.
 
-**Proton Calendar** is the exception: it offers no public API and no CalDAV, and its Android app
-keeps events end-to-end encrypted inside its own app, so events never reach the system provider
-that Kairós (and every other calendar app) reads from.
+**Proton Calendar** was the exception (no public API, no CalDAV, events never reach the system
+provider), so Kairós now ships a **built-in Proton Calendar sync bridge** (the `:proton-sync`
+module) — no third-party app needed:
 
-To use Proton Calendar with Kairós, install a third-party sync bridge that mirrors your Proton
-events into the device calendar. Kairós then picks them up automatically, exactly like any other
-calendar:
+- **Native login**: sign into Proton from inside Kairós using Proton's own `auth/v4` API and
+  SRP-6a zero-knowledge proofs. Your password is never sent to Proton and never stored — it is
+  used only on-device to compute a proof of knowledge.
+- **End-to-end encryption**: calendar events are fetched over TLS and decrypted on-device with
+  OpenPGP, then written into the system calendar so Kairós alarms treat them like any other event.
+- **Private by design**: sync talks only to Proton's servers (`mail-api.proton.me`) — no
+  third-party service, no telemetry, no credential storage. Session tokens are kept encrypted in
+  the app's private storage and refreshed automatically.
+- **One-time setup**: Settings → Proton Calendar → sign in. The "Manage calendars" screen then
+  shows your Proton events alongside everything else, with sync status surfaced in Settings.
 
-- [ProtonSync](https://github.com/carlostkd/ProtonSync) — open-source, two-way sync
-- [Sync Provider for Proton](https://apps.olausson.de/sync_provider_for_proton/) — two-way sync,
-  multi-account, recurring-event support
+**Known limitation (Proton's side, not Kairós)**: Proton offers no public API, so the bridge
+implements the same API Proton's own apps use, clean-room from published specifications. Proton's
+anti-abuse system can temporarily limit API sign-ins after repeated attempts ("unusual-activity
+protection") even when browser login works fine. If you hit that: wait a few hours, retry from a
+different network, or appeal at <https://proton.me/support/appeal-abuse>.
 
-Once a bridge has synced your Proton calendar, its events appear in Kairós alongside everything
-else. The "Manage calendars" screen detects when Proton Calendar is installed but no Proton
-events are visible yet, and guides you through installing a bridge.
+Technical deep-dives: [`docs/PROTON-SYNC-BRIDGE.md`](docs/PROTON-SYNC-BRIDGE.md) (architecture)
+and [`docs/PROTON-SYNC-DIVERGENCE-LOG.md`](docs/PROTON-SYNC-DIVERGENCE-LOG.md) (design decisions).
 
 ---
 

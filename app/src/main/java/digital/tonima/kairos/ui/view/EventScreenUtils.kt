@@ -37,14 +37,27 @@ fun openExactAlarmSettings(context: Context) {
 }
 
 fun openFullScreenIntentSettings(context: Context) {
+    // Android 14+ (API 34) manages USE_FULL_SCREEN_INTENT per-app via the dedicated
+    // "Allow full screen notifications" screen. MANAGE_APP_ALL_ALARMS is the unrelated
+    // clock-app-exemption picker — on devices that don't expose it (GrapheneOS) the old
+    // code toasted "Not applicable on this Android version" instead of opening anything.
+    // Pre-34 the permission was install-time; fall back to the app details screen there.
     val intent =
-        Intent("android.settings.MANAGE_APP_ALL_ALARMS").apply {
-            data = Uri.fromParts("package", context.packageName, null)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            Intent(
+                Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                Uri.fromParts("package", context.packageName, null),
+            )
+        } else {
+            Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", context.packageName, null),
+            )
         }
     val resolveInfo = context.packageManager.resolveActivity(intent, 0)
     if (resolveInfo != null) {
         context.startActivity(intent)
     } else {
-        Toast.makeText(context, R.string.not_applicable_on_this_android_version, Toast.LENGTH_SHORT).show()
+        openAppSettings(context)
     }
 }

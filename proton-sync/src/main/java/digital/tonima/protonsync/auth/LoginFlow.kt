@@ -204,7 +204,7 @@ class LoginFlow(
             } catch (e: HttpException) {
                 return parseAuthErrorBody(e)?.let { details ->
                     hvOutcome(pending, details)
-                } ?: failOutcome("authentication failed (HTTP ${e.code()})")
+                } ?: failOutcome(authErrorMessage(e))
             } catch (e: Exception) {
                 return failOutcome("authentication failed: ${safeMessage(e)}")
             }
@@ -406,6 +406,28 @@ class LoginFlow(
         } catch (ex: Exception) {
             null
         }
+    }
+
+    /**
+     * Proton's own Code/Error from a failed auth call, surfaced verbatim so a user report
+     * carries the actionable diagnosis (8002 = wrong password, 2028 = abuse/rate limiting,
+     * 1006 = unknown username, …) instead of a bare HTTP status.
+     */
+    private fun authErrorMessage(e: HttpException): String {
+        val detail =
+            try {
+                e.response()?.errorBody()?.string()?.let { body ->
+                    val parsed = Json.parseToJsonElement(body).jsonObject
+                    val code = parsed["Code"]?.jsonPrimitive?.content
+                    val error = parsed["Error"]?.jsonPrimitive?.content
+                    listOfNotNull(code?.let { c -> "code $c" }, error).joinToString(" — ")
+                }
+            } catch (ex: Exception) {
+                null
+            }
+        return "authentication failed (HTTP ${e.code()}" +
+            (detail?.let { ": $it" } ?: "") +
+            ")"
     }
 
     private fun hvOutcome(

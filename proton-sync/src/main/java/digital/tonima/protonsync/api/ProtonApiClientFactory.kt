@@ -21,10 +21,18 @@ data class ProtonClientIdentity(
     val versionName: String,
     val versionCode: Long,
 ) {
-    /** `x-pm-appversion` value — the truthful third-party pattern. */
-    val appVersionHeader: String = "Kairos_$versionCode"
+    /**
+     * `x-pm-appversion` value. Proton's API server VALIDATES this header against known
+     * client-family names and answers `Code 5002 "Invalid app version"` to anything else
+     * (verified live 2026-10-16: `Kairos_*` → 400). `Other` is the designated third-party
+     * family value — it is what the reference app sends (auth-flow.md VERIFY-NEEDED #5,
+     * now confirmed accepted) and what Proton's API contract expects from non-Proton
+     * clients. This is NOT impersonation (invariant I6 holds): the honest identity rides
+     * in [userAgent] below, and the divergence log records the header decision (D-06).
+     */
+    val appVersionHeader: String = "Other"
 
-    /** `User-Agent` per architecture §6 / security-audit §4.5. */
+    /** `User-Agent` per architecture §6 / security-audit §4.5 — the truthful identity. */
     val userAgent: String =
         "Kairos/$versionName (Android ${Build.VERSION.SDK_INT}; ${Build.MODEL})"
 }

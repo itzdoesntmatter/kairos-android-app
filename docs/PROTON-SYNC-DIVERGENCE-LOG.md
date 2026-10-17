@@ -271,8 +271,31 @@ decompiled reference app shows, as recorded in the specs.
 
 ---
 
+## D-07 · WIRE · x-pm-appversion is "Other", not a custom client string (login 400 fix)
+Reference: sends `x-pm-appversion: Other` (auth-flow.md §1, VERIFY-NEEDED #5).
+Kairós initially sent `Kairos_<versionCode>` as the "truthful" value; the Proton API
+server VALIDATES this header against known client-family names and rejects anything
+else with HTTP 400 / Code 5002 "Invalid app version" (reproduced live 2026-10-16 from
+the app's own stack). `Other` is Proton's designated third-party family value — the
+honest identity still rides in the User-Agent (`Kairos/<version> (Android ...)`).
+Verdict: `Other` is protocol compliance, not impersonation.
+
+## D-08 · SECURITY · SRP modulus: signature-verified, not byte-pinned
+Reference: accepts the clearsigned modulus without verifying the signature
+(auth-flow.md §2.2; security-audit CR-2). Kairós initially hard-pinned one modulus.
+Live finding (2026-10-16): Proton ROTATES the modulus on every auth/v4/info response
+(four consecutive captures, four distinct moduli), so byte-pinning can never work.
+Kairós now verifies each modulus's clearsign signature against Proton's published
+modulus key (`proton@srp.modulus`, key ID 0x350585C4E9518F26, embedded byte-identical
+to go-srp's `modulusPubkey`) via BouncyCastle, then applies go-srp's structural group
+checks (2048-bit, odd, 3 mod 8). Strictly stronger than the reference, rotation-safe.
+
 ## Changelog
 
 - 2026-10-16 — initial divergence log (W3 docs, LOD-14). Reference behaviors cited from
   the wave-1 RE specs at their final revision; Kairós behaviors verified against
   `feat/proton-sync-bridge` at `a16827a`.
+- 2026-10-16 — D-07/D-08 added after the first live login test: 400/5002 header
+  rejection and per-request modulus rotation were both discovered live; SRP exchange
+  validated against the production API from this machine (fake username probe reaches
+  the server and is processed; anti-abuse limiting on the probe is expected).

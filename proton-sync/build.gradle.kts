@@ -46,6 +46,10 @@ dependencies {
     // bcrypt for the SRP password hash and the key-password KDF (architecture D1: the JCA
     // primitives are BigInteger + SHA-512; bcrypt comes from BouncyCastle, exact-pinned).
     implementation(libs.bouncycastle)
+    // OpenPGP signature verification of the SRP modulus (ModulusVerifier) — the PGP
+    // classes live in bcpkix + bcpg, not bcprov.
+    implementation(libs.bouncycastle.pkix)
+    implementation(libs.bouncycastle.pgp)
 
     // OpenPGP envelope crypto (architecture D1 / §5): ProtonCore crypto-android wraps the
     // exact gomobile Go library the reference app binds, making us envelope-exact with

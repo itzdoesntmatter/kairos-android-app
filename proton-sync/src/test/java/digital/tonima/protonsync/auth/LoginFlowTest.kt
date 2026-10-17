@@ -77,7 +77,7 @@ class LoginFlowTest {
     private val challenge =
         SrpChallenge(
             username = "alice@proton.me",
-            modulus = SrpClient.PINNED_MODULUS_BASE64,
+            modulus = TestFixtures.capturedClearsignedModulus(),
             salt = Base64.getEncoder().encodeToString(ByteArray(10)),
             serverEphemeral = Base64.getEncoder().encodeToString(ByteArray(256).also { it[0] = 2 }),
             srpSession = "srp-session-1",

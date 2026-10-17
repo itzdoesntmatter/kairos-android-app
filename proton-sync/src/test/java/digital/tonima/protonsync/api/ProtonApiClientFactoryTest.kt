@@ -33,7 +33,7 @@ class ProtonApiClientFactoryTest {
     fun `client identity is honest — never impersonates Proton's identifiers`() {
         val identity = ProtonClientIdentity(versionName = "1.2.3", versionCode = 42)
 
-        assertEquals("Kairos_42", identity.appVersionHeader)
+        assertEquals("Other", identity.appVersionHeader)
         assertTrue(identity.userAgent.startsWith("Kairos/1.2.3 (Android "))
         assertFalse(identity.userAgent.contains("ProtonMail"))
         assertFalse(identity.userAgent.contains("me.proton"))

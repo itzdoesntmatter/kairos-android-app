@@ -26,7 +26,7 @@ class SrpClientGapTest {
     private val vectorSalt = "yKlc5/CvObfoiw=="
     private val vectorPassword = "abc123"
     private val vectorUsername = "jakubqa"
-    private val vectorModulusBody = SrpClient.PINNED_MODULUS_BASE64
+    private val vectorModulusBody = TestFixtures.TEST_MODULUS_BODY
     private val vectorServerEphemeral =
         "l13IQSVFBEV0ZZREuRQ4ZgP6OpGiIfIjbSDYQG3Yp39FkT2B/k3n1ZhwqrAdy+qvPPFq/le0b7UDtayoX4aOTJihoRvi" +
             "fas8Hr3icd9nAHqd0TUBbkZkT6Iy6UpzmirCXQtEhvGQIdOLuwvy+vZWh24G2ahBM75dAqwkP961EJMh67/I5PA5hJdQZj" +
@@ -34,7 +34,7 @@ class SrpClientGapTest {
             "e7cA6RbJfF1bjm0nNfWLXzgKguKBOeF3GEAsnCgK68q82/pq9etiUDizUlUBcA=="
 
     private fun challenge(
-        modulus: String = vectorModulusBody,
+        modulus: String = TestFixtures.testClearsignedModulus(),
         serverEphemeral: String = vectorServerEphemeral,
     ) = SrpChallenge(
         username = vectorUsername,
@@ -75,19 +75,19 @@ class SrpClientGapTest {
             SrpClient().generateProofs(challenge(modulus = ""), vectorPassword.toCharArray())
         }
 
-        assertTrue(error.message!!.contains("pinned"))
+        assertTrue(error.message!!.contains("clearsigned"))
     }
 
     @Test
     fun `a modulus that is not base64 surfaces the decoder failure - malformed wire`() {
-        // FINDING F-1 (LOD-12): a hostile/broken `Modulus` field that is not base64 at all exits
-        // as java.util.Base64's IllegalArgumentException, not SrpException. Both are unchecked, so
-        // the login orchestration must catch broadly (Exception) or a malformed response crashes
-        // the flow. The wire-contract rejection itself is correct — only the failure type differs
-        // from the documented single SrpException type.
-        assertThrows(IllegalArgumentException::class.java) {
+        // FINDING F-1 (LOD-12), updated: since the modulus moved to signature verification,
+        // a non-clearsigned `Modulus` field is now rejected up front as SrpException("modulus
+        // is not a clearsigned message") — a cleaner failure mode than the raw
+        // java.util.Base64 IllegalArgumentException this test originally documented.
+        val error = assertThrows(SrpException::class.java) {
             SrpClient().generateProofs(challenge(modulus = "not base64 !!!"), vectorPassword.toCharArray())
         }
+        assertTrue(error.message!!.contains("clearsigned"))
     }
 
     @Test
@@ -103,7 +103,7 @@ class SrpClientGapTest {
         // secret: the retry loop can never succeed and must terminate loudly instead of
         // spinning (auth-flow.md §2.3 step 9; security-audit §2.1.2 "bounded"). The fixed
         // secret keeps each iteration cheap (a = 1), so the bound is exercised for real.
-        val modulusBytes = SrpPrimitives.decodeBase64(SrpClient.PINNED_MODULUS_BASE64)
+        val modulusBytes = SrpPrimitives.decodeBase64(TestFixtures.TEST_MODULUS_BODY)
         val n = SrpPrimitives.fromLittleEndian(modulusBytes)
         val hashed = BcryptPasswordHasher()
             .hashPassword(vectorPassword.toByteArray(Charsets.US_ASCII), SrpPrimitives.decodeBase64(vectorSalt))

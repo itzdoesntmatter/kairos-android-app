@@ -42,8 +42,8 @@ class SrpClientTest {
             "dPT5luCyVa7BS1d9ZdmuR0/VCjUOdJbYjgtIH7BQoZs+KacjhUN8gybu+fsycvTK3eC+9mCN2Y6GdsuCMuR3pFB0RF9eKa" +
             "e7cA6RbJfF1bjm0nNfWLXzgKguKBOeF3GEAsnCgK68q82/pq9etiUDizUlUBcA=="
 
-    /** Wire-little-endian modulus (the pinned group), base64. */
-    private val vectorModulusBody = SrpClient.PINNED_MODULUS_BASE64
+    /** Wire-little-endian go-srp TEST modulus, base64 (the math-vector group, not production). */
+    private val vectorModulusBody = TestFixtures.TEST_MODULUS_BODY
 
     private val vectorModulusClearSign =
         "-----BEGIN PGP SIGNED MESSAGE-----\n" +
@@ -104,26 +104,36 @@ class SrpClientTest {
     }
 
     @Test
-    fun `accepts the pinned modulus without armor — raw base64 body`() {
+    fun `refuses a raw base64 modulus without the clearsign armor`() {
+        // Since the modulus moved from byte-pinning to signature verification (Proton rotates
+        // it per request), a raw base64 body is no longer a valid `Modulus` field — the wire
+        // contract is the clearsigned envelope.
         val client = clientWithFixedSecret()
 
-        val proofs = client.generateProofs(
-            vectorChallenge(modulus = vectorModulusBody),
-            vectorPassword.toCharArray(),
-        )
-
-        assertEquals(expectedClientProof, proofs.clientProofBase64)
+        val e = assertThrows(SrpException::class.java) {
+            client.generateProofs(
+                vectorChallenge(modulus = vectorModulusBody),
+                vectorPassword.toCharArray(),
+            )
+        }
+        assertTrue(e.message!!.contains("clearsigned"))
     }
 
     @Test
-    fun `rejects a modulus that differs from the pinned group`() {
+    fun `rejects a modulus whose signature does not verify`() {
+        // A tampered body inside a structurally intact clearsigned envelope must fail the
+        // signature check against Proton's modulus key — the whole point of verification.
         val client = clientWithFixedSecret()
-        val otherModulus = "AB" + vectorModulusBody.substring(2)
+        val tampered =
+            TestFixtures.testClearsignedModulus().replaceFirst(
+                TestFixtures.TEST_MODULUS_BODY,
+                "A" + TestFixtures.TEST_MODULUS_BODY.substring(1),
+            )
 
         val e = assertThrows(SrpException::class.java) {
-            client.generateProofs(vectorChallenge(modulus = otherModulus), vectorPassword.toCharArray())
+            client.generateProofs(vectorChallenge(modulus = tampered), vectorPassword.toCharArray())
         }
-        assertTrue(e.message!!.contains("pinned"))
+        assertTrue(e.message!!.contains("signature"))
     }
 
     @Test
@@ -169,7 +179,7 @@ class SrpClientTest {
 
     @Test
     fun `pinned modulus constant decodes to a 256-byte group`() {
-        val decoded = SrpPrimitives.decodeBase64(SrpClient.PINNED_MODULUS_BASE64)
+        val decoded = SrpPrimitives.decodeBase64(TestFixtures.TEST_MODULUS_BODY)
         assertEquals(SrpPrimitives.GROUP_BYTES, decoded.size)
     }
 

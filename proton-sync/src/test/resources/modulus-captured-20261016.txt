@@ -1,0 +1,13 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+o1hmVqs/Y96Y8WS0yAYgw70WpC5tlrF6F+O8MieDRrehkJPRZdqw1tUYwDS99miHeyYHrWzgOaGs0sZXZfzy/MUIc+8lIhXvqi5BclZuYr4/uVJjy/HuhUK4YY/PE8eu/ggQexs7eTTGTV9z3lGKaGspIzxdkcqzi/QloE3buqqCI7UJDM2wLBRKQZVDyxtCDRMINdi57a7siQc1OwMuMI/Oj4eNWENuJOJgm8PjKm+XrrlI6a57/xjXoaY2Xf8usWiezihuXHLlNe5zoEoFcfoBp6jOuOfX1iCstBsdiV4AJIr/XLK8HDDwvvdT/3OEMoe74nDjZkYWFdNZi0eWwA==
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+Comment: https://protonmail.com
+
+wl4EARYIABAFAlwB1j8JEDUFhcTpUY8mAACTugD+Md2dkrcSqOjxbtxesUUV
+hAYYWvPp+I8hSdMaD40IYvQBAIB6+VjZxVZezmzqTWosHQfMyOiqu/y3Hifw
+n8Vlc1QJ
+=VRKu
+-----END PGP SIGNATURE-----

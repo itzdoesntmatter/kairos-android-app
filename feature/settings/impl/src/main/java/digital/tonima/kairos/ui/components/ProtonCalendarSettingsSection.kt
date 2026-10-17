@@ -8,6 +8,7 @@ import android.net.Uri
 import android.view.WindowManager
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -112,11 +113,13 @@ private fun ProtonStatusCard(
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            SyncState.ERROR -> Text(
-                text = stringResource(R.string.proton_sync_error, status.lastError.orEmpty()),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.error,
-            )
+            SyncState.ERROR -> SelectionContainer {
+                Text(
+                    text = stringResource(R.string.proton_sync_error, status.lastError.orEmpty()),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
             SyncState.NEEDS_REAUTH -> Text(
                 text = stringResource(R.string.proton_sync_session_expired),
                 style = MaterialTheme.typography.labelMedium,
@@ -289,11 +292,15 @@ private fun ProtonLoginForm(
             }
         }
         login.error?.let { error ->
-            Text(
-                text = error,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.error,
-            )
+            // Selectable so the user can long-press-copy the full Proton error (Code/Error)
+            // and paste it into a report — diagnosing a 422 needs the exact body.
+            SelectionContainer {
+                Text(
+                    text = error,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
         }
         if (login.hvUrl == null) {
             val consentOk = login.consentGranted || login.consentChecked

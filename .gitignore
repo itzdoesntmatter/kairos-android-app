@@ -57,3 +57,8 @@ X#
 # Signing keys (local only; CI decodes from secrets)
 *.jks
 keystore.properties
+
+# local secrets — never commit
+.env
+.env.*
+!.env.example

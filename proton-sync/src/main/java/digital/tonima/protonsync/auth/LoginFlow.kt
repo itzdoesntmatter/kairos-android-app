@@ -118,7 +118,12 @@ class LoginFlow(
 
         val info =
             try {
-                api.getAuthInfo(AuthInfoRequest(username = username))
+                api.getAuthInfo(AuthInfoRequest(username = username)).also {
+                    logcat(TAG, LogPriority.INFO) {
+                        "auth/v4/info OK: code=${it.code} version=${it.version} " +
+                            "modulusLen=${it.modulus.length} srpSessionLen=${it.srpSession.length}"
+                    }
+                }
             } catch (e: Exception) {
                 return failOutcome("could not reach Proton: ${safeMessage(e)}")
             }
@@ -138,7 +143,12 @@ class LoginFlow(
                         version = info.version,
                     ),
                     password,
-                )
+                ).also {
+                    logcat(TAG, LogPriority.INFO) {
+                        "SRP proofs generated: ephemeralLen=${it.clientEphemeralBase64.length} " +
+                            "proofLen=${it.clientProofBase64.length}"
+                    }
+                }
             } catch (e: SrpException) {
                 return failOutcome(safeMessage(e))
             }
@@ -208,6 +218,11 @@ class LoginFlow(
             } catch (e: Exception) {
                 return failOutcome("authentication failed: ${safeMessage(e)}")
             }
+        logcat(TAG, LogPriority.INFO) {
+            "auth/v4 response: code=${response.code} uid=${response.uid ?: "null"} " +
+                "passwordMode=${response.passwordMode} " +
+                "2fa=${response.twoFa?.enabled ?: 0}"
+        }
         return handleAuthResponse(pending, response)
     }
 

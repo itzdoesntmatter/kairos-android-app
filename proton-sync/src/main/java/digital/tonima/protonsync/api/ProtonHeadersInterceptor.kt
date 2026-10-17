@@ -29,18 +29,6 @@ class ProtonHeadersInterceptor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        if (debugRequestLogging) {
-            // Diag breadcrumb: the exact outgoing request (no bodies — proofs never logged;
-            // the Authorization header is withheld even in diag builds).
-            val safeHeaders =
-                request.headers
-                    .filterNot { it.first.equals("Authorization", ignoreCase = true) }
-                    .joinToString("; ") { "${it.first}=${it.second}" }
-            logcat("ProtonLoginFlow", LogPriority.INFO) {
-                "request ${request.method} ${request.url} headers=$safeHeaders" +
-                    " bodyLen=" + (request.body?.contentLength() ?: 0)
-            }
-        }
         val builder = request.newBuilder()
             .header(HEADER_APP_VERSION, appVersionHeader)
             .header(HEADER_API_VERSION, API_VERSION)
@@ -61,7 +49,21 @@ class ProtonHeadersInterceptor(
                 builder.header(HEADER_HV_TOKEN_TYPE, "captcha")
             }
         }
-        return chain.proceed(builder.build())
+
+        val finalRequest = builder.build()
+        if (debugRequestLogging) {
+            // Diag breadcrumb: the FINAL outgoing request after all header attachment
+            // (bodies never logged; Authorization withheld even in diag builds).
+            val safeHeaders =
+                finalRequest.headers
+                    .filterNot { it.first.equals("Authorization", ignoreCase = true) }
+                    .joinToString("; ") { "${it.first}=${it.second}" }
+            logcat("ProtonLoginFlow", LogPriority.INFO) {
+                "request ${finalRequest.method} ${finalRequest.url} headers=$safeHeaders" +
+                    " bodyLen=" + (finalRequest.body?.contentLength() ?: 0)
+            }
+        }
+        return chain.proceed(finalRequest)
     }
 
     companion object {

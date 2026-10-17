@@ -214,7 +214,7 @@ class LoginFlow(
             } catch (e: HttpException) {
                 return parseAuthErrorBody(e)?.let { details ->
                     hvOutcome(pending, details)
-                } ?: failOutcome(authErrorMessage(e))
+                } ?: failOutcome(authErrorMessage(e, pending.username))
             } catch (e: Exception) {
                 return failOutcome("authentication failed: ${safeMessage(e)}")
             }
@@ -428,7 +428,7 @@ class LoginFlow(
      * carries the actionable diagnosis (8002 = wrong password, 2028 = abuse/rate limiting,
      * 1006 = unknown username, …) instead of a bare HTTP status.
      */
-    private fun authErrorMessage(e: HttpException): String {
+    private fun authErrorMessage(e: HttpException, username: String): String {
         val rawBody =
             try {
                 e.response()?.errorBody()?.string()
@@ -439,7 +439,7 @@ class LoginFlow(
         // (some edges return no JSON) is itself the diagnostic — headers still show the
         // server identity. No secrets: error bodies carry Proton's Code/Error only.
         logcat(TAG, LogPriority.WARN) {
-            "auth failure wire: HTTP ${e.code()} headers=" +
+            "auth failure wire: HTTP ${e.code()} user=$username headers=" +
                 (e.response()?.headers()?.toMultimap()?.entries?.joinToString { (k, v) -> "$k=${v.joinToString(",")}" }
                     ?: "none") +
                 " body=${rawBody ?: "(empty)"}"
